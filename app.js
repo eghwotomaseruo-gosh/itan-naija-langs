@@ -484,9 +484,10 @@ function openPath(key){
   const tabsEl = document.getElementById("lang-tabs");
   tabsEl.innerHTML = "";
   Object.keys(COURSES).forEach(k => {
+    const c = COURSES[k];
     const tab = document.createElement("button");
-    tab.className = "lang-tab" + (k === key ? " active" : "");
-    tab.textContent = COURSES[k].name;
+    tab.className = `lang-tab ${c.color}` + (k === key ? " active" : "");
+    tab.innerHTML = `<span class="lang-tab-glyph">${c.glyph}</span><span class="lang-tab-label">${c.name}</span>`;
     tab.addEventListener("click", () => openPath(k));
     tabsEl.appendChild(tab);
   });

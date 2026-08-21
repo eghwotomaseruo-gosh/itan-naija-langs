@@ -77,31 +77,27 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .hero-title em{ color: var(--gold); font-style: normal; }
 .hero-sub{ color: var(--cream-dim); font-size:15px; line-height:1.55; max-width: 46ch; margin:0; }
 
-/* ===== language track cards ===== */
+/* ===== language switch tiles (home screen) ===== */
 .section-label{ font-family: var(--font-head); font-size:13px; text-transform:uppercase; letter-spacing:1.2px; color: var(--cream-dim); margin: 0 0 12px; }
-.track-select{ display:grid; gap:14px; margin: 8px 0 34px; }
+.track-select{ display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin: 8px 0 34px; }
 .track-card{
-  position:relative; overflow:hidden;
-  display:flex; align-items:center; gap:16px;
-  background: var(--surface); border:1px solid var(--line); border-radius:18px;
-  padding: 16px; text-align:left; color: var(--cream);
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  background: var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding: 14px 8px; text-align:center; color: var(--cream);
   transition: transform .15s ease, border-color .15s ease;
 }
-.track-card:hover{ transform: translateY(-2px); border-color: var(--line); }
-.track-card:active{ transform: translateY(0); }
-.track-pattern{ position:absolute; inset:0; opacity:.16; }
+.track-card:active{ transform: translateY(1px); }
 .track-glyph{
-  position:relative; z-index:1; flex-shrink:0;
-  width:56px; height:56px; border-radius:14px;
+  width:52px; height:52px; border-radius:14px;
   display:flex; align-items:center; justify-content:center;
-  font-family: var(--font-display); font-size:22px; font-weight:600; color: var(--bg-deep);
+  font-family: var(--font-display); font-size:21px; font-weight:600; color: var(--bg-deep);
 }
-.track-body{ position:relative; z-index:1; flex:1; min-width:0; }
-.track-name{ font-family: var(--font-head); font-weight:700; font-size:17px; margin:0 0 2px; }
-.track-native{ font-size:13px; color: var(--cream-dim); margin:0 0 8px; }
-.track-progress-track{ height:6px; border-radius:4px; background: rgba(244,239,227,0.1); overflow:hidden; }
+.track-body{ width:100%; }
+.track-name{ font-family: var(--font-head); font-weight:700; font-size:14px; margin:0 0 1px; }
+.track-native{ font-size:10.5px; color: var(--cream-dim); margin:0 0 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.track-progress-track{ height:5px; border-radius:4px; background: rgba(244,239,227,0.1); overflow:hidden; }
 .track-progress-fill{ height:100%; border-radius:4px; }
-.track-meta{ position:relative; z-index:1; font-family: var(--font-head); font-size:13px; color: var(--cream-dim); flex-shrink:0; text-align:right; }
+.track-meta{ font-family: var(--font-head); font-size:10.5px; color: var(--cream-dim); margin-top:6px; }
 
 .track-card.igbo .track-glyph{ background: var(--igbo); }
 .track-card.igbo .track-progress-fill{ background: var(--igbo); }

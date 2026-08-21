@@ -331,14 +331,13 @@ function renderHome(){
     const card = document.createElement("button");
     card.className = `track-card ${course.color}`;
     card.innerHTML = `
-      <div class="track-pattern" style="background-image:url(&quot;${PATTERNS[key]}&quot;); background-size:60px;"></div>
       <div class="track-glyph">${course.glyph}</div>
       <div class="track-body">
         <p class="track-name">${course.name}</p>
         <p class="track-native">${course.native}</p>
         <div class="track-progress-track"><div class="track-progress-fill" style="width:${pct}%"></div></div>
+        <p class="track-meta">${done}/${total} lessons</p>
       </div>
-      <div class="track-meta">${done}/${total}<br>lessons</div>
     `;
     card.addEventListener("click", () => openPath(key));
     trackSelect.appendChild(card);

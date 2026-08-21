@@ -46,7 +46,7 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 }
 
 /* ===== topbar / pills ===== */
-.topbar{ display:flex; align-items:center; justify-content:space-between; padding: 6px 0 18px; }
+.topbar{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; row-gap:10px; padding: 6px 0 18px; }
 .brand{ display:flex; align-items:center; gap:10px; }
 .brand-mark{ font-family: var(--font-head); color: var(--gold); letter-spacing: 3px; font-size: 14px; opacity:.8; }
 .brand-name{ font-family: var(--font-display); font-size: 22px; font-weight:600; }

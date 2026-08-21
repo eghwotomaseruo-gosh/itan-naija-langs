@@ -1,4 +1,4 @@
-# Ìtàn — learn Igbo, Yorùbá &amp; Hausa
+# Lingua Naija — learn Igbo, Yorùbá &amp; Hausa
 
 A gamified, frontend-only demo (XP, streaks, hearts, badges, a local leaderboard)
 with 10 lessons per language, covering greetings, numbers, family, colors, time

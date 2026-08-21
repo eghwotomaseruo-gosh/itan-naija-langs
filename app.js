@@ -7,111 +7,146 @@ const PATTERNS = {
   hausa: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><g stroke='%23d1682f' stroke-width='2' fill='none'><rect x='8' y='8' width='40' height='40' transform='rotate(45 28 28)'/><rect x='18' y='18' width='20' height='20' transform='rotate(45 28 28)'/></g></svg>`
 };
 
-/* ====================== LESSON DATA ====================== */
+/* ====================== VOCAB DATA ======================
+   Each course has 10 topical lessons. Question sets are
+   generated from this vocab at runtime (see buildLessonQuestions). */
 const COURSES = {
   igbo: {
-    name: "Igbo", native: "Asụsụ Igbo", color: "igbo", glyph: "Ị",
+    name: "Igbo", native: "Asụsụ Igbo", color: "igbo", glyph: "Ị", speechLang: "ig-NG",
     lessons: [
-      {
-        title: "Greetings",
-        questions: [
-          { type: "mc", prompt: "How do you say \u201cHello\u201d in Igbo?", options: ["Ndewo", "Daalu", "Mba", "Ọzọ"], answer: "Ndewo" },
-          { type: "mc", prompt: "\u201cKedu?\u201d is closest in meaning to:", options: ["Goodbye", "How are you?", "Thank you", "My name is"], answer: "How are you?" },
-          { type: "mc", prompt: "How do you say \u201cThank you\u201d in Igbo?", options: ["Daalu", "Ndewo", "Ee", "Nna"], answer: "Daalu" },
-          { type: "mc", prompt: "Which word means \u201cYes\u201d?", options: ["Ee", "Mba", "Kedu", "Nne"], answer: "Ee" },
-          { type: "mc", prompt: "Which word means \u201cNo\u201d?", options: ["Mba", "Ee", "Daalu", "Ọzọ"], answer: "Mba" }
-        ]
-      },
-      {
-        title: "Numbers 1–5",
-        questions: [
-          { type: "mc", prompt: "What is \u201cOne\u201d in Igbo?", options: ["Otu", "Abụọ", "Atọ", "Ise"], answer: "Otu" },
-          { type: "mc", prompt: "What is \u201cTwo\u201d in Igbo?", options: ["Abụọ", "Otu", "Anọ", "Atọ"], answer: "Abụọ" },
-          { type: "mc", prompt: "What is \u201cThree\u201d in Igbo?", options: ["Atọ", "Ise", "Otu", "Abụọ"], answer: "Atọ" },
-          { type: "mc", prompt: "What is \u201cFour\u201d in Igbo?", options: ["Anọ", "Ise", "Atọ", "Otu"], answer: "Anọ" },
-          { type: "mc", prompt: "What is \u201cFive\u201d in Igbo?", options: ["Ise", "Anọ", "Abụọ", "Otu"], answer: "Ise" }
-        ]
-      },
-      {
-        title: "Family",
-        questions: [
-          { type: "mc", prompt: "\u201cNne\u201d means:", options: ["Mother", "Father", "Child", "Sibling"], answer: "Mother" },
-          { type: "mc", prompt: "\u201cNna\u201d means:", options: ["Father", "Mother", "Sibling", "Friend"], answer: "Father" },
-          { type: "mc", prompt: "\u201cNwa\u201d means:", options: ["Child", "Father", "Mother", "Elder"], answer: "Child" },
-          { type: "mc", prompt: "\u201cNwanne\u201d means:", options: ["Sibling", "Child", "Father", "Mother"], answer: "Sibling" },
-          { type: "mc", prompt: "Which word means \u201cFamily\u201d?", options: ["Ezinụlọ", "Nwanne", "Nna", "Nne"], answer: "Ezinụlọ" }
-        ]
-      }
+      { title: "Greetings", vocab: [
+        { native: "Ndewo", en: "Hello" }, { native: "Kedu", en: "How are you" },
+        { native: "Daalu", en: "Thank you" }, { native: "Ee", en: "Yes" },
+        { native: "Mba", en: "No" }, { native: "Ọzọ", en: "See you again" }
+      ]},
+      { title: "Numbers 1–5", vocab: [
+        { native: "Otu", en: "One" }, { native: "Abụọ", en: "Two" }, { native: "Atọ", en: "Three" },
+        { native: "Anọ", en: "Four" }, { native: "Ise", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Isii", en: "Six" }, { native: "Asaa", en: "Seven" }, { native: "Asatọ", en: "Eight" },
+        { native: "Itoolu", en: "Nine" }, { native: "Iri", en: "Ten" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Nne", en: "Mother" }, { native: "Nna", en: "Father" }, { native: "Nwa", en: "Child" },
+        { native: "Nwanne", en: "Sibling" }, { native: "Di", en: "Husband" }, { native: "Nwunye", en: "Wife" }
+      ]},
+      { title: "Colors", vocab: [
+        { native: "Ọcha", en: "White" }, { native: "Oji", en: "Black" }, { native: "Uhie", en: "Red" },
+        { native: "Odo", en: "Yellow" }, { native: "Anụnụ", en: "Blue" }
+      ]},
+      { title: "Time words", vocab: [
+        { native: "Taa", en: "Today" }, { native: "Echi", en: "Tomorrow" }, { native: "Ụnyaahụ", en: "Yesterday" },
+        { native: "Ụtụtụ", en: "Morning" }, { native: "Abalị", en: "Night" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "Biko", en: "Please" }, { native: "Ndo", en: "Sorry" }, { native: "Nnọọ", en: "Welcome" },
+        { native: "Kedu aha gị", en: "What is your name" }, { native: "Daalu nke ukwuu", en: "Thank you very much" }
+      ]},
+      { title: "Food", vocab: [
+        { native: "Nri", en: "Food" }, { native: "Mmiri", en: "Water" }, { native: "Ji", en: "Yam" },
+        { native: "Ọka", en: "Corn" }, { native: "Anụ", en: "Meat" }, { native: "Akpu", en: "Cassava" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Isi", en: "Head" }, { native: "Aka", en: "Hand" }, { native: "Ụkwụ", en: "Leg" },
+        { native: "Anya", en: "Eye" }, { native: "Ọnụ", en: "Mouth" }, { native: "Ntị", en: "Ear" }
+      ]},
+      { title: "Animals", vocab: [
+        { native: "Nkịta", en: "Dog" }, { native: "Nwamba", en: "Cat" }, { native: "Ehi", en: "Cow" },
+        { native: "Ọkụkọ", en: "Chicken" }, { native: "Aturu", en: "Sheep" }, { native: "Enyi", en: "Elephant" }
+      ]}
     ]
   },
   yoruba: {
-    name: "Yorùbá", native: "Èdè Yorùbá", color: "yoruba", glyph: "Ẹ",
+    name: "Yorùbá", native: "Èdè Yorùbá", color: "yoruba", glyph: "Ẹ", speechLang: "yo-NG",
     lessons: [
-      {
-        title: "Greetings",
-        questions: [
-          { type: "mc", prompt: "How do you say \u201cHello\u201d in Yorùbá?", options: ["Bawo ni", "E se", "Rara", "O daabo"], answer: "Bawo ni" },
-          { type: "mc", prompt: "How do you say \u201cThank you\u201d in Yorùbá?", options: ["E se", "Bawo ni", "Beeni", "Iya"], answer: "E se" },
-          { type: "mc", prompt: "Which word means \u201cYes\u201d?", options: ["Beeni", "Rara", "Bawo", "Baba"], answer: "Beeni" },
-          { type: "mc", prompt: "Which word means \u201cNo\u201d?", options: ["Rara", "Beeni", "E se", "Kaabo"], answer: "Rara" },
-          { type: "mc", prompt: "\u201cO daabo\u201d is used when:", options: ["Saying goodbye", "Asking a question", "Counting", "Greeting a stranger"], answer: "Saying goodbye" }
-        ]
-      },
-      {
-        title: "Numbers 1–5",
-        questions: [
-          { type: "mc", prompt: "What is \u201cOne\u201d in Yorùbá?", options: ["Ọkan", "Meji", "Mẹta", "Marun"], answer: "Ọkan" },
-          { type: "mc", prompt: "What is \u201cTwo\u201d in Yorùbá?", options: ["Meji", "Ọkan", "Mẹrin", "Mẹta"], answer: "Meji" },
-          { type: "mc", prompt: "What is \u201cThree\u201d in Yorùbá?", options: ["Mẹta", "Marun", "Ọkan", "Meji"], answer: "Mẹta" },
-          { type: "mc", prompt: "What is \u201cFour\u201d in Yorùbá?", options: ["Mẹrin", "Marun", "Mẹta", "Ọkan"], answer: "Mẹrin" },
-          { type: "mc", prompt: "What is \u201cFive\u201d in Yorùbá?", options: ["Marun", "Mẹrin", "Meji", "Ọkan"], answer: "Marun" }
-        ]
-      },
-      {
-        title: "Family",
-        questions: [
-          { type: "mc", prompt: "\u201cIya\u201d means:", options: ["Mother", "Father", "Sister", "Brother"], answer: "Mother" },
-          { type: "mc", prompt: "\u201cBaba\u201d means:", options: ["Father", "Mother", "Sister", "Friend"], answer: "Father" },
-          { type: "mc", prompt: "\u201cArakunrin\u201d means:", options: ["Brother", "Sister", "Mother", "Child"], answer: "Brother" },
-          { type: "mc", prompt: "\u201cArabinrin\u201d means:", options: ["Sister", "Brother", "Father", "Elder"], answer: "Sister" },
-          { type: "mc", prompt: "Which word means \u201cFamily\u201d?", options: ["Ẹbi", "Iya", "Baba", "Ọkan"], answer: "Ẹbi" }
-        ]
-      }
+      { title: "Greetings", vocab: [
+        { native: "Bawo ni", en: "Hello" }, { native: "E kaaro", en: "Good morning" },
+        { native: "E se", en: "Thank you" }, { native: "Beeni", en: "Yes" },
+        { native: "Rara", en: "No" }, { native: "O daabo", en: "Goodbye" }
+      ]},
+      { title: "Numbers 1–5", vocab: [
+        { native: "Ọkan", en: "One" }, { native: "Meji", en: "Two" }, { native: "Mẹta", en: "Three" },
+        { native: "Mẹrin", en: "Four" }, { native: "Marun", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Mẹfa", en: "Six" }, { native: "Meje", en: "Seven" }, { native: "Mẹjọ", en: "Eight" },
+        { native: "Mẹsan", en: "Nine" }, { native: "Mẹwa", en: "Ten" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Iya", en: "Mother" }, { native: "Baba", en: "Father" }, { native: "Ọmọ", en: "Child" },
+        { native: "Arakunrin", en: "Brother" }, { native: "Arabinrin", en: "Sister" }, { native: "Ẹbi", en: "Family" }
+      ]},
+      { title: "Colors", vocab: [
+        { native: "Funfun", en: "White" }, { native: "Dudu", en: "Black" }, { native: "Pupa", en: "Red" },
+        { native: "Ofeefee", en: "Yellow" }, { native: "Alawọ ewe", en: "Green" }
+      ]},
+      { title: "Time words", vocab: [
+        { native: "Oni", en: "Today" }, { native: "Ọla", en: "Tomorrow" }, { native: "Ana", en: "Yesterday" },
+        { native: "Owuro", en: "Morning" }, { native: "Alẹ", en: "Night" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "Jọwọ", en: "Please" }, { native: "Ma binu", en: "Sorry" }, { native: "Ẹ kaabọ", en: "Welcome" },
+        { native: "Kini oruko re", en: "What is your name" }, { native: "O se pupo", en: "Thank you very much" }
+      ]},
+      { title: "Food", vocab: [
+        { native: "Ounje", en: "Food" }, { native: "Omi", en: "Water" }, { native: "Iṣu", en: "Yam" },
+        { native: "Agbado", en: "Corn" }, { native: "Ẹran", en: "Meat" }, { native: "Ẹja", en: "Fish" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Ori", en: "Head" }, { native: "Ọwọ", en: "Hand" }, { native: "Ẹsẹ", en: "Leg" },
+        { native: "Oju", en: "Eye" }, { native: "Ẹnu", en: "Mouth" }, { native: "Etí", en: "Ear" }
+      ]},
+      { title: "Animals", vocab: [
+        { native: "Aja", en: "Dog" }, { native: "Ologbo", en: "Cat" }, { native: "Malu", en: "Cow" },
+        { native: "Adiye", en: "Chicken" }, { native: "Agutan", en: "Sheep" }, { native: "Erin", en: "Elephant" }
+      ]}
     ]
   },
   hausa: {
-    name: "Hausa", native: "Harshen Hausa", color: "hausa", glyph: "H",
+    name: "Hausa", native: "Harshen Hausa", color: "hausa", glyph: "H", speechLang: "ha-NG",
     lessons: [
-      {
-        title: "Greetings",
-        questions: [
-          { type: "mc", prompt: "How do you say \u201cHello\u201d in Hausa?", options: ["Sannu", "Na gode", "A'a", "Yauwa"], answer: "Sannu" },
-          { type: "mc", prompt: "How do you say \u201cThank you\u201d in Hausa?", options: ["Na gode", "Sannu", "Ee", "Uba"], answer: "Na gode" },
-          { type: "mc", prompt: "Which word means \u201cYes\u201d?", options: ["Ee", "A'a", "Sannu", "Uwa"], answer: "Ee" },
-          { type: "mc", prompt: "Which word means \u201cNo\u201d?", options: ["A'a", "Ee", "Na gode", "Sannu"], answer: "A'a" },
-          { type: "mc", prompt: "\u201cSannu da zuwa\u201d means:", options: ["Welcome", "Goodbye", "Excuse me", "Please"], answer: "Welcome" }
-        ]
-      },
-      {
-        title: "Numbers 1–5",
-        questions: [
-          { type: "mc", prompt: "What is \u201cOne\u201d in Hausa?", options: ["Daya", "Biyu", "Uku", "Biyar"], answer: "Daya" },
-          { type: "mc", prompt: "What is \u201cTwo\u201d in Hausa?", options: ["Biyu", "Daya", "Hudu", "Uku"], answer: "Biyu" },
-          { type: "mc", prompt: "What is \u201cThree\u201d in Hausa?", options: ["Uku", "Biyar", "Daya", "Biyu"], answer: "Uku" },
-          { type: "mc", prompt: "What is \u201cFour\u201d in Hausa?", options: ["Hudu", "Biyar", "Uku", "Daya"], answer: "Hudu" },
-          { type: "mc", prompt: "What is \u201cFive\u201d in Hausa?", options: ["Biyar", "Hudu", "Biyu", "Daya"], answer: "Biyar" }
-        ]
-      },
-      {
-        title: "Family",
-        questions: [
-          { type: "mc", prompt: "\u201cUwa\u201d means:", options: ["Mother", "Father", "Child", "Sibling"], answer: "Mother" },
-          { type: "mc", prompt: "\u201cUba\u201d means:", options: ["Father", "Mother", "Sister", "Friend"], answer: "Father" },
-          { type: "mc", prompt: "\u201cDa\u201d means:", options: ["Son", "Daughter", "Mother", "Elder"], answer: "Son" },
-          { type: "mc", prompt: "\u201cYar\u201d means:", options: ["Daughter", "Son", "Father", "Sibling"], answer: "Daughter" },
-          { type: "mc", prompt: "Which word means \u201cFamily\u201d?", options: ["Iyali", "Uwa", "Uba", "Daya"], answer: "Iyali" }
-        ]
-      }
+      { title: "Greetings", vocab: [
+        { native: "Sannu", en: "Hello" }, { native: "Ina kwana", en: "Good morning" },
+        { native: "Na gode", en: "Thank you" }, { native: "Ee", en: "Yes" },
+        { native: "A'a", en: "No" }, { native: "Sai anjima", en: "Goodbye" }
+      ]},
+      { title: "Numbers 1–5", vocab: [
+        { native: "Daya", en: "One" }, { native: "Biyu", en: "Two" }, { native: "Uku", en: "Three" },
+        { native: "Hudu", en: "Four" }, { native: "Biyar", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Shida", en: "Six" }, { native: "Bakwai", en: "Seven" }, { native: "Takwas", en: "Eight" },
+        { native: "Tara", en: "Nine" }, { native: "Goma", en: "Ten" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Uwa", en: "Mother" }, { native: "Uba", en: "Father" }, { native: "Da", en: "Son" },
+        { native: "Diya", en: "Daughter" }, { native: "Yaya", en: "Sibling" }, { native: "Iyali", en: "Family" }
+      ]},
+      { title: "Colors", vocab: [
+        { native: "Fari", en: "White" }, { native: "Baki", en: "Black" }, { native: "Ja", en: "Red" },
+        { native: "Rawaya", en: "Yellow" }, { native: "Kore", en: "Green" }
+      ]},
+      { title: "Time words", vocab: [
+        { native: "Yau", en: "Today" }, { native: "Gobe", en: "Tomorrow" }, { native: "Jiya", en: "Yesterday" },
+        { native: "Safe", en: "Morning" }, { native: "Dare", en: "Night" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "Don Allah", en: "Please" }, { native: "Yi hakuri", en: "Sorry" }, { native: "Barka da zuwa", en: "Welcome" },
+        { native: "Menene sunanka", en: "What is your name" }, { native: "Na gode sosai", en: "Thank you very much" }
+      ]},
+      { title: "Food", vocab: [
+        { native: "Abinci", en: "Food" }, { native: "Ruwa", en: "Water" }, { native: "Doya", en: "Yam" },
+        { native: "Masara", en: "Corn" }, { native: "Nama", en: "Meat" }, { native: "Kifi", en: "Fish" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Kai", en: "Head" }, { native: "Hannu", en: "Hand" }, { native: "Kafa", en: "Leg" },
+        { native: "Ido", en: "Eye" }, { native: "Baki", en: "Mouth" }, { native: "Kunne", en: "Ear" }
+      ]},
+      { title: "Animals", vocab: [
+        { native: "Kare", en: "Dog" }, { native: "Kyanwa", en: "Cat" }, { native: "Saniya", en: "Cow" },
+        { native: "Kaza", en: "Chicken" }, { native: "Tunkiya", en: "Sheep" }, { native: "Giwa", en: "Elephant" }
+      ]}
     ]
   }
 };
@@ -119,11 +154,86 @@ const COURSES = {
 const BADGES = [
   { id: "first-lesson", name: "First steps", icon: "\u{1F476}", test: s => s.lessonsCompleted >= 1 },
   { id: "three-lessons", name: "Warming up", icon: "\u{1F525}", test: s => s.lessonsCompleted >= 3 },
+  { id: "ten-lessons", name: "Committed", icon: "\u{1F4DA}", test: s => s.lessonsCompleted >= 10 },
   { id: "streak-3", name: "3-day streak", icon: "\u{26A1}", test: s => s.streak >= 3 },
   { id: "perfect", name: "Perfect lesson", icon: "\u{2B50}", test: s => s.hasPerfect },
   { id: "polyglot", name: "Polyglot", icon: "\u{1F30D}", test: s => s.languagesStarted >= 3 },
-  { id: "xp-100", name: "Century club", icon: "\u{1F3C6}", test: s => s.xp >= 100 }
+  { id: "course-clear", name: "Course cleared", icon: "\u{1F3C1}", test: s => s.courseCleared },
+  { id: "xp-100", name: "Century club", icon: "\u{1F3C6}", test: s => s.xp >= 100 },
+  { id: "xp-300", name: "XP machine", icon: "\u{1F4AA}", test: s => s.xp >= 300 }
 ];
+
+/* ====================== HELPERS ====================== */
+function shuffle(arr){ return [...arr].sort(() => Math.random() - 0.5); }
+function normalizeStr(s){
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim().replace(/\s+/g, " ");
+}
+function speak(text, lang){
+  if(!("speechSynthesis" in window)) return;
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = 0.85;
+    window.speechSynthesis.speak(u);
+  }catch(e){ /* speech not available — fail silently */ }
+}
+
+/* ====================== QUESTION GENERATION ====================== */
+function buildLessonQuestions(course, lessonIndex){
+  const lesson = course.lessons[lessonIndex];
+  const vocab = lesson.vocab;
+  const pool = course.lessons.flatMap(l => l.vocab);
+  const order = shuffle(vocab.map((_, i) => i));
+  const mcCount = Math.min(3, vocab.length);
+  const mcIdx = order.slice(0, mcCount);
+  const typeIdx = order[mcCount] ?? order[0];
+  const listenIdx = order[mcCount + 1] ?? order[order.length - 1];
+
+  const questions = [];
+
+  mcIdx.forEach(i => {
+    const v = vocab[i];
+    const distractors = shuffle(pool.filter(p => p.en !== v.en)).slice(0, 3).map(p => p.en);
+    questions.push({
+      type: "mc",
+      prompt: `What does "${v.native}" mean?`,
+      speakText: v.native,
+      options: shuffle([v.en, ...distractors]),
+      answer: v.en
+    });
+  });
+
+  {
+    const v = vocab[typeIdx];
+    questions.push({
+      type: "type",
+      prompt: `Type the ${course.name} word for "${v.en}"`,
+      answerDisplay: v.native,
+      accept: [normalizeStr(v.native)]
+    });
+  }
+
+  {
+    const v = vocab[listenIdx];
+    const distractors = shuffle(pool.filter(p => p.en !== v.en)).slice(0, 3).map(p => p.en);
+    questions.push({
+      type: "listen",
+      prompt: "Listen, then choose the meaning",
+      speakText: v.native,
+      options: shuffle([v.en, ...distractors]),
+      answer: v.en
+    });
+  }
+
+  questions.push({
+    type: "match",
+    prompt: "Match each word to its meaning",
+    pairs: vocab.map(v => ({ native: v.native, en: v.en }))
+  });
+
+  return questions;
+}
 
 /* ====================== STATE ====================== */
 const DEFAULT_STATE = {
@@ -147,23 +257,22 @@ function loadState(){
 function saveState(){ localStorage.setItem("itan-state", JSON.stringify(state)); }
 
 let state = loadState();
-let session = null; // active lesson session
+let session = null;
 
-function todayStr(){ return new Date().toISOString().slice(0,10); }
+function todayStr(){ return new Date().toISOString().slice(0, 10); }
 
 function touchStreak(){
   const today = todayStr();
   if(state.lastPlayedDate === today) return;
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
   state.streak = (state.lastPlayedDate === yesterday) ? state.streak + 1 : 1;
   state.lastPlayedDate = today;
 }
 
-function lessonsCompletedCount(){
-  return Object.values(state.completed).reduce((a,b)=>a+b.length,0);
-}
-function languagesStartedCount(){
-  return Object.values(state.completed).filter(arr => arr.length > 0).length;
+function lessonsCompletedCount(){ return Object.values(state.completed).reduce((a, b) => a + b.length, 0); }
+function languagesStartedCount(){ return Object.values(state.completed).filter(arr => arr.length > 0).length; }
+function anyCourseCleared(){
+  return Object.keys(COURSES).some(k => state.completed[k].length >= COURSES[k].lessons.length);
 }
 
 function checkBadges(){
@@ -172,12 +281,11 @@ function checkBadges(){
     streak: state.streak,
     hasPerfect: state.hasPerfect,
     languagesStarted: languagesStartedCount(),
+    courseCleared: anyCourseCleared(),
     xp: state.xp
   };
   BADGES.forEach(b => {
-    if(!state.earnedBadges.includes(b.id) && b.test(snap)){
-      state.earnedBadges.push(b.id);
-    }
+    if(!state.earnedBadges.includes(b.id) && b.test(snap)) state.earnedBadges.push(b.id);
   });
 }
 
@@ -193,7 +301,7 @@ function renderHome(){
     const course = COURSES[key];
     const done = state.completed[key].length;
     const total = course.lessons.length;
-    const pct = Math.round((done/total)*100);
+    const pct = Math.round((done / total) * 100);
     const card = document.createElement("button");
     card.className = `track-card ${course.color}`;
     card.innerHTML = `
@@ -224,22 +332,17 @@ function renderHome(){
 }
 
 function renderLeaderboard(){
-  // Local, illustrative leaderboard: a handful of fixed names plus "You" placed by XP.
   const others = [
-    { name: "Ada O.", xp: 180 },
-    { name: "Tunde A.", xp: 140 },
-    { name: "Amina B.", xp: 95 },
-    { name: "Chiamaka N.", xp: 60 },
-    { name: "Yusuf K.", xp: 25 }
+    { name: "Ada O.", xp: 180 }, { name: "Tunde A.", xp: 140 }, { name: "Amina B.", xp: 95 },
+    { name: "Chiamaka N.", xp: 60 }, { name: "Yusuf K.", xp: 25 }
   ];
-  const rows = [...others, { name: "You", xp: state.xp, isYou: true }]
-    .sort((a,b) => b.xp - a.xp);
+  const rows = [...others, { name: "You", xp: state.xp, isYou: true }].sort((a, b) => b.xp - a.xp);
   const list = document.getElementById("leaderboard");
   list.innerHTML = "";
   rows.forEach((r, i) => {
     const li = document.createElement("li");
     if(r.isYou) li.classList.add("is-you");
-    li.innerHTML = `<span class="lb-rank">${i+1}</span><span class="lb-name">${r.name}</span><span class="lb-xp">${r.xp} XP</span>`;
+    li.innerHTML = `<span class="lb-rank">${i + 1}</span><span class="lb-name">${r.name}</span><span class="lb-xp">${r.xp} XP</span>`;
     list.appendChild(li);
   });
 }
@@ -267,19 +370,16 @@ function openPath(key){
     const node = document.createElement("button");
     node.className = "lesson-node" + (locked ? " locked" : "") + (isDone ? " complete" : "");
     node.style.background = locked ? "" : `var(--${course.color})`;
+    node.style.position = "relative";
     node.innerHTML = locked
       ? `<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`
-      : `${i+1}`;
-    if(!locked){
-      node.addEventListener("click", () => startLesson(key, i));
-    }
+      : `${i + 1}`;
+    if(!locked) node.addEventListener("click", () => startLesson(key, i));
     const label = document.createElement("div");
     label.className = "lesson-node-label";
     label.textContent = lesson.title;
-    node.style.position = "relative";
-    node.appendChild(Object.assign(document.createElement("span")));
-    pathEl.appendChild(node);
     node.appendChild(label);
+    pathEl.appendChild(node);
   });
 
   showScreen("path");
@@ -291,43 +391,90 @@ function startLesson(courseKey, lessonIndex){
     alert("You're out of hearts. Come back after a short break, or refresh to reset this demo.");
     return;
   }
-  const lesson = COURSES[courseKey].lessons[lessonIndex];
   session = {
     courseKey, lessonIndex,
-    questions: [...lesson.questions],
+    questions: buildLessonQuestions(COURSES[courseKey], lessonIndex),
     qi: 0,
     correctCount: 0,
     mistakes: 0,
     selected: null,
-    answered: false
+    answered: false,
+    matchState: null
   };
   showScreen("lesson");
   renderQuestion();
 }
 
-function renderQuestion(){
-  const q = session.questions[session.qi];
-  document.getElementById("question-kicker").textContent = "Translate";
-  document.getElementById("question-prompt").textContent = q.prompt;
-  document.getElementById("lesson-hearts").textContent = state.hearts;
-  document.getElementById("lesson-progress").style.width = `${(session.qi/session.questions.length)*100}%`;
-
-  const grid = document.getElementById("options-grid");
-  grid.innerHTML = "";
-  q.options.forEach(opt => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.textContent = opt;
-    btn.addEventListener("click", () => selectOption(btn, opt));
-    grid.appendChild(btn);
-  });
-
-  session.selected = null;
-  session.answered = false;
-  document.getElementById("feedback").classList.add("hidden");
+function resetQuestionUI(){
+  document.getElementById("options-grid").classList.remove("hidden");
+  document.getElementById("options-grid").innerHTML = "";
+  document.getElementById("type-wrap").classList.add("hidden");
+  document.getElementById("match-wrap").classList.add("hidden");
+  document.getElementById("speaker-btn").classList.add("hidden");
+  const feedback = document.getElementById("feedback");
+  feedback.classList.add("hidden");
   const checkBtn = document.getElementById("check-btn");
   checkBtn.disabled = true;
   checkBtn.textContent = "Check";
+}
+
+function renderQuestion(){
+  const q = session.questions[session.qi];
+  const course = COURSES[session.courseKey];
+  session.selected = null;
+  session.answered = false;
+  session.matchState = null;
+
+  document.getElementById("lesson-hearts").textContent = state.hearts;
+  document.getElementById("lesson-progress").style.width = `${(session.qi / session.questions.length) * 100}%`;
+
+  const kickers = { mc: "Translate", type: "Type it", listen: "Listen", match: "Match" };
+  document.getElementById("question-kicker").textContent = kickers[q.type] || "Question";
+  document.getElementById("question-prompt").textContent = q.prompt;
+
+  resetQuestionUI();
+
+  if(q.type === "mc"){
+    const grid = document.getElementById("options-grid");
+    q.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt;
+      btn.addEventListener("click", () => selectOption(btn, opt));
+      grid.appendChild(btn);
+    });
+    if(q.speakText){
+      const sBtn = document.getElementById("speaker-btn");
+      sBtn.classList.remove("hidden");
+      sBtn.onclick = () => speak(q.speakText, course.speechLang);
+    }
+  }else if(q.type === "listen"){
+    const grid = document.getElementById("options-grid");
+    q.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt;
+      btn.addEventListener("click", () => selectOption(btn, opt));
+      grid.appendChild(btn);
+    });
+    const sBtn = document.getElementById("speaker-btn");
+    sBtn.classList.remove("hidden");
+    sBtn.onclick = () => speak(q.speakText, course.speechLang);
+    setTimeout(() => speak(q.speakText, course.speechLang), 350);
+  }else if(q.type === "type"){
+    document.getElementById("options-grid").classList.add("hidden");
+    document.getElementById("type-wrap").classList.remove("hidden");
+    const input = document.getElementById("type-input");
+    input.value = "";
+    input.classList.remove("correct", "incorrect");
+    input.disabled = false;
+    input.oninput = () => { document.getElementById("check-btn").disabled = input.value.trim() === ""; };
+    setTimeout(() => input.focus(), 50);
+  }else if(q.type === "match"){
+    document.getElementById("options-grid").classList.add("hidden");
+    document.getElementById("match-wrap").classList.remove("hidden");
+    renderMatch(q, course);
+  }
 }
 
 function selectOption(btn, value){
@@ -338,19 +485,99 @@ function selectOption(btn, value){
   document.getElementById("check-btn").disabled = false;
 }
 
+/* ---- match question ---- */
+function renderMatch(q, course){
+  session.matchState = { matchedCount: 0, total: q.pairs.length, selNativeBtn: null, selEnBtn: null, selNativeIdx: null, selEnIdx: null };
+  const nativeCol = document.getElementById("match-native-col");
+  const enCol = document.getElementById("match-en-col");
+  nativeCol.innerHTML = "";
+  enCol.innerHTML = "";
+  shuffle(q.pairs.map((p, i) => ({ ...p, idx: i }))).forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "match-item";
+    btn.textContent = p.native;
+    btn.addEventListener("click", () => onMatchClick("native", btn, p.idx, q, course));
+    nativeCol.appendChild(btn);
+  });
+  shuffle(q.pairs.map((p, i) => ({ ...p, idx: i }))).forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "match-item";
+    btn.textContent = p.en;
+    btn.addEventListener("click", () => onMatchClick("en", btn, p.idx, q, course));
+    enCol.appendChild(btn);
+  });
+}
+
+function onMatchClick(side, btn, idx, q, course){
+  if(btn.classList.contains("matched")) return;
+  const ms = session.matchState;
+  if(side === "native"){
+    if(ms.selNativeBtn) ms.selNativeBtn.classList.remove("selected");
+    ms.selNativeBtn = btn; ms.selNativeIdx = idx; btn.classList.add("selected");
+    speak(q.pairs[idx].native, course.speechLang);
+  }else{
+    if(ms.selEnBtn) ms.selEnBtn.classList.remove("selected");
+    ms.selEnBtn = btn; ms.selEnIdx = idx; btn.classList.add("selected");
+  }
+  if(ms.selNativeBtn && ms.selEnBtn){
+    if(ms.selNativeIdx === ms.selEnIdx){
+      ms.selNativeBtn.classList.remove("selected"); ms.selNativeBtn.classList.add("matched");
+      ms.selEnBtn.classList.remove("selected"); ms.selEnBtn.classList.add("matched");
+      ms.matchedCount++;
+      ms.selNativeBtn = null; ms.selEnBtn = null;
+      if(ms.matchedCount === ms.total){
+        session.answered = true;
+        session.correctCount++;
+        const fb = document.getElementById("feedback");
+        fb.className = "feedback ok";
+        fb.classList.remove("hidden");
+        document.getElementById("feedback-text").textContent = "All matched!";
+        const checkBtn = document.getElementById("check-btn");
+        checkBtn.disabled = false;
+        checkBtn.textContent = (session.qi === session.questions.length - 1) ? "Finish" : "Continue";
+      }
+    }else{
+      ms.selNativeBtn.classList.add("wrong");
+      ms.selEnBtn.classList.add("wrong");
+      state.hearts = Math.max(0, state.hearts - 1);
+      document.getElementById("lesson-hearts").textContent = state.hearts;
+      session.mistakes++;
+      saveState();
+      const nBtn = ms.selNativeBtn, eBtn = ms.selEnBtn;
+      setTimeout(() => {
+        nBtn.classList.remove("selected", "wrong");
+        eBtn.classList.remove("selected", "wrong");
+      }, 500);
+      ms.selNativeBtn = null; ms.selEnBtn = null;
+    }
+  }
+}
+
+/* ---- grading / advance ---- */
 function checkAnswer(){
+  const q = session.questions[session.qi];
+
   if(!session.answered){
-    if(session.selected == null) return;
-    const q = session.questions[session.qi];
-    const correct = session.selected === q.answer;
+    let correct = false;
+
+    if(q.type === "mc" || q.type === "listen"){
+      if(session.selected == null) return;
+      correct = session.selected === q.answer;
+      [...document.getElementById("options-grid").children].forEach(b => {
+        if(b.textContent === q.answer) b.classList.add("correct");
+        else if(b.classList.contains("selected") && !correct) b.classList.add("incorrect");
+        b.disabled = true;
+      });
+    }else if(q.type === "type"){
+      const input = document.getElementById("type-input");
+      correct = q.accept.includes(normalizeStr(input.value));
+      input.classList.add(correct ? "correct" : "incorrect");
+      input.disabled = true;
+    }else if(q.type === "match"){
+      return; // graded via taps; check-btn only reachable once answered
+    }
+
     session.answered = true;
-
-    [...document.getElementById("options-grid").children].forEach(b => {
-      if(b.textContent === q.answer) b.classList.add("correct");
-      else if(b.classList.contains("selected") && !correct) b.classList.add("incorrect");
-      b.disabled = true;
-    });
-
     const fb = document.getElementById("feedback");
     const fbText = document.getElementById("feedback-text");
     fb.classList.remove("hidden");
@@ -360,7 +587,8 @@ function checkAnswer(){
       session.correctCount++;
     }else{
       fb.className = "feedback bad";
-      fbText.textContent = `Not quite — the answer is "${q.answer}".`;
+      const answerText = q.type === "type" ? q.answerDisplay : q.answer;
+      fbText.textContent = `Not quite — the answer is "${answerText}".`;
       session.mistakes++;
       state.hearts = Math.max(0, state.hearts - 1);
       document.getElementById("lesson-hearts").textContent = state.hearts;
@@ -377,11 +605,8 @@ function checkAnswer(){
     return;
   }
   session.qi++;
-  if(session.qi >= session.questions.length){
-    finishLesson();
-  }else{
-    renderQuestion();
-  }
+  if(session.qi >= session.questions.length) finishLesson();
+  else renderQuestion();
 }
 
 function finishLesson(){
@@ -409,12 +634,13 @@ function finishLesson(){
 function showScreen(name){
   document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
   document.getElementById(`screen-${name}`).classList.remove("hidden");
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
 document.getElementById("path-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
 document.getElementById("lesson-quit").addEventListener("click", () => {
   if(confirm("Quit this lesson? Your progress on it won't be saved.")){
+    if("speechSynthesis" in window) window.speechSynthesis.cancel();
     showScreen("path");
     openPath(session.courseKey);
   }

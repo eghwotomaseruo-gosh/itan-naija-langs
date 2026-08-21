@@ -83,8 +83,24 @@
 
   <section class="question-wrap">
     <p class="question-kicker" id="question-kicker">Translate</p>
-    <h2 class="question-prompt" id="question-prompt">Kedu?</h2>
+    <div class="prompt-row">
+      <h2 class="question-prompt" id="question-prompt">Kedu?</h2>
+      <button class="speaker-btn hidden" id="speaker-btn" aria-label="Play pronunciation" type="button">
+        <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>
+      </button>
+    </div>
+
     <div class="options-grid" id="options-grid"></div>
+
+    <div class="type-wrap hidden" id="type-wrap">
+      <input type="text" id="type-input" class="type-input" placeholder="Type your answer" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <p class="type-hint">Diacritics optional — spelling is checked loosely.</p>
+    </div>
+
+    <div class="match-wrap hidden" id="match-wrap">
+      <div class="match-col" id="match-native-col"></div>
+      <div class="match-col" id="match-en-col"></div>
+    </div>
   </section>
 
   <footer class="lesson-footer">

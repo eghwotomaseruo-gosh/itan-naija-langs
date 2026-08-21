@@ -180,10 +180,57 @@ function speak(text, lang){
 }
 
 /* ====================== QUESTION GENERATION ====================== */
+function poolFor(course){ return course.lessons.flatMap(l => l.vocab); }
+
+function makeMcQuestion(v, course){
+  const distractors = shuffle(poolFor(course).filter(p => p.en !== v.en)).slice(0, 3).map(p => p.en);
+  return {
+    type: "mc",
+    prompt: `What does "${v.native}" mean?`,
+    speakText: v.native,
+    options: shuffle([v.en, ...distractors]),
+    answer: v.en,
+    _vocab: v
+  };
+}
+function makeTypeQuestion(v, course){
+  return {
+    type: "type",
+    prompt: `Type the ${course.name} word for "${v.en}"`,
+    answerDisplay: v.native,
+    accept: [normalizeStr(v.native)],
+    _vocab: v
+  };
+}
+function makeListenQuestion(v, course){
+  const distractors = shuffle(poolFor(course).filter(p => p.en !== v.en)).slice(0, 3).map(p => p.en);
+  return {
+    type: "listen",
+    prompt: "Listen, then choose the meaning",
+    speakText: v.native,
+    options: shuffle([v.en, ...distractors]),
+    answer: v.en,
+    _vocab: v
+  };
+}
+function makeMatchQuestion(pairs){
+  return { type: "match", prompt: "Match each word to its meaning", pairs: pairs.map(p => ({ native: p.native, en: p.en })) };
+}
+
+/* Rebuilds a fresh version of a missed question (new distractor shuffle) for the retry queue. */
+function requeueQuestion(q, course){
+  let fresh;
+  if(q.type === "mc") fresh = makeMcQuestion(q._vocab, course);
+  else if(q.type === "type") fresh = makeTypeQuestion(q._vocab, course);
+  else if(q.type === "listen") fresh = makeListenQuestion(q._vocab, course);
+  else fresh = makeMatchQuestion(q.pairs);
+  fresh.isRetry = true;
+  return fresh;
+}
+
 function buildLessonQuestions(course, lessonIndex){
   const lesson = course.lessons[lessonIndex];
   const vocab = lesson.vocab;
-  const pool = course.lessons.flatMap(l => l.vocab);
   const order = shuffle(vocab.map((_, i) => i));
   const mcCount = Math.min(3, vocab.length);
   const mcIdx = order.slice(0, mcCount);
@@ -191,57 +238,26 @@ function buildLessonQuestions(course, lessonIndex){
   const listenIdx = order[mcCount + 1] ?? order[order.length - 1];
 
   const questions = [];
-
-  mcIdx.forEach(i => {
-    const v = vocab[i];
-    const distractors = shuffle(pool.filter(p => p.en !== v.en)).slice(0, 3).map(p => p.en);
-    questions.push({
-      type: "mc",
-      prompt: `What does "${v.native}" mean?`,
-      speakText: v.native,
-      options: shuffle([v.en, ...distractors]),
-      answer: v.en
-    });
-  });
-
-  {
-    const v = vocab[typeIdx];
-    questions.push({
-      type: "type",
-      prompt: `Type the ${course.name} word for "${v.en}"`,
-      answerDisplay: v.native,
-      accept: [normalizeStr(v.native)]
-    });
-  }
-
-  {
-    const v = vocab[listenIdx];
-    const distractors = shuffle(pool.filter(p => p.en !== v.en)).slice(0, 3).map(p => p.en);
-    questions.push({
-      type: "listen",
-      prompt: "Listen, then choose the meaning",
-      speakText: v.native,
-      options: shuffle([v.en, ...distractors]),
-      answer: v.en
-    });
-  }
-
-  questions.push({
-    type: "match",
-    prompt: "Match each word to its meaning",
-    pairs: vocab.map(v => ({ native: v.native, en: v.en }))
-  });
-
+  mcIdx.forEach(i => questions.push(makeMcQuestion(vocab[i], course)));
+  questions.push(makeTypeQuestion(vocab[typeIdx], course));
+  questions.push(makeListenQuestion(vocab[listenIdx], course));
+  questions.push(makeMatchQuestion(vocab));
   return questions;
 }
 
 /* ====================== STATE ====================== */
+// TESTING_MODE keeps hearts effectively unlimited so lessons can be
+// tested repeatedly without getting locked out. Set to false to restore
+// the normal 5-heart limit before launch.
+const TESTING_MODE = true;
+const STARTING_HEARTS = TESTING_MODE ? 999 : 5;
+
 const DEFAULT_STATE = {
   xp: 0,
   streak: 0,
   lastPlayedDate: null,
-  hearts: 5,
-  maxHearts: 5,
+  hearts: STARTING_HEARTS,
+  maxHearts: STARTING_HEARTS,
   completed: { igbo: [], yoruba: [], hausa: [] },
   earnedBadges: [],
   hasPerfect: false
@@ -250,8 +266,11 @@ const DEFAULT_STATE = {
 function loadState(){
   try{
     const raw = localStorage.getItem("itan-state");
-    if(!raw) return structuredClone(DEFAULT_STATE);
-    return Object.assign(structuredClone(DEFAULT_STATE), JSON.parse(raw));
+    let merged;
+    if(!raw) merged = structuredClone(DEFAULT_STATE);
+    else merged = Object.assign(structuredClone(DEFAULT_STATE), JSON.parse(raw));
+    if(TESTING_MODE) merged.hearts = STARTING_HEARTS; // ignore any low heart count saved before testing mode was on
+    return merged;
   }catch(e){ return structuredClone(DEFAULT_STATE); }
 }
 function saveState(){ localStorage.setItem("itan-state", JSON.stringify(state)); }
@@ -424,12 +443,13 @@ function renderQuestion(){
   session.selected = null;
   session.answered = false;
   session.matchState = null;
+  session.mistakesAtQuestionStart = session.mistakes;
 
   document.getElementById("lesson-hearts").textContent = state.hearts;
   document.getElementById("lesson-progress").style.width = `${(session.qi / session.questions.length) * 100}%`;
 
   const kickers = { mc: "Translate", type: "Type it", listen: "Listen", match: "Match" };
-  document.getElementById("question-kicker").textContent = kickers[q.type] || "Question";
+  document.getElementById("question-kicker").textContent = (q.isRetry ? "Retry · " : "") + (kickers[q.type] || "Question");
   document.getElementById("question-prompt").textContent = q.prompt;
 
   resetQuestionUI();
@@ -528,10 +548,12 @@ function onMatchClick(side, btn, idx, q, course){
       if(ms.matchedCount === ms.total){
         session.answered = true;
         session.correctCount++;
+        const hadMistake = session.mistakes > session.mistakesAtQuestionStart;
+        if(hadMistake) session.questions.push(requeueQuestion(q, course));
         const fb = document.getElementById("feedback");
         fb.className = "feedback ok";
         fb.classList.remove("hidden");
-        document.getElementById("feedback-text").textContent = "All matched!";
+        document.getElementById("feedback-text").textContent = hadMistake ? "All matched — this one will come back around." : "All matched!";
         const checkBtn = document.getElementById("check-btn");
         checkBtn.disabled = false;
         checkBtn.textContent = (session.qi === session.questions.length - 1) ? "Finish" : "Continue";
@@ -588,11 +610,12 @@ function checkAnswer(){
     }else{
       fb.className = "feedback bad";
       const answerText = q.type === "type" ? q.answerDisplay : q.answer;
-      fbText.textContent = `Not quite — the answer is "${answerText}".`;
+      fbText.textContent = `Not quite — the answer is "${answerText}". It'll come back around later in the lesson.`;
       session.mistakes++;
       state.hearts = Math.max(0, state.hearts - 1);
       document.getElementById("lesson-hearts").textContent = state.hearts;
       saveState();
+      session.questions.push(requeueQuestion(q, COURSES[session.courseKey]));
     }
     document.getElementById("check-btn").textContent = (session.qi === session.questions.length - 1) ? "Finish" : "Continue";
     return;

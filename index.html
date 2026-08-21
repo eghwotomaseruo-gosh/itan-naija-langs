@@ -11,8 +11,31 @@
 </head>
 <body>
 
+<!-- ===== AUTH (LOGIN / SIGNUP) ===== -->
+<main id="screen-auth" class="screen">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <span class="brand-mark" aria-hidden="true">ǀ ǁ ǀ</span>
+      <span class="brand-name">Lingua Naija</span>
+    </div>
+    <p class="auth-tagline">Learn Igbo, Yorùbá &amp; Hausa — your progress saved to your account.</p>
+
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" id="auth-tab-login">Log in</button>
+      <button type="button" class="auth-tab" id="auth-tab-signup">Sign up</button>
+    </div>
+
+    <form id="auth-form" class="auth-form">
+      <input type="text" id="auth-username" class="auth-input" placeholder="Username" autocomplete="username" autocapitalize="off" spellcheck="false">
+      <input type="password" id="auth-password" class="auth-input" placeholder="Password" autocomplete="current-password">
+      <p class="auth-error hidden" id="auth-error"></p>
+      <button type="submit" class="btn-check" id="auth-submit">Log in</button>
+    </form>
+  </div>
+</main>
+
 <!-- ===== HOME / DASHBOARD ===== -->
-<main id="screen-home" class="screen">
+<main id="screen-home" class="screen hidden">
   <header class="topbar">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">ǀ ǁ ǀ</span>
@@ -28,11 +51,14 @@
         <span id="stat-xp">0</span>
       </div>
       <div class="pill pill-hearts" title="Hearts">
+
         <svg viewBox="0 0 24 24" class="pill-icon"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2.2 4.6 6 4.1c2-.3 3.9.7 6 3 2.1-2.3 4-3.3 6-3 3.8.5 5.6 4.1 4 7.6C19.5 16.4 12 21 12 21z"/></svg>
         <span id="stat-hearts">5</span>
       </div>
     </div>
   </header>
+
+  <p class="account-row" id="account-row"></p>
 
   <section class="hero">
     <p class="hero-eyebrow">Ìlà mẹ́ta · Ụzọ atọ · Hanyoyi uku &mdash; three languages, one path</p>

@@ -265,19 +265,49 @@ const DEFAULT_STATE = {
   lastActiveCourse: null
 };
 
-function loadState(){
-  try{
-    const raw = localStorage.getItem("itan-state");
-    let merged;
-    if(!raw) merged = structuredClone(DEFAULT_STATE);
-    else merged = Object.assign(structuredClone(DEFAULT_STATE), JSON.parse(raw));
-    if(TESTING_MODE) merged.hearts = STARTING_HEARTS; // ignore any low heart count saved before testing mode was on
-    return merged;
-  }catch(e){ return structuredClone(DEFAULT_STATE); }
+/* ---- account session (token stored locally; everything else lives on the server) ---- */
+const TOKEN_KEY = "lingua-token";
+const USERNAME_KEY = "lingua-username";
+function getToken(){ return localStorage.getItem(TOKEN_KEY); }
+function getUsername(){ return localStorage.getItem(USERNAME_KEY); }
+function setSession(token, username){
+  localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(USERNAME_KEY, username);
 }
-function saveState(){ localStorage.setItem("itan-state", JSON.stringify(state)); }
+function clearSession(){
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USERNAME_KEY);
+}
 
-let state = loadState();
+async function apiFetch(path, options = {}){
+  const token = getToken();
+  const headers = Object.assign({ "Content-Type": "application/json" }, options.headers || {});
+  if(token) headers["Authorization"] = "Bearer " + token;
+  const res = await fetch(path, Object.assign({}, options, { headers }));
+  if(res.status === 401){
+    clearSession();
+    showAuthScreen("Your session expired — please log in again.");
+    throw new Error("unauthorized");
+  }
+  return res;
+}
+
+async function fetchProgress(){
+  const res = await apiFetch("/api/progress");
+  const data = await res.json();
+  state = Object.assign(structuredClone(DEFAULT_STATE), data);
+  if(TESTING_MODE) state.hearts = STARTING_HEARTS;
+}
+
+let saveTimer = null;
+function saveState(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    apiFetch("/api/progress", { method: "PUT", body: JSON.stringify(state) }).catch(() => {});
+  }, 300);
+}
+
+let state = structuredClone(DEFAULT_STATE);
 let session = null;
 
 function todayStr(){ return new Date().toISOString().slice(0, 10); }
@@ -314,6 +344,7 @@ function checkBadges(){
 
 /* ====================== RENDER: HOME ====================== */
 function renderHome(){
+  renderAccountRow();
   document.getElementById("stat-streak").textContent = state.streak;
   document.getElementById("stat-xp").textContent = state.xp;
   document.getElementById("stat-hearts").textContent = state.hearts;
@@ -363,13 +394,22 @@ function ordinal(n){
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-function renderLeaderboard(){
-  const others = [
-    { name: "Ada O.", xp: 180 }, { name: "Tunde A.", xp: 140 }, { name: "Amina B.", xp: 95 },
-    { name: "Chiamaka N.", xp: 60 }, { name: "Yusuf K.", xp: 25 }
-  ];
-  const rows = [...others, { name: "You", xp: state.xp, isYou: true }].sort((a, b) => b.xp - a.xp);
+async function renderLeaderboard(){
   const list = document.getElementById("leaderboard");
+  const gapEl = document.getElementById("lb-gap");
+  const me = getUsername();
+  let rows;
+  try{
+    const res = await apiFetch("/api/leaderboard");
+    const data = await res.json();
+    rows = data.map(r => ({ name: r.username === me ? "You" : r.username, xp: r.xp || 0, isYou: r.username === me }));
+    if(!rows.some(r => r.isYou)) rows.push({ name: "You", xp: state.xp, isYou: true });
+  }catch(e){
+    rows = [{ name: "You", xp: state.xp, isYou: true }];
+  }
+  rows.sort((a, b) => b.xp - a.xp);
+  rows = rows.slice(0, 10);
+
   list.innerHTML = "";
   rows.forEach((r, i) => {
     const li = document.createElement("li");
@@ -379,12 +419,24 @@ function renderLeaderboard(){
   });
 
   const youIndex = rows.findIndex(r => r.isYou);
-  const gapEl = document.getElementById("lb-gap");
   if(youIndex === 0) gapEl.textContent = "You're in the lead this week!";
-  else{
+  else if(youIndex > 0){
     const gap = rows[youIndex - 1].xp - state.xp;
     gapEl.textContent = `You're ${gap} XP from ${ordinal(youIndex)} place.`;
+  }else{
+    gapEl.textContent = "";
   }
+}
+
+function renderAccountRow(){
+  const el = document.getElementById("account-row");
+  if(!el) return;
+  el.innerHTML = `Signed in as <strong>${getUsername() || "you"}</strong> · <a href="#" id="logout-link">Log out</a>`;
+  document.getElementById("logout-link").addEventListener("click", e => {
+    e.preventDefault();
+    clearSession();
+    showAuthScreen();
+  });
 }
 
 /* ---- continue-your-path card ---- */
@@ -788,6 +840,66 @@ document.getElementById("complete-continue").addEventListener("click", () => {
   showScreen("home");
 });
 
+/* ====================== AUTH ====================== */
+let authMode = "login";
+
+function showAuthScreen(message){
+  showScreen("auth");
+  const err = document.getElementById("auth-error");
+  if(message){ err.textContent = message; err.classList.remove("hidden"); }
+  else{ err.classList.add("hidden"); err.textContent = ""; }
+}
+
+function setAuthMode(mode){
+  authMode = mode;
+  document.getElementById("auth-tab-login").classList.toggle("active", mode === "login");
+  document.getElementById("auth-tab-signup").classList.toggle("active", mode === "signup");
+  document.getElementById("auth-submit").textContent = mode === "login" ? "Log in" : "Sign up";
+  document.getElementById("auth-password").autocomplete = mode === "login" ? "current-password" : "new-password";
+}
+
+document.getElementById("auth-tab-login").addEventListener("click", () => setAuthMode("login"));
+document.getElementById("auth-tab-signup").addEventListener("click", () => setAuthMode("signup"));
+
+document.getElementById("auth-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const username = document.getElementById("auth-username").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const errEl = document.getElementById("auth-error");
+  errEl.classList.add("hidden");
+  if(!username || !password) return;
+
+  const submitBtn = document.getElementById("auth-submit");
+  submitBtn.disabled = true;
+  try{
+    const path = authMode === "login" ? "/api/login" : "/api/signup";
+    const res = await fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || "Something went wrong.");
+    setSession(data.token, data.username);
+    await fetchProgress();
+    renderHome();
+    showScreen("home");
+  }catch(err){
+    errEl.textContent = err.message;
+    errEl.classList.remove("hidden");
+  }finally{
+    submitBtn.disabled = false;
+  }
+});
+
 /* ====================== INIT ====================== */
-renderHome();
-showScreen("home");
+(async function init(){
+  if(!getToken()){ showAuthScreen(); return; }
+  try{
+    await fetchProgress();
+    renderHome();
+    showScreen("home");
+  }catch(e){
+    if(getToken()) showAuthScreen("Could not load your progress. Check your connection and try again.");
+  }
+})();

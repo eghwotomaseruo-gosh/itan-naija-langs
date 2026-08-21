@@ -152,15 +152,15 @@ const COURSES = {
 };
 
 const BADGES = [
-  { id: "first-lesson", name: "First steps", icon: "\u{1F476}", test: s => s.lessonsCompleted >= 1 },
-  { id: "three-lessons", name: "Warming up", icon: "\u{1F525}", test: s => s.lessonsCompleted >= 3 },
-  { id: "ten-lessons", name: "Committed", icon: "\u{1F4DA}", test: s => s.lessonsCompleted >= 10 },
-  { id: "streak-3", name: "3-day streak", icon: "\u{26A1}", test: s => s.streak >= 3 },
+  { id: "first-lesson", name: "First steps", icon: "\u{1F476}", test: s => s.lessonsCompleted >= 1, target: { type: "lessons", value: 1 } },
+  { id: "three-lessons", name: "Warming up", icon: "\u{1F525}", test: s => s.lessonsCompleted >= 3, target: { type: "lessons", value: 3 } },
+  { id: "ten-lessons", name: "Committed", icon: "\u{1F4DA}", test: s => s.lessonsCompleted >= 10, target: { type: "lessons", value: 10 } },
+  { id: "streak-3", name: "3-day streak", icon: "\u{26A1}", test: s => s.streak >= 3, target: { type: "streak", value: 3 } },
   { id: "perfect", name: "Perfect lesson", icon: "\u{2B50}", test: s => s.hasPerfect },
   { id: "polyglot", name: "Polyglot", icon: "\u{1F30D}", test: s => s.languagesStarted >= 3 },
   { id: "course-clear", name: "Course cleared", icon: "\u{1F3C1}", test: s => s.courseCleared },
-  { id: "xp-100", name: "Century club", icon: "\u{1F3C6}", test: s => s.xp >= 100 },
-  { id: "xp-300", name: "XP machine", icon: "\u{1F4AA}", test: s => s.xp >= 300 }
+  { id: "xp-100", name: "Century club", icon: "\u{1F3C6}", test: s => s.xp >= 100, target: { type: "xp", value: 100 } },
+  { id: "xp-300", name: "XP machine", icon: "\u{1F4AA}", test: s => s.xp >= 300, target: { type: "xp", value: 300 } }
 ];
 
 /* ====================== HELPERS ====================== */
@@ -260,7 +260,9 @@ const DEFAULT_STATE = {
   maxHearts: STARTING_HEARTS,
   completed: { igbo: [], yoruba: [], hausa: [] },
   earnedBadges: [],
-  hasPerfect: false
+  hasPerfect: false,
+  practiceDates: [],
+  lastActiveCourse: null
 };
 
 function loadState(){
@@ -286,6 +288,8 @@ function touchStreak(){
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
   state.streak = (state.lastPlayedDate === yesterday) ? state.streak + 1 : 1;
   state.lastPlayedDate = today;
+  if(!state.practiceDates.includes(today)) state.practiceDates.push(today);
+  if(state.practiceDates.length > 60) state.practiceDates = state.practiceDates.slice(-60);
 }
 
 function lessonsCompletedCount(){ return Object.values(state.completed).reduce((a, b) => a + b.length, 0); }
@@ -313,6 +317,9 @@ function renderHome(){
   document.getElementById("stat-streak").textContent = state.streak;
   document.getElementById("stat-xp").textContent = state.xp;
   document.getElementById("stat-hearts").textContent = state.hearts;
+
+  renderContinueCard();
+  renderWeekCal();
 
   const trackSelect = document.getElementById("track-select");
   trackSelect.innerHTML = "";
@@ -346,8 +353,15 @@ function renderHome(){
     el.innerHTML = `<div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div>`;
     badgesList.appendChild(el);
   });
+  renderBadgeTeaser();
 
   renderLeaderboard();
+}
+
+function ordinal(n){
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
 function renderLeaderboard(){
@@ -364,6 +378,92 @@ function renderLeaderboard(){
     li.innerHTML = `<span class="lb-rank">${i + 1}</span><span class="lb-name">${r.name}</span><span class="lb-xp">${r.xp} XP</span>`;
     list.appendChild(li);
   });
+
+  const youIndex = rows.findIndex(r => r.isYou);
+  const gapEl = document.getElementById("lb-gap");
+  if(youIndex === 0) gapEl.textContent = "You're in the lead this week!";
+  else{
+    const gap = rows[youIndex - 1].xp - state.xp;
+    gapEl.textContent = `You're ${gap} XP from ${ordinal(youIndex)} place.`;
+  }
+}
+
+/* ---- continue-your-path card ---- */
+function pickContinueCourse(){
+  if(state.lastActiveCourse && state.completed[state.lastActiveCourse].length < COURSES[state.lastActiveCourse].lessons.length){
+    return state.lastActiveCourse;
+  }
+  const found = Object.keys(COURSES).find(k => state.completed[k].length < COURSES[k].lessons.length);
+  return found || Object.keys(COURSES)[0];
+}
+
+function renderContinueCard(){
+  const card = document.getElementById("continue-card");
+  const key = pickContinueCourse();
+  const course = COURSES[key];
+  const doneCount = state.completed[key].length;
+
+  if(doneCount >= course.lessons.length){
+    card.className = "continue-card";
+    card.innerHTML = `
+      <p class="continue-kicker">All caught up</p>
+      <h2 class="continue-title">Every lesson is complete \u{1F389}</h2>
+      <p class="continue-sub" style="margin-bottom:0;">Revisit any language below to keep sharpening your skills.</p>
+    `;
+    return;
+  }
+
+  const lesson = course.lessons[doneCount];
+  card.className = `continue-card ${course.color}`;
+  card.innerHTML = `
+    <p class="continue-kicker">Continue your path</p>
+    <h2 class="continue-title">${course.name} \u00b7 ${lesson.title}</h2>
+    <p class="continue-sub">Lesson ${doneCount + 1} of ${course.lessons.length}</p>
+    <button class="continue-btn" id="continue-btn">Start lesson \u2192</button>
+  `;
+  document.getElementById("continue-btn").addEventListener("click", () => startLesson(key, doneCount));
+}
+
+/* ---- weekly streak calendar ---- */
+function renderWeekCal(){
+  const container = document.getElementById("week-cal");
+  container.innerHTML = "";
+  const today = new Date();
+  const dow = today.getDay(); // 0=Sun..6=Sat
+  const mondayOffset = (dow === 0) ? -6 : 1 - dow;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + mondayOffset);
+  const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const todayS = todayStr();
+
+  for(let i = 0; i < 7; i++){
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const ds = d.toISOString().slice(0, 10);
+    const practiced = state.practiceDates.includes(ds);
+    const isToday = ds === todayS;
+    const isFuture = ds > todayS;
+    const chip = document.createElement("div");
+    chip.className = "day-chip" + (practiced ? " done" : "") + (isToday ? " today" : "") + (isFuture ? " future" : "");
+    chip.innerHTML = `<span class="day-label">${labels[i]}</span><span class="day-dot">${practiced ? "\u2713" : ""}</span>`;
+    container.appendChild(chip);
+  }
+  document.getElementById("week-cal-streak-label").textContent = state.streak > 0 ? `\u{1F525} ${state.streak}-day streak` : "";
+}
+
+/* ---- badge progress teaser ---- */
+function renderBadgeTeaser(){
+  const el = document.getElementById("badge-teaser");
+  const currentVals = { lessons: lessonsCompletedCount(), streak: state.streak, xp: state.xp };
+  let best = null, bestGap = Infinity;
+  BADGES.forEach(b => {
+    if(state.earnedBadges.includes(b.id) || !b.target) return;
+    const gap = b.target.value - currentVals[b.target.type];
+    if(gap > 0 && gap < bestGap){ bestGap = gap; best = b; }
+  });
+  if(!best){ el.textContent = ""; return; }
+  const unitLabel = { lessons: `lesson${bestGap === 1 ? "" : "s"}`, streak: `day${bestGap === 1 ? "" : "s"}`, xp: "XP" }[best.target.type];
+  el.textContent = `${bestGap} more ${unitLabel} to earn "${best.name}" ${best.icon}`;
 }
 
 /* ====================== RENDER: PATH ====================== */
@@ -371,6 +471,8 @@ let currentCourseKey = null;
 
 function openPath(key){
   currentCourseKey = key;
+  state.lastActiveCourse = key;
+  saveState();
   const course = COURSES[key];
   document.getElementById("path-lang-name").textContent = course.name;
   document.getElementById("path-lang-native").textContent = course.native;
@@ -378,6 +480,16 @@ function openPath(key){
   const patternEl = document.getElementById("path-pattern");
   patternEl.style.backgroundImage = `url("${PATTERNS[key]}")`;
   patternEl.style.backgroundSize = "60px";
+
+  const tabsEl = document.getElementById("lang-tabs");
+  tabsEl.innerHTML = "";
+  Object.keys(COURSES).forEach(k => {
+    const tab = document.createElement("button");
+    tab.className = "lang-tab" + (k === key ? " active" : "");
+    tab.textContent = COURSES[k].name;
+    tab.addEventListener("click", () => openPath(k));
+    tabsEl.appendChild(tab);
+  });
 
   const pathEl = document.getElementById("lesson-path");
   pathEl.innerHTML = "";
@@ -410,6 +522,8 @@ function startLesson(courseKey, lessonIndex){
     alert("You're out of hearts. Come back after a short break, or refresh to reset this demo.");
     return;
   }
+  state.lastActiveCourse = courseKey;
+  saveState();
   session = {
     courseKey, lessonIndex,
     questions: buildLessonQuestions(COURSES[courseKey], lessonIndex),

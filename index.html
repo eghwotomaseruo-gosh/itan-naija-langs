@@ -40,17 +40,31 @@
     <p class="hero-sub">Nigeria carries over five hundred languages. Start with the three spoken by the most people — Igbo, Yorùbá and Hausa — a few words at a time.</p>
   </section>
 
+  <section class="continue-card" id="continue-card">
+    <!-- populated by JS: next-lesson call to action -->
+  </section>
+
+  <section class="week-cal-wrap">
+    <div class="week-cal-head">
+      <h2 class="section-label" style="margin:0;">This week</h2>
+      <span class="week-cal-streak" id="week-cal-streak-label"></span>
+    </div>
+    <div class="week-cal" id="week-cal"></div>
+  </section>
+
   <section class="track-select" id="track-select">
     <!-- language track cards injected by JS -->
   </section>
 
   <section class="badges-row">
     <h2 class="section-label">Badges</h2>
+    <p class="badge-teaser" id="badge-teaser"></p>
     <div id="badges-list" class="badges-list"></div>
   </section>
 
   <section class="leaderboard-wrap">
     <h2 class="section-label">This week's board</h2>
+    <p class="lb-gap" id="lb-gap"></p>
     <ol id="leaderboard" class="leaderboard"></ol>
   </section>
 </main>
@@ -67,6 +81,7 @@
     </div>
     <div class="pill pill-hearts small"><svg viewBox="0 0 24 24" class="pill-icon"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2.2 4.6 6 4.1c2-.3 3.9.7 6 3 2.1-2.3 4-3.3 6-3 3.8.5 5.6 4.1 4 7.6C19.5 16.4 12 21 12 21z"/></svg><span id="path-hearts">5</span></div>
   </header>
+  <div class="lang-tabs" id="lang-tabs"></div>
   <div class="path-pattern" id="path-pattern" aria-hidden="true"></div>
   <div class="lesson-path" id="lesson-path"></div>
 </main>

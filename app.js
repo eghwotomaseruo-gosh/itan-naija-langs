@@ -309,7 +309,8 @@ const DEFAULT_STATE = {
   dailyGoal: 20,
   todayXpEarned: 0,
   todayXpDate: null,
-  practiceSessionsCompleted: 0
+  practiceSessionsCompleted: 0,
+  longestStreak: 0
 };
 
 /* ---- account session (token stored locally; everything else lives on the server) ---- */
@@ -359,12 +360,26 @@ let session = null;
 
 function todayStr(){ return new Date().toISOString().slice(0, 10); }
 
+const LEVEL_THRESHOLDS = [0, 100, 250, 450, 700, 1000, 1350, 1750, 2200, 2700, 3250, 3850, 4500, 5200, 5950];
+function getLevelInfo(xp){
+  let level = 1;
+  for(let i = 1; i < LEVEL_THRESHOLDS.length; i++){
+    if(xp >= LEVEL_THRESHOLDS[i]) level = i + 1;
+    else break;
+  }
+  const floor = LEVEL_THRESHOLDS[level - 1];
+  const ceiling = LEVEL_THRESHOLDS[level] ?? (floor + 1000);
+  const pct = Math.min(100, Math.round(((xp - floor) / (ceiling - floor)) * 100));
+  return { level, floor, ceiling, pct };
+}
+
 function touchStreak(){
   const today = todayStr();
   if(state.lastPlayedDate === today) return;
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
   state.streak = (state.lastPlayedDate === yesterday) ? state.streak + 1 : 1;
   state.lastPlayedDate = today;
+  if(state.streak > (state.longestStreak || 0)) state.longestStreak = state.streak;
   if(!state.practiceDates.includes(today)) state.practiceDates.push(today);
   if(state.practiceDates.length > 60) state.practiceDates = state.practiceDates.slice(-60);
 }
@@ -481,7 +496,13 @@ async function renderLeaderboard(){
 function renderAccountRow(){
   const el = document.getElementById("account-row");
   if(!el) return;
-  el.innerHTML = `Signed in as <strong>${getUsername() || "you"}</strong> · <a href="#" id="logout-link">Log out</a>`;
+  const lvl = getLevelInfo(state.xp);
+  el.innerHTML = `<a href="#" id="profile-link">Signed in as <strong>${getUsername() || "you"}</strong> · Level ${lvl.level}</a> · <a href="#" id="logout-link">Log out</a>`;
+  document.getElementById("profile-link").addEventListener("click", e => {
+    e.preventDefault();
+    renderProfile();
+    showScreen("profile");
+  });
   document.getElementById("logout-link").addEventListener("click", e => {
     e.preventDefault();
     clearSession();
@@ -631,6 +652,54 @@ function renderPracticeScreen(){
   container.querySelectorAll(".practice-start-btn").forEach(btn => {
     btn.addEventListener("click", () => startPractice(btn.dataset.course));
   });
+}
+
+/* ---- profile screen ---- */
+function renderProfile(){
+  const username = getUsername() || "you";
+  const lvl = getLevelInfo(state.xp);
+
+  document.getElementById("profile-avatar").textContent = username.charAt(0).toUpperCase();
+  document.getElementById("profile-username").textContent = username;
+  document.getElementById("profile-level-label").textContent = `Level ${lvl.level} explorer`;
+  document.getElementById("profile-xp-fill").style.width = `${lvl.pct}%`;
+  document.getElementById("profile-xp-sub").textContent = `${state.xp - lvl.floor} / ${lvl.ceiling - lvl.floor} XP to Level ${lvl.level + 1}`;
+
+  const stats = [
+    { num: state.xp, label: "Total XP" },
+    { num: state.streak, label: "Day streak" },
+    { num: state.longestStreak || 0, label: "Best streak" },
+    { num: lessonsCompletedCount(), label: "Lessons done" },
+    { num: state.earnedBadges.length, label: "Badges" },
+    { num: state.practiceSessionsCompleted || 0, label: "Practice runs" }
+  ];
+  document.getElementById("profile-stats-grid").innerHTML = stats.map(s => `
+    <div class="profile-stat"><span class="profile-stat-num">${s.num}</span><span class="profile-stat-label">${s.label}</span></div>
+  `).join("");
+
+  const langsEl = document.getElementById("profile-languages");
+  langsEl.innerHTML = Object.keys(COURSES).map(k => {
+    const course = COURSES[k];
+    const done = state.completed[k].length;
+    const total = course.lessons.length;
+    const pct = Math.round((done / total) * 100);
+    return `
+      <div class="profile-lang-row">
+        <span class="profile-lang-glyph ${course.color}">${course.glyph}</span>
+        <div class="profile-lang-body">
+          <p class="profile-lang-name">${course.name}</p>
+          <div class="profile-lang-track"><div class="profile-lang-fill" style="width:${pct}%; background:var(--${course.color});"></div></div>
+        </div>
+        <span class="profile-lang-meta">${done}/${total}</span>
+      </div>
+    `;
+  }).join("");
+
+  const badgesEl = document.getElementById("profile-badges-grid");
+  badgesEl.innerHTML = BADGES.map(b => {
+    const earned = state.earnedBadges.includes(b.id);
+    return `<div class="badge${earned ? " earned" : ""}"><div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div></div>`;
+  }).join("");
 }
 
 /* ---- badge progress teaser ---- */
@@ -998,6 +1067,11 @@ function showScreen(name){
 
 document.getElementById("path-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
 document.getElementById("practice-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
+document.getElementById("profile-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
+document.getElementById("profile-logout-btn").addEventListener("click", () => {
+  clearSession();
+  showAuthScreen();
+});
 document.getElementById("lesson-quit").addEventListener("click", () => {
   if(confirm("Quit this lesson? Your progress on it won't be saved.")){
     if("speechSynthesis" in window) window.speechSynthesis.cancel();

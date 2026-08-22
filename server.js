@@ -41,7 +41,8 @@ const DEFAULT_PROGRESS = {
   dailyGoal: 20,
   todayXpEarned: 0,
   todayXpDate: null,
-  practiceSessionsCompleted: 0
+  practiceSessionsCompleted: 0,
+  longestStreak: 0
 };
 
 async function initDb(){

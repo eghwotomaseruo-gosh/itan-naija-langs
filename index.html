@@ -127,6 +127,37 @@
   <div id="practice-list" class="practice-list"></div>
 </main>
 
+<!-- ===== PROFILE ===== -->
+<main id="screen-profile" class="screen hidden">
+  <header class="path-topbar">
+    <button class="icon-btn" id="profile-back" aria-label="Back to home">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="path-title">
+      <span>Profile</span>
+      <span class="path-lang-native">Your learning stats</span>
+    </div>
+  </header>
+
+  <div class="profile-hero">
+    <div class="profile-avatar" id="profile-avatar">?</div>
+    <p class="profile-username" id="profile-username">—</p>
+    <p class="profile-level-label" id="profile-level-label">Level 1</p>
+    <div class="profile-xp-track"><div class="profile-xp-fill" id="profile-xp-fill"></div></div>
+    <p class="profile-xp-sub" id="profile-xp-sub">0 / 100 XP to next level</p>
+  </div>
+
+  <div class="profile-stats-grid" id="profile-stats-grid"></div>
+
+  <h2 class="section-label">Languages</h2>
+  <div class="profile-languages" id="profile-languages"></div>
+
+  <h2 class="section-label">All badges</h2>
+  <div class="profile-badges-grid" id="profile-badges-grid"></div>
+
+  <button class="btn-logout" id="profile-logout-btn">Log out</button>
+</main>
+
 <!-- ===== LESSON PATH (per language) ===== -->
 <main id="screen-path" class="screen hidden">
   <header class="path-topbar">

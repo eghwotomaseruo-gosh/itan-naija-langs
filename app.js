@@ -183,6 +183,64 @@ function speak(text, lang){
   }catch(e){ /* speech not available — fail silently */ }
 }
 
+/* ---- record-yourself (self-practice, no automatic scoring) ---- */
+let mediaRecorder = null;
+let isRecording = false;
+let recordedBlobUrl = null;
+
+function setupSpeakingRow(){
+  const row = document.getElementById("speaking-row");
+  const micBtn = document.getElementById("mic-btn");
+  const micLabel = document.getElementById("mic-btn-label");
+  const playbackBtn = document.getElementById("playback-btn");
+
+  if(!("mediaDevices" in navigator) || !window.MediaRecorder){
+    row.classList.add("hidden");
+    return;
+  }
+  row.classList.remove("hidden");
+  micBtn.classList.remove("recording");
+  micLabel.textContent = "Record yourself";
+  playbackBtn.classList.add("hidden");
+  if(recordedBlobUrl){ URL.revokeObjectURL(recordedBlobUrl); recordedBlobUrl = null; }
+
+  micBtn.onclick = toggleRecording;
+  playbackBtn.onclick = () => { if(recordedBlobUrl) new Audio(recordedBlobUrl).play(); };
+}
+
+async function toggleRecording(){
+  const micBtn = document.getElementById("mic-btn");
+  const micLabel = document.getElementById("mic-btn-label");
+  const playbackBtn = document.getElementById("playback-btn");
+
+  if(!isRecording){
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const chunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        if(recordedBlobUrl) URL.revokeObjectURL(recordedBlobUrl);
+        recordedBlobUrl = URL.createObjectURL(blob);
+        playbackBtn.classList.remove("hidden");
+        stream.getTracks().forEach(t => t.stop());
+      };
+      mediaRecorder.start();
+      isRecording = true;
+      micBtn.classList.add("recording");
+      micLabel.textContent = "Tap to stop";
+    }catch(e){
+      alert("Couldn't access your microphone. Check your browser's site permissions.");
+    }
+  }else{
+    mediaRecorder.stop();
+    isRecording = false;
+    micBtn.classList.remove("recording");
+    micLabel.textContent = "Record yourself";
+  }
+}
+
 /* ====================== QUESTION GENERATION ====================== */
 function poolFor(course){ return course.lessons.flatMap(l => l.vocab); }
 
@@ -830,6 +888,7 @@ function resetQuestionUI(){
   document.getElementById("type-wrap").classList.add("hidden");
   document.getElementById("match-wrap").classList.add("hidden");
   document.getElementById("speaker-btn").classList.add("hidden");
+  document.getElementById("speaking-row").classList.add("hidden");
   const feedback = document.getElementById("feedback");
   feedback.classList.add("hidden");
   const checkBtn = document.getElementById("check-btn");
@@ -867,6 +926,7 @@ function renderQuestion(){
       const sBtn = document.getElementById("speaker-btn");
       sBtn.classList.remove("hidden");
       sBtn.onclick = () => speak(q.speakText, course.speechLang);
+      setupSpeakingRow();
     }
   }else if(q.type === "listen"){
     const grid = document.getElementById("options-grid");
@@ -881,6 +941,7 @@ function renderQuestion(){
     sBtn.classList.remove("hidden");
     sBtn.onclick = () => speak(q.speakText, course.speechLang);
     setTimeout(() => speak(q.speakText, course.speechLang), 350);
+    setupSpeakingRow();
   }else if(q.type === "type"){
     document.getElementById("options-grid").classList.add("hidden");
     document.getElementById("type-wrap").classList.remove("hidden");
@@ -1084,6 +1145,7 @@ document.getElementById("profile-logout-btn").addEventListener("click", () => {
 document.getElementById("lesson-quit").addEventListener("click", () => {
   if(confirm("Quit this lesson? Your progress on it won't be saved.")){
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
+    if(isRecording && mediaRecorder){ mediaRecorder.stop(); isRecording = false; }
     if(session.isPractice){
       renderPracticeScreen();
       showScreen("practice");

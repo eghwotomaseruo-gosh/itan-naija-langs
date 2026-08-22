@@ -73,9 +73,16 @@ deployed the static version).
 API. Most browsers don't ship dedicated Igbo/Yorùbá/Hausa voices, so playback
 is best-effort, not professional audio.
 
+Wherever the speaker button appears, there's also a "Record yourself" mic
+button — tap it, say the word out loud, tap again to stop, then play it back
+next to the native audio to self-check your pronunciation. There's no
+automatic scoring; this is a self-practice tool, not a grader. Recordings
+aren't saved anywhere — they live only in the browser tab for that question.
+
 ## What's next (later phases, not built yet)
 - Move lesson content into the database (a real content-management system)
-- Practice/review mode that resurfaces frequently-missed words
+- More languages
+- A Nigerian-cultural-content track (proverbs, etiquette, real conversations)
 - Achievements tied to more milestones, daily goal picker
 - Audio recordings instead of browser text-to-speech
 - Speaking exercises with pronunciation feedback

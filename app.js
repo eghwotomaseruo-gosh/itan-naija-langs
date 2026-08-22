@@ -408,6 +408,9 @@ function checkBadges(){
 /* ====================== RENDER: HOME ====================== */
 function renderHome(){
   renderAccountRow();
+  const hour = new Date().getHours();
+  const timeGreeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  document.getElementById("home-greeting").textContent = `${timeGreeting}, ${getUsername() || "there"}`;
   document.getElementById("stat-streak").textContent = state.streak;
   document.getElementById("stat-xp").textContent = state.xp;
   document.getElementById("stat-hearts").textContent = state.hearts;

@@ -496,15 +496,21 @@ async function renderLeaderboard(){
 function renderAccountRow(){
   const el = document.getElementById("account-row");
   if(!el) return;
+  const username = getUsername() || "you";
   const lvl = getLevelInfo(state.xp);
-  el.innerHTML = `<a href="#" id="profile-link">Signed in as <strong>${getUsername() || "you"}</strong> · Level ${lvl.level}</a> · <a href="#" id="logout-link">Log out</a>`;
-  document.getElementById("profile-link").addEventListener("click", e => {
-    e.preventDefault();
+  el.innerHTML = `
+    <button type="button" class="account-row-btn" id="profile-link">
+      <span class="account-row-avatar">${username.charAt(0).toUpperCase()}</span>
+      <span class="account-row-text">${username}<span>Level ${lvl.level} · View profile</span></span>
+      <svg class="account-row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <button type="button" class="account-row-logout" id="logout-link">Log out</button>
+  `;
+  document.getElementById("profile-link").addEventListener("click", () => {
     renderProfile();
     showScreen("profile");
   });
-  document.getElementById("logout-link").addEventListener("click", e => {
-    e.preventDefault();
+  document.getElementById("logout-link").addEventListener("click", () => {
     clearSession();
     showAuthScreen();
   });

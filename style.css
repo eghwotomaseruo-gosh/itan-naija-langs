@@ -255,8 +255,24 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .auth-error{ color: #f0b088; font-size:13px; margin: -4px 0 0; }
 
 /* ===== account row (home screen) ===== */
-.account-row{ font-size:12.5px; color: var(--cream-dim); margin: -8px 0 18px; }
-.account-row a{ color: var(--gold); text-decoration:none; font-weight:600; }
+.account-row{ display:flex; align-items:center; gap:10px; margin: 0 0 20px; }
+.account-row-btn{
+  flex:1; display:flex; align-items:center; gap:10px;
+  background: var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding: 10px 14px; text-align:left; color: var(--cream);
+}
+.account-row-btn:active{ border-color: var(--gold); }
+.account-row-avatar{
+  flex-shrink:0; width:32px; height:32px; border-radius:50%; background: var(--gold); color: var(--bg-deep);
+  display:flex; align-items:center; justify-content:center; font-family: var(--font-display); font-weight:700; font-size:14px;
+}
+.account-row-text{ flex:1; font-family: var(--font-head); font-size:13px; font-weight:600; }
+.account-row-text span{ display:block; font-size:11px; color: var(--cream-dim); font-weight:500; margin-top:1px; }
+.account-row-chevron{ flex-shrink:0; width:16px; height:16px; color: var(--cream-dim); }
+.account-row-logout{
+  flex-shrink:0; background:none; border:none; color: var(--cream-dim); font-size:12px; font-family: var(--font-head);
+  text-decoration: underline; padding: 8px 2px;
+}
 
 
 /* ===== daily goal card ===== */

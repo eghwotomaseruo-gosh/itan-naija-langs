@@ -36,7 +36,12 @@ const DEFAULT_PROGRESS = {
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],
-  lastActiveCourse: null
+  lastActiveCourse: null,
+  missedWords: [],
+  dailyGoal: 20,
+  todayXpEarned: 0,
+  todayXpDate: null,
+  practiceSessionsCompleted: 0
 };
 
 async function initDb(){

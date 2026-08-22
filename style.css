@@ -259,6 +259,42 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .account-row a{ color: var(--gold); text-decoration:none; font-weight:600; }
 
 
+/* ===== daily goal card ===== */
+.daily-goal-card{ background: var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px; margin: 0 0 20px; }
+.daily-goal-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
+.daily-goal-label{ font-family: var(--font-head); font-size:13px; color: var(--gold); font-weight:700; }
+.daily-goal-track{ height:10px; border-radius:6px; background: rgba(244,239,227,0.1); overflow:hidden; margin-bottom:12px; }
+.daily-goal-fill{ height:100%; background: var(--gold); border-radius:6px; width:0%; transition: width .3s ease; }
+.goal-options{ display:flex; gap:8px; }
+.goal-option{
+  flex:1; padding:8px 4px; border-radius:9px; border:1px solid var(--line);
+  background: var(--surface-raised); color: var(--cream-dim); font-family: var(--font-head); font-weight:600; font-size:12.5px;
+}
+.goal-option.active{ border-color: var(--gold); color: var(--cream); background: rgba(227,167,43,0.14); }
+
+/* ===== practice entry card (home) ===== */
+.practice-entry{ margin: 0 0 20px; }
+.practice-card{
+  background: var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px;
+  display:flex; flex-direction:column; gap:10px; margin-bottom:10px;
+}
+.practice-card-head{ display:flex; align-items:center; gap:12px; }
+.practice-glyph{
+  flex-shrink:0; width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-display); font-size:18px; font-weight:600; color: var(--bg-deep);
+}
+.practice-card.igbo .practice-glyph{ background: var(--igbo); }
+.practice-card.yoruba .practice-glyph{ background: var(--yoruba); }
+.practice-card.hausa .practice-glyph{ background: var(--hausa); }
+.practice-name{ font-family: var(--font-head); font-weight:700; font-size:15px; margin:0 0 2px; }
+.practice-sub{ font-size:12.5px; color: var(--cream-dim); margin:0; line-height:1.4; }
+.practice-start-btn{ align-self:flex-start; padding:9px 16px; font-size:13px; }
+.practice-entry-empty{ text-align:center; padding: 22px; color: var(--cream-dim); font-size:13.5px; }
+
+/* ===== practice screen (full list) ===== */
+.practice-list{ display:flex; flex-direction:column; gap:12px; padding-top:6px; }
+
 .continue-card{
   position:relative; overflow:hidden;
   background: linear-gradient(135deg, var(--surface-raised), var(--surface));

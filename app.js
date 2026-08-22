@@ -160,7 +160,11 @@ const BADGES = [
   { id: "polyglot", name: "Polyglot", icon: "\u{1F30D}", test: s => s.languagesStarted >= 3 },
   { id: "course-clear", name: "Course cleared", icon: "\u{1F3C1}", test: s => s.courseCleared },
   { id: "xp-100", name: "Century club", icon: "\u{1F3C6}", test: s => s.xp >= 100, target: { type: "xp", value: 100 } },
-  { id: "xp-300", name: "XP machine", icon: "\u{1F4AA}", test: s => s.xp >= 300, target: { type: "xp", value: 300 } }
+  { id: "xp-300", name: "XP machine", icon: "\u{1F4AA}", test: s => s.xp >= 300, target: { type: "xp", value: 300 } },
+  { id: "xp-500", name: "XP legend", icon: "\u{1F680}", test: s => s.xp >= 500, target: { type: "xp", value: 500 } },
+  { id: "streak-7", name: "Week streak", icon: "\u{1F31F}", test: s => s.streak >= 7, target: { type: "streak", value: 7 } },
+  { id: "streak-30", name: "Month streak", icon: "\u{1F451}", test: s => s.streak >= 30, target: { type: "streak", value: 30 } },
+  { id: "practice-5", name: "Practice pro", icon: "\u{1F3AF}", test: s => s.practiceSessionsCompleted >= 5, target: { type: "practice", value: 5 } }
 ];
 
 /* ====================== HELPERS ====================== */
@@ -245,6 +249,44 @@ function buildLessonQuestions(course, lessonIndex){
   return questions;
 }
 
+/* ---- missed-word tracking (for Practice mode) ---- */
+function recordMiss(courseKey, vocabItem){
+  if(!vocabItem) return;
+  const key = `${courseKey}|${vocabItem.native}`;
+  let entry = state.missedWords.find(m => m.key === key);
+  if(!entry){
+    entry = { key, courseKey, native: vocabItem.native, en: vocabItem.en, count: 0 };
+    state.missedWords.push(entry);
+  }
+  entry.count++;
+  entry.lastMissed = todayStr();
+  if(state.missedWords.length > 100) state.missedWords = state.missedWords.slice(-100);
+}
+function clearMiss(courseKey, vocabItem){
+  if(!vocabItem) return;
+  const key = `${courseKey}|${vocabItem.native}`;
+  state.missedWords = state.missedWords.filter(m => m.key !== key);
+}
+
+function buildPracticeQuestions(courseKey){
+  const course = COURSES[courseKey];
+  const items = state.missedWords.filter(m => m.courseKey === courseKey);
+  return shuffle(items.map(m => {
+    const v = { native: m.native, en: m.en };
+    const r = Math.random();
+    if(r < 0.34) return makeMcQuestion(v, course);
+    if(r < 0.67) return makeTypeQuestion(v, course);
+    return makeListenQuestion(v, course);
+  }));
+}
+
+/* ---- daily goal tracking ---- */
+function addDailyXp(gain){
+  const today = todayStr();
+  if(state.todayXpDate !== today){ state.todayXpDate = today; state.todayXpEarned = 0; }
+  state.todayXpEarned += gain;
+}
+
 /* ====================== STATE ====================== */
 // TESTING_MODE keeps hearts effectively unlimited so lessons can be
 // tested repeatedly without getting locked out. Set to false to restore
@@ -262,7 +304,12 @@ const DEFAULT_STATE = {
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],
-  lastActiveCourse: null
+  lastActiveCourse: null,
+  missedWords: [],
+  dailyGoal: 20,
+  todayXpEarned: 0,
+  todayXpDate: null,
+  practiceSessionsCompleted: 0
 };
 
 /* ---- account session (token stored locally; everything else lives on the server) ---- */
@@ -335,7 +382,8 @@ function checkBadges(){
     hasPerfect: state.hasPerfect,
     languagesStarted: languagesStartedCount(),
     courseCleared: anyCourseCleared(),
-    xp: state.xp
+    xp: state.xp,
+    practiceSessionsCompleted: state.practiceSessionsCompleted || 0
   };
   BADGES.forEach(b => {
     if(!state.earnedBadges.includes(b.id) && b.test(snap)) state.earnedBadges.push(b.id);
@@ -351,6 +399,8 @@ function renderHome(){
 
   renderContinueCard();
   renderWeekCal();
+  renderDailyGoal();
+  renderPracticeEntry();
 
   const trackSelect = document.getElementById("track-select");
   trackSelect.innerHTML = "";
@@ -502,10 +552,91 @@ function renderWeekCal(){
   document.getElementById("week-cal-streak-label").textContent = state.streak > 0 ? `\u{1F525} ${state.streak}-day streak` : "";
 }
 
+/* ---- daily goal ---- */
+function renderDailyGoal(){
+  const today = todayStr();
+  const earned = (state.todayXpDate === today) ? state.todayXpEarned : 0;
+  const goal = state.dailyGoal || 20;
+  const pct = Math.min(100, Math.round((earned / goal) * 100));
+  document.getElementById("daily-goal-fill").style.width = `${pct}%`;
+  document.getElementById("daily-goal-label").textContent = `${earned} / ${goal} XP`;
+  document.querySelectorAll(".goal-option").forEach(btn => {
+    btn.classList.toggle("active", Number(btn.dataset.goal) === goal);
+  });
+}
+document.getElementById("goal-options").addEventListener("click", e => {
+  const btn = e.target.closest(".goal-option");
+  if(!btn) return;
+  state.dailyGoal = Number(btn.dataset.goal);
+  saveState();
+  renderDailyGoal();
+});
+
+/* ---- practice entry card (home) ---- */
+function renderPracticeEntry(){
+  const el = document.getElementById("practice-entry");
+  const total = state.missedWords.length;
+  if(total === 0){
+    el.innerHTML = `<div class="practice-entry-empty">No mistakes to review yet — keep learning \u{1F44D}</div>`;
+    return;
+  }
+  const byLanguage = Object.keys(COURSES).map(k => ({ key: k, count: state.missedWords.filter(m => m.courseKey === k).length })).filter(x => x.count > 0);
+  const summary = byLanguage.map(x => `${COURSES[x.key].name} (${x.count})`).join(", ");
+  el.innerHTML = `
+    <div class="practice-card">
+      <div class="practice-card-head">
+        <span class="practice-glyph" style="background:var(--gold);">\u{1F3AF}</span>
+        <div>
+          <p class="practice-name">Practice</p>
+          <p class="practice-sub">${total} word${total === 1 ? "" : "s"} to review: ${summary}</p>
+        </div>
+      </div>
+      <button class="continue-btn" id="practice-entry-btn">Review mistakes \u2192</button>
+    </div>
+  `;
+  document.getElementById("practice-entry-btn").addEventListener("click", () => {
+    renderPracticeScreen();
+    showScreen("practice");
+  });
+}
+
+/* ---- practice screen (full breakdown + start buttons) ---- */
+function renderPracticeScreen(){
+  const container = document.getElementById("practice-list");
+  container.innerHTML = "";
+  Object.keys(COURSES).forEach(k => {
+    const course = COURSES[k];
+    const items = state.missedWords.filter(m => m.courseKey === k);
+    const card = document.createElement("div");
+    card.className = `practice-card ${course.color}`;
+    if(items.length === 0){
+      card.innerHTML = `
+        <div class="practice-card-head">
+          <span class="practice-glyph">${course.glyph}</span>
+          <div><p class="practice-name">${course.name}</p><p class="practice-sub">Nothing to review right now.</p></div>
+        </div>
+      `;
+    }else{
+      const preview = items.slice(0, 6).map(m => m.native).join(", ") + (items.length > 6 ? "\u2026" : "");
+      card.innerHTML = `
+        <div class="practice-card-head">
+          <span class="practice-glyph">${course.glyph}</span>
+          <div><p class="practice-name">${course.name}</p><p class="practice-sub">${items.length} word${items.length === 1 ? "" : "s"}: ${preview}</p></div>
+        </div>
+        <button class="continue-btn practice-start-btn" data-course="${k}">Start practice \u2192</button>
+      `;
+    }
+    container.appendChild(card);
+  });
+  container.querySelectorAll(".practice-start-btn").forEach(btn => {
+    btn.addEventListener("click", () => startPractice(btn.dataset.course));
+  });
+}
+
 /* ---- badge progress teaser ---- */
 function renderBadgeTeaser(){
   const el = document.getElementById("badge-teaser");
-  const currentVals = { lessons: lessonsCompletedCount(), streak: state.streak, xp: state.xp };
+  const currentVals = { lessons: lessonsCompletedCount(), streak: state.streak, xp: state.xp, practice: state.practiceSessionsCompleted || 0 };
   let best = null, bestGap = Infinity;
   BADGES.forEach(b => {
     if(state.earnedBadges.includes(b.id) || !b.target) return;
@@ -513,7 +644,7 @@ function renderBadgeTeaser(){
     if(gap > 0 && gap < bestGap){ bestGap = gap; best = b; }
   });
   if(!best){ el.textContent = ""; return; }
-  const unitLabel = { lessons: `lesson${bestGap === 1 ? "" : "s"}`, streak: `day${bestGap === 1 ? "" : "s"}`, xp: "XP" }[best.target.type];
+  const unitLabel = { lessons: `lesson${bestGap === 1 ? "" : "s"}`, streak: `day${bestGap === 1 ? "" : "s"}`, xp: "XP", practice: `session${bestGap === 1 ? "" : "s"}` }[best.target.type];
   el.textContent = `${bestGap} more ${unitLabel} to earn "${best.name}" ${best.icon}`;
 }
 
@@ -584,7 +715,32 @@ function startLesson(courseKey, lessonIndex){
     mistakes: 0,
     selected: null,
     answered: false,
-    matchState: null
+    matchState: null,
+    isPractice: false
+  };
+  showScreen("lesson");
+  renderQuestion();
+}
+
+function startPractice(courseKey){
+  if(state.hearts <= 0){
+    alert("You're out of hearts. Come back after a short break, or refresh to reset this demo.");
+    return;
+  }
+  const questions = buildPracticeQuestions(courseKey);
+  if(questions.length === 0) return;
+  state.lastActiveCourse = courseKey;
+  saveState();
+  session = {
+    courseKey, lessonIndex: null,
+    questions,
+    qi: 0,
+    correctCount: 0,
+    mistakes: 0,
+    selected: null,
+    answered: false,
+    matchState: null,
+    isPractice: true
   };
   showScreen("lesson");
   renderQuestion();
@@ -716,6 +872,7 @@ function onMatchClick(side, btn, idx, q, course){
         session.correctCount++;
         const hadMistake = session.mistakes > session.mistakesAtQuestionStart;
         if(hadMistake) session.questions.push(requeueQuestion(q, course));
+        if(session.isPractice) q.pairs.forEach(p => clearMiss(session.courseKey, p));
         const fb = document.getElementById("feedback");
         fb.className = "feedback ok";
         fb.classList.remove("hidden");
@@ -730,6 +887,8 @@ function onMatchClick(side, btn, idx, q, course){
       state.hearts = Math.max(0, state.hearts - 1);
       document.getElementById("lesson-hearts").textContent = state.hearts;
       session.mistakes++;
+      recordMiss(session.courseKey, q.pairs[ms.selNativeIdx]);
+      recordMiss(session.courseKey, q.pairs[ms.selEnIdx]);
       saveState();
       const nBtn = ms.selNativeBtn, eBtn = ms.selEnBtn;
       setTimeout(() => {
@@ -773,6 +932,7 @@ function checkAnswer(){
       fb.className = "feedback ok";
       fbText.textContent = "Correct!";
       session.correctCount++;
+      if(session.isPractice && q._vocab) clearMiss(session.courseKey, q._vocab);
     }else{
       fb.className = "feedback bad";
       const answerText = q.type === "type" ? q.answerDisplay : q.answer;
@@ -780,6 +940,7 @@ function checkAnswer(){
       session.mistakes++;
       state.hearts = Math.max(0, state.hearts - 1);
       document.getElementById("lesson-hearts").textContent = state.hearts;
+      recordMiss(session.courseKey, q._vocab);
       saveState();
       session.questions.push(requeueQuestion(q, COURSES[session.courseKey]));
     }
@@ -789,8 +950,13 @@ function checkAnswer(){
 
   // advance
   if(state.hearts <= 0){
-    showScreen("path");
-    openPath(session.courseKey);
+    if(session.isPractice){
+      renderPracticeScreen();
+      showScreen("practice");
+    }else{
+      showScreen("path");
+      openPath(session.courseKey);
+    }
     return;
   }
   session.qi++;
@@ -804,14 +970,18 @@ function finishLesson(){
   const xpGain = 10 + (session.mistakes === 0 ? 5 : 0);
 
   touchStreak();
+  addDailyXp(xpGain);
   state.xp += xpGain;
-  if(!state.completed[session.courseKey].includes(session.lessonIndex)){
+  if(session.isPractice){
+    state.practiceSessionsCompleted = (state.practiceSessionsCompleted || 0) + 1;
+  }else if(!state.completed[session.courseKey].includes(session.lessonIndex)){
     state.completed[session.courseKey].push(session.lessonIndex);
   }
   if(session.mistakes === 0) state.hasPerfect = true;
   checkBadges();
   saveState();
 
+  document.getElementById("complete-title").textContent = session.isPractice ? "Practice complete" : "Lesson complete";
   document.getElementById("complete-sub").textContent = `You earned ${xpGain} XP`;
   document.getElementById("complete-xp").textContent = `+${xpGain}`;
   document.getElementById("complete-streak").textContent = state.streak;
@@ -827,11 +997,17 @@ function showScreen(name){
 }
 
 document.getElementById("path-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
+document.getElementById("practice-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
 document.getElementById("lesson-quit").addEventListener("click", () => {
   if(confirm("Quit this lesson? Your progress on it won't be saved.")){
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
-    showScreen("path");
-    openPath(session.courseKey);
+    if(session.isPractice){
+      renderPracticeScreen();
+      showScreen("practice");
+    }else{
+      showScreen("path");
+      openPath(session.courseKey);
+    }
   }
 });
 document.getElementById("check-btn").addEventListener("click", checkAnswer);

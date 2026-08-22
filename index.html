@@ -78,6 +78,24 @@
     <div class="week-cal" id="week-cal"></div>
   </section>
 
+  <section class="daily-goal-card">
+    <div class="daily-goal-head">
+      <h2 class="section-label" style="margin:0;">Today's goal</h2>
+      <span class="daily-goal-label" id="daily-goal-label">0 / 20 XP</span>
+    </div>
+    <div class="daily-goal-track"><div class="daily-goal-fill" id="daily-goal-fill"></div></div>
+    <div class="goal-options" id="goal-options">
+      <button type="button" class="goal-option" data-goal="10">10 XP</button>
+      <button type="button" class="goal-option" data-goal="20">20 XP</button>
+      <button type="button" class="goal-option" data-goal="30">30 XP</button>
+      <button type="button" class="goal-option" data-goal="50">50 XP</button>
+    </div>
+  </section>
+
+  <section class="practice-entry" id="practice-entry">
+    <!-- populated by JS: missed-word count + link to Practice screen -->
+  </section>
+
   <section class="track-select" id="track-select">
     <!-- language track cards injected by JS -->
   </section>
@@ -93,6 +111,20 @@
     <p class="lb-gap" id="lb-gap"></p>
     <ol id="leaderboard" class="leaderboard"></ol>
   </section>
+</main>
+
+<!-- ===== PRACTICE (review missed words) ===== -->
+<main id="screen-practice" class="screen hidden">
+  <header class="path-topbar">
+    <button class="icon-btn" id="practice-back" aria-label="Back to home">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="path-title">
+      <span>Practice</span>
+      <span class="path-lang-native">Review what tripped you up</span>
+    </div>
+  </header>
+  <div id="practice-list" class="practice-list"></div>
 </main>
 
 <!-- ===== LESSON PATH (per language) ===== -->
@@ -156,7 +188,7 @@
 <main id="screen-complete" class="screen hidden">
   <div class="complete-wrap">
     <div class="complete-badge" id="complete-badge">✓</div>
-    <h2 class="complete-title">Lesson complete</h2>
+    <h2 class="complete-title" id="complete-title">Lesson complete</h2>
     <p class="complete-sub" id="complete-sub">You earned 10 XP</p>
     <div class="complete-stats">
       <div class="complete-stat"><span class="complete-stat-num" id="complete-xp">+10</span><span class="complete-stat-label">XP</span></div>

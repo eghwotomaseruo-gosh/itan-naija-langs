@@ -5,7 +5,8 @@ const PATTERNS = {
   igbo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><g stroke='%233f9d6b' stroke-width='2' fill='none'><path d='M0 30 Q15 10 30 30 T60 30'/><path d='M0 45 Q15 25 30 45 T60 45'/><path d='M0 15 Q15 -5 30 15 T60 15'/></g></svg>`,
   yoruba: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><g fill='%23b23e78'><circle cx='8' cy='8' r='3'/><circle cx='24' cy='8' r='3'/><circle cx='40' cy='8' r='3'/><circle cx='16' cy='24' r='3'/><circle cx='32' cy='24' r='3'/><circle cx='8' cy='40' r='3'/><circle cx='24' cy='40' r='3'/><circle cx='40' cy='40' r='3'/></g></svg>`,
   hausa: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><g stroke='%23d1682f' stroke-width='2' fill='none'><rect x='8' y='8' width='40' height='40' transform='rotate(45 28 28)'/><rect x='18' y='18' width='20' height='20' transform='rotate(45 28 28)'/></g></svg>`,
-  edo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><g fill='%232f8f8a'><circle cx='6' cy='6' r='2.5'/><circle cx='18' cy='6' r='2.5'/><circle cx='30' cy='6' r='2.5'/><circle cx='42' cy='6' r='2.5'/><circle cx='12' cy='18' r='2.5'/><circle cx='24' cy='18' r='2.5'/><circle cx='36' cy='18' r='2.5'/><circle cx='6' cy='30' r='2.5'/><circle cx='18' cy='30' r='2.5'/><circle cx='30' cy='30' r='2.5'/><circle cx='42' cy='30' r='2.5'/></g></svg>`
+  edo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><g fill='%232f8f8a'><circle cx='6' cy='6' r='2.5'/><circle cx='18' cy='6' r='2.5'/><circle cx='30' cy='6' r='2.5'/><circle cx='42' cy='6' r='2.5'/><circle cx='12' cy='18' r='2.5'/><circle cx='24' cy='18' r='2.5'/><circle cx='36' cy='18' r='2.5'/><circle cx='6' cy='30' r='2.5'/><circle cx='18' cy='30' r='2.5'/><circle cx='30' cy='30' r='2.5'/><circle cx='42' cy='30' r='2.5'/></g></svg>`,
+  efik: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='40'><g stroke='%233f6fa8' stroke-width='2' fill='none'><path d='M0 10 Q15 0 30 10 T60 10'/><path d='M0 22 Q15 12 30 22 T60 22'/><path d='M0 34 Q15 24 30 34 T60 34'/></g></svg>`
 };
 
 /* ====================== VOCAB DATA ======================
@@ -186,6 +187,29 @@ const COURSES = {
       { title: "Body Parts", vocab: [
         { native: "Uhun", en: "Head" }, { native: "Ehor", en: "Ear" }, { native: "Aro", en: "Eye" },
         { native: "Ihue", en: "Nose" }, { native: "Unu", en: "Mouth" }, { native: "Atata owẹ", en: "Foot" }
+      ]}
+    ]
+  },
+  efik: {
+    name: "Efik", native: "Usem Efịk", color: "efik", glyph: "C", speechLang: "efi",
+    lessons: [
+      { title: "Greetings", vocab: [
+        { native: "Emedi", en: "Welcome" }, { native: "Emesiere", en: "Good morning" },
+        { native: "Mokom", en: "Good afternoon" }, { native: "Esiere", en: "Good night" },
+        { native: "Ka di", en: "Goodbye" }
+      ]},
+      { title: "Numbers 1–5", vocab: [
+        { native: "Kiet", en: "One" }, { native: "Iba", en: "Two" }, { native: "Ita", en: "Three" },
+        { native: "Inaŋ", en: "Four" }, { native: "Ition", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Itiokiet", en: "Six" }, { native: "Itiaba", en: "Seven" }, { native: "Itiaita", en: "Eight" },
+        { native: "Usukkiet", en: "Nine" }, { native: "Duop", en: "Ten" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "Idem fo?", en: "How are you" }, { native: "Nso ke Ekot fi?", en: "What is your name" },
+        { native: "Mbọk", en: "Please" }, { native: "Sosongo", en: "Thank you" },
+        { native: "Nfana ibaga", en: "No problem" }
       ]}
     ]
   }
@@ -399,7 +423,7 @@ const DEFAULT_STATE = {
   lastPlayedDate: null,
   hearts: STARTING_HEARTS,
   maxHearts: STARTING_HEARTS,
-  completed: { igbo: [], yoruba: [], hausa: [], edo: [] },
+  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [] },
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],

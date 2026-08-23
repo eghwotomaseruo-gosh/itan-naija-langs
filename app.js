@@ -4,7 +4,8 @@
 const PATTERNS = {
   igbo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><g stroke='%233f9d6b' stroke-width='2' fill='none'><path d='M0 30 Q15 10 30 30 T60 30'/><path d='M0 45 Q15 25 30 45 T60 45'/><path d='M0 15 Q15 -5 30 15 T60 15'/></g></svg>`,
   yoruba: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><g fill='%23b23e78'><circle cx='8' cy='8' r='3'/><circle cx='24' cy='8' r='3'/><circle cx='40' cy='8' r='3'/><circle cx='16' cy='24' r='3'/><circle cx='32' cy='24' r='3'/><circle cx='8' cy='40' r='3'/><circle cx='24' cy='40' r='3'/><circle cx='40' cy='40' r='3'/></g></svg>`,
-  hausa: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><g stroke='%23d1682f' stroke-width='2' fill='none'><rect x='8' y='8' width='40' height='40' transform='rotate(45 28 28)'/><rect x='18' y='18' width='20' height='20' transform='rotate(45 28 28)'/></g></svg>`
+  hausa: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><g stroke='%23d1682f' stroke-width='2' fill='none'><rect x='8' y='8' width='40' height='40' transform='rotate(45 28 28)'/><rect x='18' y='18' width='20' height='20' transform='rotate(45 28 28)'/></g></svg>`,
+  edo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><g fill='%232f8f8a'><circle cx='6' cy='6' r='2.5'/><circle cx='18' cy='6' r='2.5'/><circle cx='30' cy='6' r='2.5'/><circle cx='42' cy='6' r='2.5'/><circle cx='12' cy='18' r='2.5'/><circle cx='24' cy='18' r='2.5'/><circle cx='36' cy='18' r='2.5'/><circle cx='6' cy='30' r='2.5'/><circle cx='18' cy='30' r='2.5'/><circle cx='30' cy='30' r='2.5'/><circle cx='42' cy='30' r='2.5'/></g></svg>`
 };
 
 /* ====================== VOCAB DATA ======================
@@ -146,6 +147,45 @@ const COURSES = {
       { title: "Animals", vocab: [
         { native: "Kare", en: "Dog" }, { native: "Kyanwa", en: "Cat" }, { native: "Saniya", en: "Cow" },
         { native: "Kaza", en: "Chicken" }, { native: "Tunkiya", en: "Sheep" }, { native: "Giwa", en: "Elephant" }
+      ]}
+    ]
+  },
+  edo: {
+    name: "Edo", native: "Ẹ̀dó (Bini)", color: "edo", glyph: "B", speechLang: "bin",
+    lessons: [
+      { title: "Greetings", vocab: [
+        { native: "Kọyọ", en: "Hello" }, { native: "Ọbowiẹ", en: "Good morning" },
+        { native: "Ọbavan", en: "Good afternoon" }, { native: "Ọbota", en: "Good evening" },
+        { native: "Obiluu", en: "Thank you" }
+      ]},
+      { title: "Numbers 1–5", vocab: [
+        { native: "Ọkpa", en: "One" }, { native: "Eva", en: "Two" }, { native: "Eha", en: "Three" },
+        { native: "Enẹ", en: "Four" }, { native: "Isẹn", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Ehan", en: "Six" }, { native: "Ihinrọn", en: "Seven" }, { native: "Erẹnrẹn", en: "Eight" },
+        { native: "Ihinrin", en: "Nine" }, { native: "Igbe", en: "Ten" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Érhá", en: "Father" }, { native: "Iye", en: "Mother" }, { native: "Ovbi", en: "Child" },
+        { native: "Erha nokhua", en: "Grandfather" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "Vbèè óye hé", en: "How are you" }, { native: "Obo kia", en: "Welcome" },
+        { native: "Uzébu", en: "Great" }, { native: "Òkhíen òwie", en: "Good night" },
+        { native: "Ìsélógbé", en: "Season's greetings" }
+      ]},
+      { title: "Colors", vocab: [
+        { native: "Ọfasẹ", en: "White" }, { native: "Nekhui", en: "Black" }, { native: "Ọlilẹ", en: "Red" },
+        { native: "Ọmebe", en: "Green" }, { native: "Ọdane", en: "Blue" }, { native: "Ọnivọ", en: "Yellow" }
+      ]},
+      { title: "Food", vocab: [
+        { native: "Ọka", en: "Corn" }, { native: "Izẹ", en: "Rice" }, { native: "Erere", en: "Beans" },
+        { native: "Iyan", en: "Yam" }, { native: "Ọghẹdẹ", en: "Plantain" }, { native: "Akarha", en: "Coco yam" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Uhun", en: "Head" }, { native: "Ehor", en: "Ear" }, { native: "Aro", en: "Eye" },
+        { native: "Ihue", en: "Nose" }, { native: "Unu", en: "Mouth" }, { native: "Atata owẹ", en: "Foot" }
       ]}
     ]
   }
@@ -296,8 +336,9 @@ function buildLessonQuestions(course, lessonIndex){
   const order = shuffle(vocab.map((_, i) => i));
   const mcCount = Math.min(3, vocab.length);
   const mcIdx = order.slice(0, mcCount);
-  const typeIdx = order[mcCount] ?? order[0];
-  const listenIdx = order[mcCount + 1] ?? order[order.length - 1];
+  const rest = order.slice(mcCount);
+  const typeIdx = rest[0] ?? order[0];
+  const listenIdx = rest.find(i => i !== typeIdx) ?? mcIdx.find(i => i !== typeIdx) ?? order[0];
 
   const questions = [];
   mcIdx.forEach(i => questions.push(makeMcQuestion(vocab[i], course)));
@@ -358,7 +399,7 @@ const DEFAULT_STATE = {
   lastPlayedDate: null,
   hearts: STARTING_HEARTS,
   maxHearts: STARTING_HEARTS,
-  completed: { igbo: [], yoruba: [], hausa: [] },
+  completed: { igbo: [], yoruba: [], hausa: [], edo: [] },
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],
@@ -402,6 +443,9 @@ async function fetchProgress(){
   const res = await apiFetch("/api/progress");
   const data = await res.json();
   state = Object.assign(structuredClone(DEFAULT_STATE), data);
+  Object.keys(COURSES).forEach(k => {
+    if(!Array.isArray(state.completed[k])) state.completed[k] = [];
+  });
   if(TESTING_MODE) state.hearts = STARTING_HEARTS;
 }
 
@@ -484,17 +528,12 @@ function renderHome(){
     const course = COURSES[key];
     const done = state.completed[key].length;
     const total = course.lessons.length;
-    const pct = Math.round((done / total) * 100);
+    const isDone = done >= total;
     const card = document.createElement("button");
     card.className = `track-card ${course.color}`;
     card.innerHTML = `
-      <div class="track-glyph">${course.glyph}</div>
-      <div class="track-body">
-        <p class="track-name">${course.name}</p>
-        <p class="track-native">${course.native}</p>
-        <div class="track-progress-track"><div class="track-progress-fill" style="width:${pct}%"></div></div>
-        <p class="track-meta">${done}/${total} lessons</p>
-      </div>
+      <div class="track-glyph">${course.glyph}${isDone ? `<span class="track-done-badge">\u2713</span>` : ""}</div>
+      <p class="track-name">${course.name}</p>
     `;
     card.addEventListener("click", () => openPath(key));
     trackSelect.appendChild(card);

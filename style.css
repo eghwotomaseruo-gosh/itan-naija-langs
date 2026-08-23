@@ -13,6 +13,8 @@
   --yoruba: #b23e78;    /* adire magenta */
   --yoruba-deep: #872c5a;
   --hausa: #d1682f;     /* zellige clay */
+  --edo: #2f8f8a;       /* coral-bead teal */
+  --edo-deep: #1f6560;
   --hausa-deep: #a34f22;
   --danger: #d1682f;
 
@@ -70,34 +72,31 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
   margin: 0 0 18px; color: var(--cream);
 }
 
-/* ===== language switch tiles (home screen) ===== */
+/* ===== language switch tiles (home screen) — horizontal icon row ===== */
 .section-label{ font-family: var(--font-head); font-size:13px; text-transform:uppercase; letter-spacing:1.2px; color: var(--cream-dim); margin: 0 0 12px; }
-.track-select{ display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin: 8px 0 34px; }
+.track-select{ display:flex; gap:16px; overflow-x:auto; margin: 4px 0 30px; padding: 4px 2px 8px; -webkit-overflow-scrolling:touch; }
 .track-card{
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-  background: var(--surface); border:1px solid var(--line); border-radius:16px;
-  padding: 14px 8px; text-align:center; color: var(--cream);
-  transition: transform .15s ease, border-color .15s ease;
+  flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:8px;
+  background:none; border:none; padding:0; color: var(--cream); width:68px;
 }
 .track-card:active{ transform: translateY(1px); }
 .track-glyph{
-  width:52px; height:52px; border-radius:14px;
+  position:relative;
+  width:60px; height:60px; border-radius:16px;
   display:flex; align-items:center; justify-content:center;
-  font-family: var(--font-display); font-size:21px; font-weight:600; color: var(--bg-deep);
+  font-family: var(--font-display); font-size:24px; font-weight:600; color: var(--bg-deep);
 }
-.track-body{ width:100%; }
-.track-name{ font-family: var(--font-head); font-weight:700; font-size:14px; margin:0 0 1px; }
-.track-native{ font-size:10.5px; color: var(--cream-dim); margin:0 0 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.track-progress-track{ height:5px; border-radius:4px; background: rgba(244,239,227,0.1); overflow:hidden; }
-.track-progress-fill{ height:100%; border-radius:4px; }
-.track-meta{ font-family: var(--font-head); font-size:10.5px; color: var(--cream-dim); margin-top:6px; }
+.track-done-badge{
+  position:absolute; top:-5px; right:-5px; width:20px; height:20px; border-radius:50%;
+  background: var(--gold); color: var(--bg-deep); font-size:10.5px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; border:2px solid var(--bg);
+}
+.track-name{ font-family: var(--font-head); font-weight:600; font-size:12.5px; text-align:center; }
 
 .track-card.igbo .track-glyph{ background: var(--igbo); }
-.track-card.igbo .track-progress-fill{ background: var(--igbo); }
 .track-card.yoruba .track-glyph{ background: var(--yoruba); }
-.track-card.yoruba .track-progress-fill{ background: var(--yoruba); }
 .track-card.hausa .track-glyph{ background: var(--hausa); }
-.track-card.hausa .track-progress-fill{ background: var(--hausa); }
+.track-card.edo .track-glyph{ background: var(--edo); }
 
 /* ===== badges ===== */
 .badges-row{ margin-bottom: 30px; }
@@ -308,6 +307,7 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .practice-card.igbo .practice-glyph{ background: var(--igbo); }
 .practice-card.yoruba .practice-glyph{ background: var(--yoruba); }
 .practice-card.hausa .practice-glyph{ background: var(--hausa); }
+.practice-card.edo .practice-glyph{ background: var(--edo); }
 .practice-name{ font-family: var(--font-head); font-weight:700; font-size:15px; margin:0 0 2px; }
 .practice-sub{ font-size:12.5px; color: var(--cream-dim); margin:0; line-height:1.4; }
 .practice-start-btn{ align-self:flex-start; padding:9px 16px; font-size:13px; }
@@ -340,6 +340,7 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .profile-lang-glyph.igbo{ background: var(--igbo); }
 .profile-lang-glyph.yoruba{ background: var(--yoruba); }
 .profile-lang-glyph.hausa{ background: var(--hausa); }
+.profile-lang-glyph.edo{ background: var(--edo); }
 .profile-lang-body{ flex:1; }
 .profile-lang-name{ font-family: var(--font-head); font-weight:600; font-size:13.5px; margin:0 0 5px; }
 .profile-lang-track{ height:5px; border-radius:4px; background: rgba(244,239,227,0.1); overflow:hidden; }
@@ -364,6 +365,7 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .continue-card.igbo{ border-color: rgba(63,157,107,0.4); }
 .continue-card.yoruba{ border-color: rgba(178,62,120,0.4); }
 .continue-card.hausa{ border-color: rgba(209,104,47,0.4); }
+.continue-card.edo{ border-color: rgba(47,143,138,0.4); }
 .continue-kicker{ font-family: var(--font-head); text-transform:uppercase; letter-spacing:1.3px; font-size:11.5px; color: var(--gold); margin:0 0 8px; }
 .continue-title{ font-family: var(--font-display); font-size:22px; font-weight:600; margin:0 0 4px; }
 .continue-sub{ font-size:13.5px; color: var(--cream-dim); margin:0 0 16px; }
@@ -410,6 +412,7 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .lang-tab.igbo .lang-tab-glyph{ background: var(--igbo); }
 .lang-tab.yoruba .lang-tab-glyph{ background: var(--yoruba); }
 .lang-tab.hausa .lang-tab-glyph{ background: var(--hausa); }
+.lang-tab.edo .lang-tab-glyph{ background: var(--edo); }
 .lang-tab.active .lang-tab-glyph{ border-color: var(--gold); box-shadow: 0 0 0 2px var(--bg); }
 .lang-tab-label{ font-family: var(--font-head); font-weight:600; font-size:12.5px; color: var(--cream-dim); }
 .lang-tab.active .lang-tab-label{ color: var(--cream); }

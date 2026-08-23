@@ -32,7 +32,7 @@ const DEFAULT_PROGRESS = {
   lastPlayedDate: null,
   hearts: 5,
   maxHearts: 5,
-  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [] },
+  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [], urhobo: [] },
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],

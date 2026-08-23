@@ -6,7 +6,8 @@ const PATTERNS = {
   yoruba: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><g fill='%23b23e78'><circle cx='8' cy='8' r='3'/><circle cx='24' cy='8' r='3'/><circle cx='40' cy='8' r='3'/><circle cx='16' cy='24' r='3'/><circle cx='32' cy='24' r='3'/><circle cx='8' cy='40' r='3'/><circle cx='24' cy='40' r='3'/><circle cx='40' cy='40' r='3'/></g></svg>`,
   hausa: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><g stroke='%23d1682f' stroke-width='2' fill='none'><rect x='8' y='8' width='40' height='40' transform='rotate(45 28 28)'/><rect x='18' y='18' width='20' height='20' transform='rotate(45 28 28)'/></g></svg>`,
   edo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><g fill='%232f8f8a'><circle cx='6' cy='6' r='2.5'/><circle cx='18' cy='6' r='2.5'/><circle cx='30' cy='6' r='2.5'/><circle cx='42' cy='6' r='2.5'/><circle cx='12' cy='18' r='2.5'/><circle cx='24' cy='18' r='2.5'/><circle cx='36' cy='18' r='2.5'/><circle cx='6' cy='30' r='2.5'/><circle cx='18' cy='30' r='2.5'/><circle cx='30' cy='30' r='2.5'/><circle cx='42' cy='30' r='2.5'/></g></svg>`,
-  efik: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='40'><g stroke='%233f6fa8' stroke-width='2' fill='none'><path d='M0 10 Q15 0 30 10 T60 10'/><path d='M0 22 Q15 12 30 22 T60 22'/><path d='M0 34 Q15 24 30 34 T60 34'/></g></svg>`
+  efik: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='40'><g stroke='%233f6fa8' stroke-width='2' fill='none'><path d='M0 10 Q15 0 30 10 T60 10'/><path d='M0 22 Q15 12 30 22 T60 22'/><path d='M0 34 Q15 24 30 34 T60 34'/></g></svg>`,
+  urhobo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><g stroke='%237a4fa0' stroke-width='2' fill='none'><path d='M25 5 L45 25 L25 45 L5 25 Z'/><path d='M25 15 L35 25 L25 35 L15 25 Z'/></g></svg>`
 };
 
 /* ====================== VOCAB DATA ======================
@@ -210,6 +211,23 @@ const COURSES = {
         { native: "Idem fo?", en: "How are you" }, { native: "Nso ke Ekot fi?", en: "What is your name" },
         { native: "Mbọk", en: "Please" }, { native: "Sosongo", en: "Thank you" },
         { native: "Nfana ibaga", en: "No problem" }
+      ]}
+    ]
+  },
+  urhobo: {
+    name: "Urhobo", native: "Ẹdo Urhobo", color: "urhobo", glyph: "U", speechLang: "urh",
+    lessons: [
+      { title: "Numbers 1–5", vocab: [
+        { native: "Ọvo", en: "One" }, { native: "Ívẹ", en: "Two" }, { native: "Érha", en: "Three" },
+        { native: "Ẹ́ne", en: "Four" }, { native: "Íyorin", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Ésan", en: "Six" }, { native: "Íghwrẹ́", en: "Seven" }, { native: "Ẹréré", en: "Eight" },
+        { native: "Írhirin", en: "Nine" }, { native: "Íhwe", en: "Ten" }
+      ]},
+      { title: "Everyday Words", vocab: [
+        { native: "Ame", en: "Water" }, { native: "Akara", en: "Bean-cake" }, { native: "Owọ", en: "Leg" },
+        { native: "Ówia", en: "Work" }, { native: "Akpọ", en: "World" }
       ]}
     ]
   }
@@ -423,7 +441,7 @@ const DEFAULT_STATE = {
   lastPlayedDate: null,
   hearts: STARTING_HEARTS,
   maxHearts: STARTING_HEARTS,
-  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [] },
+  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [], urhobo: [] },
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],

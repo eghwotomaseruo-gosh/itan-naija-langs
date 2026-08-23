@@ -517,6 +517,12 @@ function renderHome(){
   document.getElementById("stat-xp").textContent = state.xp;
   document.getElementById("stat-hearts").textContent = state.hearts;
 
+  const pillCourseKey = pickContinueCourse();
+  const pillCourse = COURSES[pillCourseKey];
+  const pillGlyph = document.getElementById("lang-pill-glyph");
+  pillGlyph.textContent = pillCourse.glyph;
+  pillGlyph.style.background = `var(--${pillCourse.color})`;
+
   renderContinueCard();
   renderWeekCal();
   renderDailyGoal();
@@ -1174,6 +1180,12 @@ function showScreen(name){
   window.scrollTo(0, 0);
 }
 
+document.getElementById("lang-pill-toggle").addEventListener("click", () => {
+  const trackSelect = document.getElementById("track-select");
+  const pill = document.getElementById("lang-pill-toggle");
+  trackSelect.classList.toggle("hidden");
+  pill.classList.toggle("open", !trackSelect.classList.contains("hidden"));
+});
 document.getElementById("path-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
 document.getElementById("practice-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
 document.getElementById("profile-back").addEventListener("click", () => { renderHome(); showScreen("home"); });

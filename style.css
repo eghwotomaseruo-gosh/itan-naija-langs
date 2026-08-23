@@ -65,6 +65,14 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .pill-streak .pill-icon{ stroke:none; fill: var(--gold); }
 .pill-xp .pill-icon{ stroke:none; fill: var(--gold); }
 .pill-hearts .pill-icon{ stroke:none; fill: var(--yoruba); }
+.pill-lang{ gap:5px; }
+.pill-lang-glyph{
+  width:19px; height:19px; border-radius:6px; background: var(--gold); color: var(--bg-deep);
+  display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-display); font-weight:700; font-size:11px;
+}
+.pill-lang-chevron{ width:13px; height:13px; stroke: var(--cream-dim); transition: transform .2s ease; }
+.pill-lang.open .pill-lang-chevron{ transform: rotate(180deg); }
 
 /* ===== home greeting (compact, replaces the old full-width hero) ===== */
 .home-greeting{

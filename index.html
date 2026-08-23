@@ -42,6 +42,10 @@
       <span class="brand-name">Lingua Naija</span>
     </div>
     <div class="stat-pills">
+      <button class="pill pill-lang" id="lang-pill-toggle" title="Switch language" type="button">
+        <span class="pill-lang-glyph" id="lang-pill-glyph">?</span>
+        <svg viewBox="0 0 24 24" class="pill-icon pill-lang-chevron"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
       <div class="pill pill-streak" title="Day streak">
         <svg viewBox="0 0 24 24" class="pill-icon"><path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-1.5-1-2-1-3.5 2 1 3 3 3 5.5a5 5 0 0 1-10 0c0-5 5-6 5-11z"/></svg>
         <span id="stat-streak">0</span>
@@ -92,7 +96,7 @@
     <!-- populated by JS: missed-word count + link to Practice screen -->
   </section>
 
-  <section class="track-select" id="track-select">
+  <section class="track-select hidden" id="track-select">
     <!-- language track cards injected by JS -->
   </section>
 

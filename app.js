@@ -233,6 +233,57 @@ const COURSES = {
   }
 };
 
+const CULTURE = {
+  igbo: {
+    intro: "A few pieces of everyday Igbo wisdom and custom \u2014 the kind of thing you'd pick up from elders, not textbooks.",
+    proverbs: [
+      { native: "Egbe belụ, ugo belụ, nke si ibe ya ebena, nku kwaa ya.", translation: "Let the hawk perch, let the eagle perch; whichever says the other should not perch, may its wing break.", meaning: "Live and let live \u2014 everyone deserves the chance to thrive." },
+      { native: "Onye kwe, chi ya ekwe.", translation: "If a person agrees, their personal god agrees.", meaning: "Self-belief and determination pave the way to success." }
+    ],
+    etiquette: { title: "Greeting elders", text: "When greeting an elder, a slight bow shows respect, and it's customary to use both hands when giving or receiving something from them." },
+    scenario: {
+      prompt: "You meet your friend's mother for the first time. What's the respectful thing to do?",
+      options: [
+        { text: "Say \u201cNdewo\u201d and offer a slight bow", correct: true, feedback: "That's the respectful way to greet an elder you're meeting for the first time." },
+        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected \u2014 a wave alone can come across as distant." },
+        { text: "Ask for her phone number right away", correct: false, feedback: "Save the small talk for after a proper greeting!" }
+      ]
+    }
+  },
+  yoruba: {
+    intro: "A few pieces of everyday Yorùbá wisdom and custom \u2014 the kind of thing you'd pick up from elders, not textbooks.",
+    proverbs: [
+      { native: "Ilé ọba tí ó jóná, ẹwà ló bù sí i.", translation: "A king's palace that gets burnt has only added more beauty.", meaning: "Make the best of hardship \u2014 necessity is the mother of invention." },
+      { native: "Ìdí méjèèjì ló tó olúwa rẹ̀ jókòó.", translation: "The two buttocks are sufficient for their owner to sit on.", meaning: "Be content with what you have." }
+    ],
+    etiquette: { title: "Greeting elders", text: "Young men traditionally prostrate flat on the ground (\u00ecdobal\u00e8) when greeting an elder, while young women kneel (k\u00fanl\u1eb9) \u2014 a sign of deep respect still practiced today." },
+    scenario: {
+      prompt: "You meet your friend's mother for the first time. What's the respectful thing to do?",
+      options: [
+        { text: "Say \u201cBawo ni\u201d and kneel or prostrate briefly", correct: true, feedback: "That's the traditional, respectful way to greet an elder." },
+        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected \u2014 a wave alone can come across as distant." },
+        { text: "Ask for her phone number right away", correct: false, feedback: "Save the small talk for after a proper greeting!" }
+      ]
+    }
+  },
+  hausa: {
+    intro: "A few pieces of everyday Hausa wisdom and custom \u2014 the kind of thing you'd pick up from elders, not textbooks.",
+    proverbs: [
+      { native: "A yi, a gama, ta fi takama, gobe a koma.", translation: "To do and finish is better than \u2018don't care, come back tomorrow.\u2019", meaning: "Don't put off until tomorrow what you can do today." },
+      { native: "Ruwa ba ta tsami banza.", translation: "Water does not get sour without a cause.", meaning: "Everything happens for a reason." }
+    ],
+    etiquette: { title: "Greeting elders", text: "A handshake is the customary greeting, and it's considered polite to ask after someone's family and health before getting to the point of a conversation." },
+    scenario: {
+      prompt: "You meet your friend's mother for the first time. What's the respectful thing to do?",
+      options: [
+        { text: "Say \u201cSannu\u201d and ask after her health and family", correct: true, feedback: "That's the respectful, customary way to open a greeting." },
+        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected \u2014 a wave alone can come across as distant." },
+        { text: "Ask for her phone number right away", correct: false, feedback: "Save the small talk for after a proper greeting!" }
+      ]
+    }
+  }
+};
+
 const BADGES = [
   { id: "first-lesson", name: "First steps", icon: "\u{1F476}", test: s => s.lessonsCompleted >= 1, target: { type: "lessons", value: 1 } },
   { id: "three-lessons", name: "Warming up", icon: "\u{1F525}", test: s => s.lessonsCompleted >= 3, target: { type: "lessons", value: 3 } },
@@ -246,7 +297,8 @@ const BADGES = [
   { id: "xp-500", name: "XP legend", icon: "\u{1F680}", test: s => s.xp >= 500, target: { type: "xp", value: 500 } },
   { id: "streak-7", name: "Week streak", icon: "\u{1F31F}", test: s => s.streak >= 7, target: { type: "streak", value: 7 } },
   { id: "streak-30", name: "Month streak", icon: "\u{1F451}", test: s => s.streak >= 30, target: { type: "streak", value: 30 } },
-  { id: "practice-5", name: "Practice pro", icon: "\u{1F3AF}", test: s => s.practiceSessionsCompleted >= 5, target: { type: "practice", value: 5 } }
+  { id: "practice-5", name: "Practice pro", icon: "\u{1F3AF}", test: s => s.practiceSessionsCompleted >= 5, target: { type: "practice", value: 5 } },
+  { id: "culture-keeper", name: "Culture keeper", icon: "\u{1FAD8}", test: s => s.cultureCompletedCount >= 3 }
 ];
 
 /* ====================== HELPERS ====================== */
@@ -451,7 +503,8 @@ const DEFAULT_STATE = {
   todayXpEarned: 0,
   todayXpDate: null,
   practiceSessionsCompleted: 0,
-  longestStreak: 0
+  longestStreak: 0,
+  cultureCompleted: { igbo: false, yoruba: false, hausa: false }
 };
 
 /* ---- account session (token stored locally; everything else lives on the server) ---- */
@@ -487,6 +540,9 @@ async function fetchProgress(){
   state = Object.assign(structuredClone(DEFAULT_STATE), data);
   Object.keys(COURSES).forEach(k => {
     if(!Array.isArray(state.completed[k])) state.completed[k] = [];
+  });
+  Object.keys(CULTURE).forEach(k => {
+    if(typeof state.cultureCompleted[k] !== "boolean") state.cultureCompleted[k] = false;
   });
   if(TESTING_MODE) state.hearts = STARTING_HEARTS;
 }
@@ -542,7 +598,8 @@ function checkBadges(){
     languagesStarted: languagesStartedCount(),
     courseCleared: anyCourseCleared(),
     xp: state.xp,
-    practiceSessionsCompleted: state.practiceSessionsCompleted || 0
+    practiceSessionsCompleted: state.practiceSessionsCompleted || 0,
+    cultureCompletedCount: Object.values(state.cultureCompleted).filter(Boolean).length
   };
   BADGES.forEach(b => {
     if(!state.earnedBadges.includes(b.id) && b.test(snap)) state.earnedBadges.push(b.id);
@@ -569,6 +626,7 @@ function renderHome(){
   renderWeekCal();
   renderDailyGoal();
   renderPracticeEntry();
+  renderCultureEntry();
 
   const trackSelect = document.getElementById("track-select");
   trackSelect.innerHTML = "";
@@ -774,6 +832,143 @@ function renderPracticeEntry(){
     showScreen("practice");
   });
 }
+
+/* ---- culture entry card (home) ---- */
+function renderCultureEntry(){
+  const el = document.getElementById("culture-entry");
+  const doneCount = Object.values(state.cultureCompleted).filter(Boolean).length;
+  const total = Object.keys(CULTURE).length;
+  el.innerHTML = `
+    <div class="practice-card">
+      <div class="practice-card-head">
+        <span class="practice-glyph" style="background:var(--gold);">\u{1FAD8}</span>
+        <div>
+          <p class="practice-name">Culture</p>
+          <p class="practice-sub">Proverbs, etiquette &amp; real-life scenarios \u2014 ${doneCount}/${total} done</p>
+        </div>
+      </div>
+      <button class="continue-btn" id="culture-entry-btn">Explore \u2192</button>
+    </div>
+  `;
+  document.getElementById("culture-entry-btn").addEventListener("click", () => {
+    renderCultureHub();
+    showScreen("culture-hub");
+  });
+}
+
+function renderCultureHub(){
+  const container = document.getElementById("culture-hub-list");
+  container.innerHTML = "";
+  Object.keys(CULTURE).forEach(k => {
+    const course = COURSES[k];
+    const done = state.cultureCompleted[k];
+    const card = document.createElement("div");
+    card.className = `practice-card ${course.color}`;
+    card.innerHTML = `
+      <div class="practice-card-head">
+        <span class="practice-glyph">${course.glyph}</span>
+        <div><p class="practice-name">${course.name}</p><p class="practice-sub">${done ? "Completed \u2014 replay anytime" : "2 proverbs, an etiquette note, and a scenario"}</p></div>
+      </div>
+      <button class="continue-btn culture-start-btn" data-course="${k}">${done ? "Replay" : "Start"} \u2192</button>
+    `;
+    container.appendChild(card);
+  });
+  container.querySelectorAll(".culture-start-btn").forEach(btn => {
+    btn.addEventListener("click", () => startCulture(btn.dataset.course));
+  });
+}
+
+/* ---- culture lesson session ---- */
+let cultureSession = null;
+
+function startCulture(courseKey){
+  const data = CULTURE[courseKey];
+  const cards = [
+    { type: "intro", text: data.intro },
+    { type: "proverb", data: data.proverbs[0] },
+    { type: "proverb", data: data.proverbs[1] },
+    { type: "etiquette", data: data.etiquette },
+    { type: "scenario", data: data.scenario }
+  ];
+  cultureSession = { courseKey, cards, index: 0, answered: false };
+  showScreen("culture");
+  renderCultureCard();
+}
+
+function renderCultureCard(){
+  const card = cultureSession.cards[cultureSession.index];
+  const course = COURSES[cultureSession.courseKey];
+  document.getElementById("culture-progress").style.width = `${(cultureSession.index / cultureSession.cards.length) * 100}%`;
+  cultureSession.answered = false;
+
+  const el = document.getElementById("culture-card");
+  const btn = document.getElementById("culture-continue-btn");
+  btn.disabled = false;
+  btn.textContent = (cultureSession.index === cultureSession.cards.length - 1) ? "Finish" : "Continue";
+
+  if(card.type === "intro"){
+    el.innerHTML = `<p class="culture-kicker">${course.name} Culture</p><p class="culture-body-text">${card.text}</p>`;
+  }else if(card.type === "proverb"){
+    el.innerHTML = `
+      <p class="culture-kicker">Proverb</p>
+      <p class="culture-proverb-native">${card.data.native}</p>
+      <p class="culture-proverb-translation">"${card.data.translation}"</p>
+      <p class="culture-proverb-meaning">${card.data.meaning}</p>
+    `;
+  }else if(card.type === "etiquette"){
+    el.innerHTML = `<p class="culture-kicker">Etiquette \u2014 ${card.data.title}</p><p class="culture-body-text">${card.data.text}</p>`;
+  }else if(card.type === "scenario"){
+    btn.disabled = true;
+    el.innerHTML = `
+      <p class="culture-kicker">Real-life scenario</p>
+      <p class="culture-body-text">${card.data.prompt}</p>
+      <div class="culture-scenario-options" id="culture-scenario-options"></div>
+      <p class="culture-feedback hidden" id="culture-feedback"></p>
+    `;
+    const optsEl = document.getElementById("culture-scenario-options");
+    card.data.options.forEach(opt => {
+      const optBtn = document.createElement("button");
+      optBtn.className = "culture-option-btn";
+      optBtn.textContent = opt.text;
+      optBtn.addEventListener("click", () => {
+        if(cultureSession.answered) return;
+        cultureSession.answered = true;
+        optBtn.classList.add(opt.correct ? "correct" : "incorrect");
+        const fb = document.getElementById("culture-feedback");
+        fb.textContent = opt.feedback;
+        fb.classList.remove("hidden");
+        document.getElementById("culture-continue-btn").disabled = false;
+      });
+      optsEl.appendChild(optBtn);
+    });
+  }
+}
+
+function finishCulture(){
+  const key = cultureSession.courseKey;
+  const firstTime = !state.cultureCompleted[key];
+  state.cultureCompleted[key] = true;
+  if(firstTime){
+    state.xp += 15;
+    addDailyXp(15);
+  }
+  touchStreak();
+  checkBadges();
+  saveState();
+  renderCultureHub();
+  showScreen("culture-hub");
+}
+
+document.getElementById("culture-continue-btn").addEventListener("click", () => {
+  cultureSession.index++;
+  if(cultureSession.index >= cultureSession.cards.length) finishCulture();
+  else renderCultureCard();
+});
+document.getElementById("culture-quit").addEventListener("click", () => {
+  renderCultureHub();
+  showScreen("culture-hub");
+});
+document.getElementById("culture-hub-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
 
 /* ---- practice screen (full breakdown + start buttons) ---- */
 function renderPracticeScreen(){

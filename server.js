@@ -42,7 +42,8 @@ const DEFAULT_PROGRESS = {
   todayXpEarned: 0,
   todayXpDate: null,
   practiceSessionsCompleted: 0,
-  longestStreak: 0
+  longestStreak: 0,
+  cultureCompleted: { igbo: false, yoruba: false, hausa: false }
 };
 
 async function initDb(){

@@ -100,6 +100,10 @@
     <!-- populated by JS: missed-word count + link to Practice screen -->
   </section>
 
+  <section class="culture-entry" id="culture-entry">
+    <!-- populated by JS: link to Culture hub -->
+  </section>
+
   <section class="badges-row">
     <h2 class="section-label">Badges</h2>
     <p class="badge-teaser" id="badge-teaser"></p>
@@ -125,6 +129,34 @@
     </div>
   </header>
   <div id="practice-list" class="practice-list"></div>
+</main>
+
+<!-- ===== CULTURE HUB (choose a language) ===== -->
+<main id="screen-culture-hub" class="screen hidden">
+  <header class="path-topbar">
+    <button class="icon-btn" id="culture-hub-back" aria-label="Back to home">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="path-title">
+      <span>Culture</span>
+      <span class="path-lang-native">Proverbs, etiquette &amp; real-life scenarios</span>
+    </div>
+  </header>
+  <div id="culture-hub-list" class="practice-list"></div>
+</main>
+
+<!-- ===== CULTURE LESSON ===== -->
+<main id="screen-culture" class="screen hidden">
+  <header class="path-topbar">
+    <button class="icon-btn" id="culture-quit" aria-label="Back to Culture hub">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="progress-track"><div class="progress-fill" id="culture-progress"></div></div>
+  </header>
+  <div class="culture-card" id="culture-card"></div>
+  <footer class="lesson-footer">
+    <button id="culture-continue-btn" class="btn-check">Continue</button>
+  </footer>
 </main>
 
 <!-- ===== PROFILE ===== -->

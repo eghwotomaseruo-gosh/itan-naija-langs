@@ -724,8 +724,11 @@ async function renderLeaderboard(){
   });
 
   const youIndex = rows.findIndex(r => r.isYou);
-  if(youIndex === 0) gapEl.textContent = "You're in the lead this week!";
-  else if(youIndex > 0){
+  if(rows.length === 1 && youIndex === 0){
+    gapEl.textContent = "You're first here \u2014 invite a friend to make it a real race.";
+  }else if(youIndex === 0){
+    gapEl.textContent = "You're in the lead this week!";
+  }else if(youIndex > 0){
     const gap = rows[youIndex - 1].xp - state.xp;
     gapEl.textContent = `You're ${gap} XP from ${ordinal(youIndex)} place.`;
   }else{
@@ -816,7 +819,7 @@ function renderWeekCal(){
     chip.innerHTML = `<span class="day-label">${labels[i]}</span><span class="day-dot">${practiced ? "\u2713" : ""}</span>`;
     container.appendChild(chip);
   }
-  document.getElementById("week-cal-streak-label").textContent = state.streak > 0 ? `\u{1F525} ${state.streak}-day streak` : "";
+  document.getElementById("week-cal-streak-label").textContent = state.streak > 0 ? `\u{1F525} ${state.streak}-day streak` : "Start today!";
 }
 
 /* ---- daily goal ---- */

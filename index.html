@@ -11,14 +11,43 @@
 </head>
 <body>
 
-<!-- ===== AUTH (LOGIN / SIGNUP) ===== -->
+<!-- ===== HOMEPAGE / AUTH (LOGIN / SIGNUP) ===== -->
 <main id="screen-auth" class="screen">
-  <div class="auth-wrap">
+
+  <header class="landing-topbar">
     <div class="auth-brand">
       <span class="brand-mark" aria-hidden="true">ǀ ǁ ǀ</span>
       <span class="brand-name">Lingua Naija</span>
     </div>
-    <p class="auth-tagline">Learn Igbo, Yorùbá &amp; Hausa — your progress saved to your account.</p>
+  </header>
+
+  <section class="landing-hero">
+    <p class="landing-eyebrow">Free · Gamified · Made for Nigeria</p>
+    <h1 class="landing-title">Speak your language like it's yours again.</h1>
+    <p class="landing-sub">Bite-sized lessons, real practice, and a little friendly competition — the fun way to actually stick with learning Igbo, Yorùbá, and Hausa.</p>
+    <button type="button" class="landing-cta" id="landing-cta-btn">Start learning free →</button>
+  </section>
+
+  <section class="landing-languages" aria-label="Languages you can learn">
+    <div class="landing-lang-card igbo">
+      <span class="landing-lang-glyph">Ị</span>
+      <p class="landing-lang-name">Igbo</p>
+      <p class="landing-lang-native">Asụsụ Igbo</p>
+    </div>
+    <div class="landing-lang-card yoruba">
+      <span class="landing-lang-glyph">Ẹ</span>
+      <p class="landing-lang-name">Yorùbá</p>
+      <p class="landing-lang-native">Èdè Yorùbá</p>
+    </div>
+    <div class="landing-lang-card hausa">
+      <span class="landing-lang-glyph">H</span>
+      <p class="landing-lang-name">Hausa</p>
+      <p class="landing-lang-native">Harshen Hausa</p>
+    </div>
+  </section>
+
+  <section class="auth-wrap" id="auth-form-wrap">
+    <p class="auth-form-label">Log in or create a free account</p>
 
     <div class="auth-tabs">
       <button type="button" class="auth-tab active" id="auth-tab-login">Log in</button>
@@ -31,7 +60,7 @@
       <p class="auth-error hidden" id="auth-error"></p>
       <button type="submit" class="btn-check" id="auth-submit">Log in</button>
     </form>
-  </div>
+  </section>
 </main>
 
 <!-- ===== HOME / DASHBOARD ===== -->

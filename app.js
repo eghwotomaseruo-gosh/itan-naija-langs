@@ -1524,6 +1524,11 @@ function setAuthMode(mode){
 }
 
 document.getElementById("auth-tab-login").addEventListener("click", () => setAuthMode("login"));
+document.getElementById("landing-cta-btn").addEventListener("click", () => {
+  setAuthMode("signup");
+  document.getElementById("auth-form-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
+  setTimeout(() => document.getElementById("auth-username").focus(), 400);
+});
 document.getElementById("auth-tab-signup").addEventListener("click", () => setAuthMode("signup"));
 
 document.getElementById("auth-form").addEventListener("submit", async e => {

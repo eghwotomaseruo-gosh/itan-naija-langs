@@ -257,6 +257,41 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .complete-stat-label{ font-size:11.5px; color: var(--cream-dim); }
 .complete-wrap .btn-check{ width: 220px; }
 
+/* ===== surprise chest ===== */
+.surprise-wrap{
+  position: relative; display:flex; flex-direction:column; align-items:center; text-align:center;
+  padding-top: 16vh; gap:6px; overflow:hidden;
+}
+.confetti{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.confetti span{
+  position:absolute; top:-10%; width:8px; height:14px; opacity:.9;
+  background: var(--gold); animation: confetti-fall 2.8s linear infinite;
+}
+.confetti span:nth-child(1){ left:8%; background:var(--gold); animation-delay:0s; }
+.confetti span:nth-child(2){ left:20%; background:var(--igbo); animation-delay:.3s; }
+.confetti span:nth-child(3){ left:34%; background:var(--yoruba); animation-delay:.6s; }
+.confetti span:nth-child(4){ left:48%; background:var(--hausa); animation-delay:.15s; }
+.confetti span:nth-child(5){ left:62%; background:var(--edo); animation-delay:.45s; }
+.confetti span:nth-child(6){ left:74%; background:var(--efik); animation-delay:.75s; }
+.confetti span:nth-child(7){ left:86%; background:var(--urhobo); animation-delay:.2s; }
+.confetti span:nth-child(8){ left:94%; background:var(--gold); animation-delay:.5s; }
+@keyframes confetti-fall{
+  0%{ transform: translateY(0) rotate(0deg); opacity:1; }
+  100%{ transform: translateY(120vh) rotate(360deg); opacity:0; }
+}
+.surprise-chest{ font-size:56px; margin-bottom:10px; position:relative; z-index:1; }
+.surprise-kicker{ font-family: var(--font-head); text-transform:uppercase; letter-spacing:1.5px; font-size:12px; color: var(--gold); margin:0 0 6px; position:relative; z-index:1; }
+.surprise-title{ font-family: var(--font-display); font-size:26px; margin:0 0 18px; position:relative; z-index:1; }
+.surprise-fact{
+  max-width: 320px; font-size:14.5px; line-height:1.6; color: var(--cream-dim);
+  margin: 0 0 20px; position:relative; z-index:1;
+}
+.surprise-bonus{
+  font-family: var(--font-head); font-weight:700; font-size:15px; color: var(--bg-deep);
+  background: var(--gold); padding: 8px 18px; border-radius:999px; margin-bottom:28px; position:relative; z-index:1;
+}
+.surprise-wrap .btn-check{ width: 220px; position:relative; z-index:1; }
+
 /* ===== auth screen ===== */
 .auth-wrap{ max-width:380px; margin: 14vh auto 0; padding: 0 8px; }
 .auth-brand{ display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:10px; }

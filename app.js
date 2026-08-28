@@ -233,6 +233,19 @@ const COURSES = {
   }
 };
 
+const SURPRISE_FACTS = [
+  "Nigeria is home to over 250 ethnic groups and more than 500 living languages \u2014 you're learning just a few of them!",
+  "Nollywood, Nigeria's film industry, produces more movies per year than Hollywood \u2014 second in the world only to India's Bollywood by volume.",
+  "Lagos is one of the fastest-growing megacities on Earth, with a metro population bigger than many entire countries.",
+  "The name \u201cNigeria\u201d was reportedly coined by journalist Flora Shaw in 1897, after the Niger River.",
+  "Nigeria has three major river systems \u2014 the Niger, the Benue, and the Cross River \u2014 which shaped where many of its languages developed.",
+  "Nigerian jollof rice has sparked a decades-long, good-natured rivalry with Ghana over whose version is better.",
+  "Amina of Zazzau, a 16th-century Hausa warrior queen, is remembered for expanding her kingdom's territory and trade routes.",
+  "Nigeria has more than one \u201cofficial\u201d greeting for almost every hour of the day \u2014 many languages have separate words for morning, afternoon, and evening greetings.",
+  "The University of Ibadan, founded in 1948, is Nigeria's oldest university.",
+  "Afrobeats, a genre with deep roots in Nigerian music, is now streamed by millions of people worldwide."
+];
+
 const CULTURE = {
   igbo: {
     intro: "A few pieces of everyday Igbo wisdom and custom \u2014 the kind of thing you'd pick up from elders, not textbooks.",
@@ -557,6 +570,7 @@ function saveState(){
 
 let state = structuredClone(DEFAULT_STATE);
 let session = null;
+let pendingSurprise = false;
 
 function todayStr(){ return new Date().toISOString().slice(0, 10); }
 
@@ -1400,6 +1414,10 @@ function finishLesson(){
   }
   if(session.mistakes === 0) state.hasPerfect = true;
   checkBadges();
+
+  const totalActivities = lessonsCompletedCount() + (state.practiceSessionsCompleted || 0);
+  pendingSurprise = totalActivities > 0 && totalActivities % 3 === 0;
+
   saveState();
 
   document.getElementById("complete-title").textContent = session.isPractice ? "Practice complete" : "Lesson complete";
@@ -1445,6 +1463,24 @@ document.getElementById("lesson-quit").addEventListener("click", () => {
 });
 document.getElementById("check-btn").addEventListener("click", checkAnswer);
 document.getElementById("complete-continue").addEventListener("click", () => {
+  if(pendingSurprise){
+    pendingSurprise = false;
+    showSurpriseChest();
+  }else{
+    renderHome();
+    showScreen("home");
+  }
+});
+
+function showSurpriseChest(){
+  const fact = SURPRISE_FACTS[Math.floor(Math.random() * SURPRISE_FACTS.length)];
+  document.getElementById("surprise-fact").textContent = fact;
+  state.xp += 10;
+  addDailyXp(10);
+  saveState();
+  showScreen("surprise");
+}
+document.getElementById("surprise-continue").addEventListener("click", () => {
   renderHome();
   showScreen("home");
 });

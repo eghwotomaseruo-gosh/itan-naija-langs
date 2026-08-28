@@ -225,9 +225,29 @@ const COURSES = {
         { native: "Ésan", en: "Six" }, { native: "Íghwrẹ́", en: "Seven" }, { native: "Ẹréré", en: "Eight" },
         { native: "Írhirin", en: "Nine" }, { native: "Íhwe", en: "Ten" }
       ]},
-      { title: "Everyday Words", vocab: [
-        { native: "Ame", en: "Water" }, { native: "Akara", en: "Bean-cake" }, { native: "Owọ", en: "Leg" },
-        { native: "Ówia", en: "Work" }, { native: "Akpọ", en: "World" }
+      { title: "Greetings", vocab: [
+        { native: "Do", en: "Thank you" }, { native: "Dede", en: "Welcome" }, { native: "Kédófa", en: "Goodbye" },
+        { native: "Kódẹ", en: "Goodnight" }, { native: "Yéghwérẹ", en: "Safe journey" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "Biko", en: "Please" }, { native: "E", en: "Yes" }, { native: "Ẹjo", en: "No" },
+        { native: "Omagáre", en: "How are you" }, { native: "Míguẹ", en: "Respectful greeting to an elder" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Ósẹ", en: "Father" }, { native: "Óni", en: "Mother" }, { native: "Ibábode", en: "Grandfather" },
+        { native: "Inénode", en: "Grandmother" }, { native: "Ómó", en: "Child" }, { native: "Óniọvo", en: "Sibling" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Uyovwi", en: "Head" }, { native: "Obọ", en: "Hand" }, { native: "Owọ", en: "Leg" },
+        { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" }, { native: "Órhó", en: "Ear" }
+      ]},
+      { title: "Food", vocab: [
+        { native: "Ame", en: "Water" }, { native: "Akara", en: "Bean-cake" }, { native: "Irósu", en: "Rice" },
+        { native: "Ọné", en: "Yam" }, { native: "Óka", en: "Corn" }, { native: "Ọrhẹ", en: "Plantain" }
+      ]},
+      { title: "Animals", vocab: [
+        { native: "Eráko", en: "Dog" }, { native: "Erhué", en: "Cow" }, { native: "Ogodẹ", en: "Sheep" },
+        { native: "Óhọ", en: "Chicken" }, { native: "Ewéri", en: "Monkey" }, { native: "Eni", en: "Elephant" }
       ]}
     ]
   }

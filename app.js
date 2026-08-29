@@ -341,11 +341,15 @@ function normalizeStr(s){
 }
 function speak(text, lang){
   if(!("speechSynthesis" in window)) return;
+  const sBtn = document.getElementById("speaker-btn");
   try{
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = lang;
     u.rate = 0.85;
+    u.onstart = () => sBtn.classList.add("playing");
+    u.onend = () => sBtn.classList.remove("playing");
+    u.onerror = () => sBtn.classList.remove("playing");
     window.speechSynthesis.speak(u);
   }catch(e){ /* speech not available — fail silently */ }
 }
@@ -367,7 +371,7 @@ function setupSpeakingRow(){
   }
   row.classList.remove("hidden");
   micBtn.classList.remove("recording");
-  micLabel.textContent = "Record yourself";
+  micLabel.textContent = "Try saying it";
   playbackBtn.classList.add("hidden");
   if(recordedBlobUrl){ URL.revokeObjectURL(recordedBlobUrl); recordedBlobUrl = null; }
 
@@ -404,7 +408,7 @@ async function toggleRecording(){
     mediaRecorder.stop();
     isRecording = false;
     micBtn.classList.remove("recording");
-    micLabel.textContent = "Record yourself";
+    micLabel.textContent = "Try saying it";
   }
 }
 
@@ -1208,6 +1212,7 @@ function resetQuestionUI(){
   document.getElementById("match-wrap").classList.add("hidden");
   document.getElementById("speaker-btn").classList.add("hidden");
   document.getElementById("speaking-row").classList.add("hidden");
+  document.getElementById("audio-hint").classList.add("hidden");
   const feedback = document.getElementById("feedback");
   feedback.classList.add("hidden");
   const checkBtn = document.getElementById("check-btn");
@@ -1259,6 +1264,7 @@ function renderQuestion(){
     const sBtn = document.getElementById("speaker-btn");
     sBtn.classList.remove("hidden");
     sBtn.onclick = () => speak(q.speakText, course.speechLang);
+    document.getElementById("audio-hint").classList.remove("hidden");
     setTimeout(() => speak(q.speakText, course.speechLang), 350);
     setupSpeakingRow();
   }else if(q.type === "type"){

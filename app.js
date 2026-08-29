@@ -1451,10 +1451,25 @@ function finishLesson(){
 
   document.getElementById("complete-title").textContent = session.isPractice ? "Practice complete" : "Lesson complete";
   document.getElementById("complete-sub").textContent = `You earned ${xpGain} XP`;
-  document.getElementById("complete-xp").textContent = `+${xpGain}`;
   document.getElementById("complete-streak").textContent = state.streak;
   document.getElementById("complete-accuracy").textContent = `${accuracy}%`;
+  document.getElementById("complete-perfect").classList.toggle("hidden", session.mistakes !== 0);
+  animateCompleteXp(xpGain);
   showScreen("complete");
+}
+
+function animateCompleteXp(target){
+  const el = document.getElementById("complete-xp");
+  const start = performance.now();
+  const duration = 550;
+  function tick(now){
+    const progress = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = `+${Math.round(eased * target)}`;
+    if(progress < 1) requestAnimationFrame(tick);
+    else el.textContent = `+${target}`;
+  }
+  requestAnimationFrame(tick);
 }
 
 /* ====================== NAV ====================== */

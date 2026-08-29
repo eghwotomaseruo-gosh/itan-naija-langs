@@ -1136,6 +1136,7 @@ function openPath(key){
   const pathEl = document.getElementById("lesson-path");
   pathEl.innerHTML = "";
   const doneCount = state.completed[key].length;
+  let currentNodeEl = null;
   course.lessons.forEach((lesson, i) => {
     const isDone = i < doneCount;
     const isNext = i === doneCount;
@@ -1148,6 +1149,7 @@ function openPath(key){
       ? `<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`
       : `${i + 1}`;
     if(!locked) node.addEventListener("click", () => startLesson(key, i));
+    if(isNext) currentNodeEl = node;
     if(isDone && doneCount < course.lessons.length){
       const nextBadge = document.createElement("span");
       nextBadge.className = "lesson-node-next-badge";
@@ -1171,7 +1173,23 @@ function openPath(key){
     pathEl.appendChild(node);
   });
 
+  setupJumpToCurrentButton(currentNodeEl);
   showScreen("path");
+}
+
+let jumpButtonObserver = null;
+function setupJumpToCurrentButton(currentNodeEl){
+  const btn = document.getElementById("jump-to-current-btn");
+  if(jumpButtonObserver){ jumpButtonObserver.disconnect(); jumpButtonObserver = null; }
+
+  if(!currentNodeEl){ btn.classList.add("hidden"); return; }
+
+  btn.onclick = () => currentNodeEl.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  jumpButtonObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => btn.classList.toggle("hidden", entry.isIntersecting));
+  }, { threshold: 0.4 });
+  jumpButtonObserver.observe(currentNodeEl);
 }
 
 /* ====================== LESSON SESSION ====================== */

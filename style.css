@@ -152,6 +152,16 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .path-pattern{ height:64px; border-radius:16px; margin: 6px 0 18px; opacity:.5; }
 
 .lesson-path{ display:flex; flex-direction:column; align-items:center; gap:26px; padding: 10px 0 40px; position:relative; }
+
+.jump-to-current-btn{
+  position: fixed; right: max(20px, calc((100vw - 640px) / 2 + 20px)); bottom: 28px;
+  width:48px; height:48px; border-radius:50%; z-index:20;
+  background: var(--surface-raised); border:1px solid var(--line); color: var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+.jump-to-current-btn svg{ width:20px; height:20px; }
+.jump-to-current-btn:active{ transform: scale(0.92); }
 .lesson-node{
   position:relative; width:72px; height:72px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;

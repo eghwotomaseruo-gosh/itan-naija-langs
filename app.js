@@ -1148,6 +1148,22 @@ function openPath(key){
       ? `<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`
       : `${i + 1}`;
     if(!locked) node.addEventListener("click", () => startLesson(key, i));
+    if(isDone && doneCount < course.lessons.length){
+      const nextBadge = document.createElement("span");
+      nextBadge.className = "lesson-node-next-badge";
+      nextBadge.textContent = "✓";
+      nextBadge.setAttribute("aria-label", "Go to next lesson");
+      nextBadge.addEventListener("click", e => {
+        e.stopPropagation();
+        startLesson(key, doneCount);
+      });
+      node.appendChild(nextBadge);
+    }else if(isDone){
+      const doneBadge = document.createElement("span");
+      doneBadge.className = "lesson-node-next-badge";
+      doneBadge.textContent = "✓";
+      node.appendChild(doneBadge);
+    }
     const label = document.createElement("div");
     label.className = "lesson-node-label";
     label.textContent = lesson.title;

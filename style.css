@@ -162,11 +162,12 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .lesson-node:active{ transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.28); }
 .lesson-node.locked{ background: var(--surface-raised); color: var(--cream-dim); box-shadow:0 5px 0 rgba(0,0,0,0.15); cursor:default; }
 .lesson-node.locked svg{ width:22px; height:22px; }
-.lesson-node.complete::after{
-  content:"✓"; position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%;
-  background: var(--gold); color: var(--bg-deep); font-size:13px; font-weight:800;
+.lesson-node-next-badge{
+  content:"✓"; position:absolute; top:-8px; right:-8px; width:30px; height:30px; border-radius:50%;
+  background: var(--gold); color: var(--bg-deep); font-size:14px; font-weight:800;
   display:flex; align-items:center; justify-content:center; border: 2px solid var(--bg);
 }
+.lesson-node-next-badge:active{ transform: scale(0.9); }
 .lesson-node-label{ position:absolute; bottom:-22px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:11.5px; color: var(--cream-dim); font-family: var(--font-head); }
 .lesson-node:nth-child(odd){ margin-left: -54px; }
 .lesson-node:nth-child(even){ margin-left: 54px; }

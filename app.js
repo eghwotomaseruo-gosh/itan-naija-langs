@@ -253,6 +253,26 @@ const COURSES = {
   }
 };
 
+/* Break each topic into two shorter sub-lessons (using the same vocab, just
+   split across two shorter sessions) wherever there's enough vocab to do so
+   meaningfully. This roughly doubles the apparent lesson count per language
+   without requiring any new vocabulary — same idea as Duolingo splitting a
+   topic into multiple bite-sized lessons instead of one long one. */
+function splitIntoSubLessons(lessons){
+  const expanded = [];
+  lessons.forEach(lesson => {
+    const vocab = lesson.vocab;
+    if(vocab.length < 5){ expanded.push(lesson); return; }
+    const mid = Math.ceil(vocab.length / 2);
+    expanded.push({ title: `${lesson.title} \u00b7 Part 1`, vocab: vocab.slice(0, mid) });
+    expanded.push({ title: `${lesson.title} \u00b7 Part 2`, vocab: vocab.slice(mid) });
+  });
+  return expanded;
+}
+Object.keys(COURSES).forEach(k => {
+  COURSES[k].lessons = splitIntoSubLessons(COURSES[k].lessons);
+});
+
 const SURPRISE_FACTS = [
   "Nigeria is home to over 250 ethnic groups and more than 500 living languages \u2014 you're learning just a few of them!",
   "Nollywood, Nigeria's film industry, produces more movies per year than Hollywood \u2014 second in the world only to India's Bollywood by volume.",

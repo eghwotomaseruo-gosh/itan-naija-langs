@@ -7,7 +7,8 @@ const PATTERNS = {
   hausa: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><g stroke='%23d1682f' stroke-width='2' fill='none'><rect x='8' y='8' width='40' height='40' transform='rotate(45 28 28)'/><rect x='18' y='18' width='20' height='20' transform='rotate(45 28 28)'/></g></svg>`,
   edo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><g fill='%232f8f8a'><circle cx='6' cy='6' r='2.5'/><circle cx='18' cy='6' r='2.5'/><circle cx='30' cy='6' r='2.5'/><circle cx='42' cy='6' r='2.5'/><circle cx='12' cy='18' r='2.5'/><circle cx='24' cy='18' r='2.5'/><circle cx='36' cy='18' r='2.5'/><circle cx='6' cy='30' r='2.5'/><circle cx='18' cy='30' r='2.5'/><circle cx='30' cy='30' r='2.5'/><circle cx='42' cy='30' r='2.5'/></g></svg>`,
   efik: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='40'><g stroke='%233f6fa8' stroke-width='2' fill='none'><path d='M0 10 Q15 0 30 10 T60 10'/><path d='M0 22 Q15 12 30 22 T60 22'/><path d='M0 34 Q15 24 30 34 T60 34'/></g></svg>`,
-  urhobo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><g stroke='%237a4fa0' stroke-width='2' fill='none'><path d='M25 5 L45 25 L25 45 L5 25 Z'/><path d='M25 15 L35 25 L25 35 L15 25 Z'/></g></svg>`
+  urhobo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><g stroke='%237a4fa0' stroke-width='2' fill='none'><path d='M25 5 L45 25 L25 45 L5 25 Z'/><path d='M25 15 L35 25 L25 35 L15 25 Z'/></g></svg>`,
+  tiv: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><g stroke='%238a2f3f' stroke-width='4' fill='none'><path d='M-5 10 L15 -10'/><path d='M5 25 L25 5'/><path d='M15 40 L35 20'/><path d='M25 50 L45 30'/></g></svg>`
 };
 
 /* ====================== VOCAB DATA ======================
@@ -250,6 +251,43 @@ const COURSES = {
         { native: "Óhọ", en: "Chicken" }, { native: "Ewéri", en: "Monkey" }, { native: "Eni", en: "Elephant" }
       ]}
     ]
+  },
+  tiv: {
+    name: "Tiv", native: "Dzwa Tiv", color: "tiv", glyph: "T", speechLang: "tiv",
+    lessons: [
+      { title: "Numbers 1–5", vocab: [
+        { native: "Mom", en: "One" }, { native: "Uhar", en: "Two" }, { native: "Utar", en: "Three" },
+        { native: "Unyiin", en: "Four" }, { native: "Utaan", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Ateratar", en: "Six" }, { native: "Utaan-kar-uhar", en: "Seven" }, { native: "Anigheni", en: "Eight" },
+        { native: "Utan-kar-unyiin", en: "Nine" }, { native: "Pue", en: "Ten" }
+      ]},
+      { title: "Greetings", vocab: [
+        { native: "M sugh", en: "Hello" }, { native: "M sugh u", en: "Thank you" }, { native: "Een", en: "Yes" },
+        { native: "Ei", en: "No" }, { native: "Dedoo", en: "Good" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "Iti yo er nyi?", en: "What is your name" }, { native: "Iti yam er...", en: "My name is..." },
+        { native: "Mzamber we", en: "Please" }, { native: "U nder ver", en: "Good morning" }, { native: "U pander ver", en: "Good afternoon" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Ter", en: "Father" }, { native: "Ngo", en: "Mother" }, { native: "Wan", en: "Child" },
+        { native: "Abgbian", en: "Sibling" }, { native: "Nom", en: "Husband" }, { native: "Kwase", en: "Wife" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Ishe", en: "Eye" }, { native: "Hinga", en: "Nose" }, { native: "Nyexe", en: "Tooth" },
+        { native: "Nombor", en: "Tongue" }, { native: "Ave", en: "Hand" }
+      ]},
+      { title: "Nature", vocab: [
+        { native: "Mngerem", en: "Water" }, { native: "Usu", en: "Fire" }, { native: "Iyange", en: "Sun" },
+        { native: "Uwer", en: "Moon" }, { native: "Ishan", en: "Star" }, { native: "Ura", en: "Rain" }
+      ]},
+      { title: "Animals", vocab: [
+        { native: "Iyou", en: "Dog" }, { native: "Anyam", en: "Cat" }, { native: "Ishu", en: "Fish" },
+        { native: "Inyon", en: "Bird" }
+      ]}
+    ]
   }
 };
 
@@ -470,12 +508,47 @@ function makeMatchQuestion(pairs){
   return { type: "match", prompt: "Match each word to its meaning", pairs: pairs.map(p => ({ native: p.native, en: p.en })) };
 }
 
+function makeBlankQuestion(v, course){
+  const chars = v.native.split("");
+  const candidates = chars.map((ch, i) => ({ ch, i })).filter(x => x.ch !== " " && x.i !== 0);
+  const pick = candidates.length ? candidates[Math.floor(Math.random() * candidates.length)] : { ch: chars[0], i: 0 };
+  const correctLetter = pick.ch;
+  const masked = chars.map((ch, i) => (i === pick.i ? "_" : ch)).join("");
+
+  const letterPool = [...new Set(poolFor(course).flatMap(p => p.native.split("")).filter(ch => ch !== " " && ch.toLowerCase() !== correctLetter.toLowerCase()))];
+  const distractors = shuffle(letterPool).slice(0, 3);
+  const fallbackLetters = "aeiou".split("").filter(l => l !== correctLetter.toLowerCase());
+  while(distractors.length < 3) distractors.push(fallbackLetters[distractors.length] || "x");
+
+  return {
+    type: "blank",
+    prompt: masked,
+    meaningHint: v.en,
+    options: shuffle([correctLetter, ...distractors]),
+    answer: correctLetter,
+    _vocab: v
+  };
+}
+
+function makeSentenceQuestion(v, course){
+  const words = v.native.split(" ");
+  return {
+    type: "sentence",
+    prompt: `Build the phrase for "${v.en}"`,
+    shuffled: shuffle(words.map((w, i) => ({ w, i }))),
+    answer: words.join(" "),
+    _vocab: v
+  };
+}
+
 /* Rebuilds a fresh version of a missed question (new distractor shuffle) for the retry queue. */
 function requeueQuestion(q, course){
   let fresh;
   if(q.type === "mc") fresh = makeMcQuestion(q._vocab, course);
   else if(q.type === "type") fresh = makeTypeQuestion(q._vocab, course);
   else if(q.type === "listen") fresh = makeListenQuestion(q._vocab, course);
+  else if(q.type === "blank") fresh = makeBlankQuestion(q._vocab, course);
+  else if(q.type === "sentence") fresh = makeSentenceQuestion(q._vocab, course);
   else fresh = makeMatchQuestion(q.pairs);
   fresh.isRetry = true;
   return fresh;
@@ -485,17 +558,33 @@ function buildLessonQuestions(course, lessonIndex){
   const lesson = course.lessons[lessonIndex];
   const vocab = lesson.vocab;
   const order = shuffle(vocab.map((_, i) => i));
-  const mcCount = Math.min(3, vocab.length);
-  const mcIdx = order.slice(0, mcCount);
-  const rest = order.slice(mcCount);
-  const typeIdx = rest[0] ?? order[0];
-  const listenIdx = rest.find(i => i !== typeIdx) ?? mcIdx.find(i => i !== typeIdx) ?? order[0];
+  const used = [];
+  function pickIdx(){
+    const candidate = order.find(i => !used.includes(i));
+    const idx = candidate ?? order[used.length % order.length];
+    used.push(idx);
+    return idx;
+  }
+
+  const mcCount = Math.min(2, vocab.length);
+  const mcIdxs = Array.from({ length: mcCount }, pickIdx);
+  const blankIdx = pickIdx();
+  const typeIdx = pickIdx();
+  const listenIdx = pickIdx();
 
   const questions = [];
-  mcIdx.forEach(i => questions.push(makeMcQuestion(vocab[i], course)));
+  mcIdxs.forEach(i => questions.push(makeMcQuestion(vocab[i], course)));
+  questions.push(makeBlankQuestion(vocab[blankIdx], course));
   questions.push(makeTypeQuestion(vocab[typeIdx], course));
   questions.push(makeListenQuestion(vocab[listenIdx], course));
   questions.push(makeMatchQuestion(vocab));
+
+  const sentenceCandidates = vocab.filter(v => v.native.includes(" "));
+  if(sentenceCandidates.length){
+    questions.push(makeSentenceQuestion(sentenceCandidates[Math.floor(Math.random() * sentenceCandidates.length)], course));
+  }else{
+    questions.push(makeMcQuestion(vocab[pickIdx()], course));
+  }
   return questions;
 }
 
@@ -550,7 +639,7 @@ const DEFAULT_STATE = {
   lastPlayedDate: null,
   hearts: STARTING_HEARTS,
   maxHearts: STARTING_HEARTS,
-  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [], urhobo: [] },
+  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [], urhobo: [], tiv: [] },
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],
@@ -1264,6 +1353,7 @@ function resetQuestionUI(){
   document.getElementById("options-grid").innerHTML = "";
   document.getElementById("type-wrap").classList.add("hidden");
   document.getElementById("match-wrap").classList.add("hidden");
+  document.getElementById("sentence-wrap").classList.add("hidden");
   document.getElementById("speaker-btn").classList.add("hidden");
   document.getElementById("speaking-row").classList.add("hidden");
   document.getElementById("audio-hint").classList.add("hidden");
@@ -1285,7 +1375,7 @@ function renderQuestion(){
   document.getElementById("lesson-hearts").textContent = state.hearts;
   document.getElementById("lesson-progress").style.width = `${(session.qi / session.questions.length) * 100}%`;
 
-  const kickers = { mc: "Translate", type: "Type it", listen: "Listen", match: "Match" };
+  const kickers = { mc: "Translate", type: "Type it", listen: "Listen", match: "Match", blank: "Fill the blank", sentence: "Build it" };
   document.getElementById("question-kicker").textContent = (q.isRetry ? "Retry · " : "") + (kickers[q.type] || "Question");
   document.getElementById("question-prompt").textContent = q.prompt;
 
@@ -1306,6 +1396,18 @@ function renderQuestion(){
       sBtn.onclick = () => speak(q.speakText, course.speechLang);
       setupSpeakingRow();
     }
+  }else if(q.type === "blank"){
+    const grid = document.getElementById("options-grid");
+    q.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt;
+      btn.addEventListener("click", () => selectOption(btn, opt));
+      grid.appendChild(btn);
+    });
+    const hint = document.getElementById("audio-hint");
+    hint.textContent = `Means "${q.meaningHint}"`;
+    hint.classList.remove("hidden");
   }else if(q.type === "listen"){
     const grid = document.getElementById("options-grid");
     q.options.forEach(opt => {
@@ -1334,6 +1436,10 @@ function renderQuestion(){
     document.getElementById("options-grid").classList.add("hidden");
     document.getElementById("match-wrap").classList.remove("hidden");
     renderMatch(q, course);
+  }else if(q.type === "sentence"){
+    document.getElementById("options-grid").classList.add("hidden");
+    document.getElementById("sentence-wrap").classList.remove("hidden");
+    renderSentence(q);
   }
 }
 
@@ -1418,6 +1524,34 @@ function onMatchClick(side, btn, idx, q, course){
   }
 }
 
+/* ---- sentence-building question ---- */
+function renderSentence(q){
+  const bankEl = document.getElementById("sentence-bank");
+  const answerEl = document.getElementById("sentence-answer-row");
+  bankEl.innerHTML = "";
+  answerEl.innerHTML = "";
+  answerEl.classList.remove("correct", "incorrect");
+  q.shuffled.forEach((item, idx) => {
+    const chip = document.createElement("button");
+    chip.className = "sentence-tile";
+    chip.textContent = item.w;
+    chip.dataset.idx = idx;
+    chip.addEventListener("click", e => onSentenceTileTap(e));
+    bankEl.appendChild(chip);
+  });
+  document.getElementById("check-btn").disabled = true;
+}
+
+function onSentenceTileTap(e){
+  if(session.answered) return;
+  const chip = e.currentTarget;
+  const inBank = chip.parentElement.id === "sentence-bank";
+  const target = document.getElementById(inBank ? "sentence-answer-row" : "sentence-bank");
+  target.appendChild(chip);
+  chip.classList.toggle("placed", inBank);
+  document.getElementById("check-btn").disabled = document.getElementById("sentence-bank").children.length > 0;
+}
+
 /* ---- grading / advance ---- */
 function checkAnswer(){
   const q = session.questions[session.qi];
@@ -1425,7 +1559,7 @@ function checkAnswer(){
   if(!session.answered){
     let correct = false;
 
-    if(q.type === "mc" || q.type === "listen"){
+    if(q.type === "mc" || q.type === "listen" || q.type === "blank"){
       if(session.selected == null) return;
       correct = session.selected === q.answer;
       [...document.getElementById("options-grid").children].forEach(b => {
@@ -1440,6 +1574,12 @@ function checkAnswer(){
       input.disabled = true;
     }else if(q.type === "match"){
       return; // graded via taps; check-btn only reachable once answered
+    }else if(q.type === "sentence"){
+      const answerEl = document.getElementById("sentence-answer-row");
+      const attempt = [...answerEl.children].map(c => c.textContent).join(" ");
+      correct = attempt === q.answer;
+      answerEl.classList.add(correct ? "correct" : "incorrect");
+      [...answerEl.children, ...document.getElementById("sentence-bank").children].forEach(c => { c.disabled = true; });
     }
 
     session.answered = true;

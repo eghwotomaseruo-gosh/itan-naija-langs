@@ -19,6 +19,8 @@
   --efik-deep: #2c4f79;
   --urhobo: #7a4fa0;    /* royal purple */
   --urhobo-deep: #54366e;
+  --tiv: #8a2f3f;        /* wine red */
+  --tiv-deep: #5e1f2b;
   --hausa-deep: #a34f22;
   --danger: #d1682f;
 
@@ -115,6 +117,7 @@ button:focus-visible, input:focus-visible, a:focus-visible{
 .track-card.edo .track-glyph{ background: var(--edo); }
 .track-card.efik .track-glyph{ background: var(--efik); }
 .track-card.urhobo .track-glyph{ background: var(--urhobo); }
+.track-card.tiv .track-glyph{ background: var(--tiv); }
 
 /* ===== badges ===== */
 .badges-row{ margin-bottom: 30px; padding-top: 18px; border-top: 1px solid var(--line); }
@@ -252,6 +255,22 @@ button:focus-visible, input:focus-visible, a:focus-visible{
 .match-item.selected{ border-color: var(--gold); background: var(--surface-raised); }
 .match-item.matched{ border-color: var(--igbo); background: rgba(63,157,107,0.16); color:#8fd6ac; opacity:.85; }
 .match-item.wrong{ border-color: var(--danger); background: rgba(209,104,47,0.18); }
+
+/* sentence-building question */
+.sentence-wrap{ display:flex; flex-direction:column; gap:22px; }
+.sentence-answer-row{
+  display:flex; flex-wrap:wrap; gap:8px; min-height:52px;
+  padding: 10px; border:2px dashed var(--line); border-radius:14px;
+}
+.sentence-answer-row.correct{ border-color: var(--igbo); border-style:solid; background: rgba(63,157,107,0.1); }
+.sentence-answer-row.incorrect{ border-color: var(--danger); border-style:solid; background: rgba(209,104,47,0.1); }
+.sentence-bank{ display:flex; flex-wrap:wrap; gap:8px; }
+.sentence-tile{
+  background: var(--surface); border:2px solid var(--line); border-radius:10px;
+  padding: 10px 16px; color: var(--cream); font-family: var(--font-head); font-weight:600; font-size:15px;
+}
+.sentence-tile.placed{ background: var(--surface-raised); border-color: var(--gold); }
+.sentence-tile:disabled{ opacity:.75; }
 .option-btn{
   background: var(--surface); border:2px solid var(--line); border-radius:14px;
   padding: 16px 14px; color: var(--cream); font-size:15px; font-weight:500; text-align:left;
@@ -456,6 +475,7 @@ button:focus-visible, input:focus-visible, a:focus-visible{
 .practice-card.edo .practice-glyph{ background: var(--edo); }
 .practice-card.efik .practice-glyph{ background: var(--efik); }
 .practice-card.urhobo .practice-glyph{ background: var(--urhobo); }
+.practice-card.tiv .practice-glyph{ background: var(--tiv); }
 .practice-name{ font-family: var(--font-head); font-weight:700; font-size:15px; margin:0 0 2px; }
 .practice-sub{ font-size:12.5px; color: var(--cream-dim); margin:0; line-height:1.4; }
 .practice-start-btn{ align-self:flex-start; padding:9px 16px; font-size:13px; }
@@ -513,6 +533,7 @@ button:focus-visible, input:focus-visible, a:focus-visible{
 .profile-lang-glyph.edo{ background: var(--edo); }
 .profile-lang-glyph.efik{ background: var(--efik); }
 .profile-lang-glyph.urhobo{ background: var(--urhobo); }
+.profile-lang-glyph.tiv{ background: var(--tiv); }
 .profile-lang-body{ flex:1; }
 .profile-lang-name{ font-family: var(--font-head); font-weight:600; font-size:13.5px; margin:0 0 5px; }
 .profile-lang-track{ height:5px; border-radius:4px; background: rgba(244,239,227,0.1); overflow:hidden; }
@@ -541,6 +562,7 @@ button:focus-visible, input:focus-visible, a:focus-visible{
 .continue-card.edo{ border-color: rgba(47,143,138,0.55); }
 .continue-card.efik{ border-color: rgba(63,111,168,0.55); }
 .continue-card.urhobo{ border-color: rgba(122,79,160,0.55); }
+.continue-card.tiv{ border-color: rgba(138,47,63,0.55); }
 .continue-kicker{ font-family: var(--font-head); text-transform:uppercase; letter-spacing:1.3px; font-size:12px; color: var(--gold); margin:0 0 8px; font-weight:700; }
 .continue-title{ font-family: var(--font-display); font-size:25px; font-weight:600; margin:0 0 4px; line-height:1.2; }
 .continue-sub{ font-size:13.5px; color: var(--cream-dim); margin:0 0 18px; }
@@ -591,6 +613,7 @@ button:focus-visible, input:focus-visible, a:focus-visible{
 .lang-tab.edo .lang-tab-glyph{ background: var(--edo); }
 .lang-tab.efik .lang-tab-glyph{ background: var(--efik); }
 .lang-tab.urhobo .lang-tab-glyph{ background: var(--urhobo); }
+.lang-tab.tiv .lang-tab-glyph{ background: var(--tiv); }
 .lang-tab.active .lang-tab-glyph{ border-color: var(--gold); box-shadow: 0 0 0 2px var(--bg); }
 .lang-tab-label{ font-family: var(--font-head); font-weight:600; font-size:12.5px; color: var(--cream-dim); }
 .lang-tab.active .lang-tab-label{ color: var(--cream); }

@@ -1,0 +1,36 @@
+:root {
+  /* Updated fonts for Nigerian diacritics support */
+  --font-body: "Inter", "IBM Plex Sans", -apple-system, sans-serif;
+  /* ... (rest of your variables) ... */
+}
+
+/* Improved button animations */
+.option-btn {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 14px;
+  color: var(--cream);
+  font-size: 15px;
+  box-shadow: 0 4px 0 var(--line); /* Physical button feel */
+  transition: all 0.1s;
+}
+
+.option-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--line);
+}
+
+.option-btn.selected {
+  border-color: var(--gold);
+  background: var(--surface-raised);
+  box-shadow: 0 4px 0 var(--gold-deep);
+}
+
+/* ... (rest of your styles) ... */
+
+@keyframes pulse {
+  0% { opacity: 0.5; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.5; transform: scale(0.95); }
+}

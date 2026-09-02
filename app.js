@@ -2719,6 +2719,7 @@ function openPath(key){
   const PATH_OFFSETS = [0, -50, -75, -45, 0, 45, 75, 50];
 
   const pathEl = document.getElementById("lesson-path");
+  pathEl.className = "lesson-path " + course.color;
   pathEl.innerHTML = "";
 
   let currentNodeEl = null;
@@ -2734,25 +2735,46 @@ function openPath(key){
     const currentOffset = PATH_OFFSETS[layoutItemIndex % PATH_OFFSETS.length];
     layoutItemIndex++;
 
-    tileWrap.className = "lesson-tile" + (locked ? " locked" : "") + (isDone ? " complete" : "") + (isNext ? " active" : "");
+    tileWrap.className = "lesson-tile " + course.color + (locked ? " locked" : "") + (isDone ? " complete" : "") + (isNext ? " active" : "");
     tileWrap.style.marginLeft = `${currentOffset}px`;
+
+    // Real 3D Ground Contact Shadow anchored to the path terrain
+    const groundShadow = document.createElement("div");
+    groundShadow.className = "tile-ground-shadow";
+    tileWrap.appendChild(groundShadow);
 
     // 3D tactile button
     const btn = document.createElement("button");
-    btn.className = "tile-button";
-    btn.style.setProperty("--tile-bg", locked ? "#222c3a" : `var(--${course.color})`);
-    btn.style.setProperty("--tile-depth", locked ? "#151b24" : `var(--${course.color}-deep)`);
+    btn.className = "tile-button " + course.color + (locked ? " locked" : "");
+    btn.setAttribute("aria-label", `${lesson.title} - ${isDone ? "Completed" : isNext ? "Current" : "Locked"}`);
+    btn.style.setProperty("--tile-bg", locked ? "#232c3a" : `var(--${course.color})`);
+    btn.style.setProperty("--tile-depth", locked ? "#121822" : `var(--${course.color}-deep)`);
 
-    // Top specular gloss shine
+    // 1. Top specular gloss dome shine
     const gloss = document.createElement("div");
     gloss.className = "tile-gloss";
     btn.appendChild(gloss);
 
-    // If active (current) node, add 16-lobed scalloped rosette ring, sparkles, and "START" tooltip
+    // 2. Minted coin concentric inner bevel ring
+    const innerRing = document.createElement("div");
+    innerRing.className = "tile-inner-ring";
+    btn.appendChild(innerRing);
+
+    // 3. Lower fresnel rim light
+    const rimLight = document.createElement("div");
+    rimLight.className = "tile-rim-light";
+    btn.appendChild(rimLight);
+
+    // If active (current) node, add 16-lobed scalloped rosette ring, ambient aura, sparkles, and 3D "START" tooltip
     if(isNext){
       const activeWrap = document.createElement("div");
       activeWrap.className = "tile-active-wrap";
       activeWrap.innerHTML = SCALLOPED_ROSETTE_SVG;
+
+      // Ambient glowing energy aura behind active stone
+      const aura = document.createElement("div");
+      aura.className = "tile-active-aura";
+      activeWrap.appendChild(aura);
 
       // Floating sparkles
       const s1 = document.createElement("span"); s1.className = "tile-sparkle s1"; s1.textContent = "✨";
@@ -2762,7 +2784,7 @@ function openPath(key){
       activeWrap.appendChild(s2);
       activeWrap.appendChild(s3);
 
-      // "START" speech bubble pill tooltip
+      // 3D "START" speech bubble pill tooltip
       const tooltip = document.createElement("div");
       tooltip.className = "tile-tooltip";
       tooltip.textContent = "START";
@@ -2783,7 +2805,7 @@ function openPath(key){
       iconContainer.innerHTML = `<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
       btn.appendChild(iconContainer);
     }else if(isNext){
-      // Show lesson number inside active disc (like the "8" in screenshot)
+      // Show lesson number inside active disc (with high-contrast 3D depth)
       const numSpan = document.createElement("span");
       numSpan.className = "tile-number";
       numSpan.textContent = `${i + 1}`;
@@ -2794,7 +2816,7 @@ function openPath(key){
       btn.appendChild(iconContainer);
     }
 
-    // Completed node badge: 3 golden stars on top (from screenshot) and gold checkmark
+    // Completed node badge: 3 golden stars on top and 3D gold checkmark medallion
     if(isDone){
       const stars = document.createElement("div");
       stars.className = "tile-stars";
@@ -2826,10 +2848,26 @@ function openPath(key){
 
     pathEl.appendChild(tileWrap);
 
+    // 3D Connecting Stepping Pebbles along the winding path between lessons
+    const lessonNumber = i + 1;
+    if(lessonNumber % 4 !== 0 && i < course.lessons.length - 1){
+      const nextOffset = PATH_OFFSETS[(layoutItemIndex) % PATH_OFFSETS.length];
+      const trailRow = document.createElement("div");
+      trailRow.className = "path-trail-row" + (isDone ? " lit" : "");
+      const p1 = Math.round(currentOffset * 0.75 + nextOffset * 0.25);
+      const p2 = Math.round(currentOffset * 0.5 + nextOffset * 0.5);
+      const p3 = Math.round(currentOffset * 0.25 + nextOffset * 0.75);
+      trailRow.innerHTML = `
+        <span class="path-pebble" style="margin-left:${p1}px"></span>
+        <span class="path-pebble" style="margin-left:${p2}px"></span>
+        <span class="path-pebble" style="margin-left:${p3}px"></span>
+      `;
+      pathEl.appendChild(trailRow);
+    }
+
     // ==========================================
     // REWARD CHEST AFTER EVERY 4 GAMES (LESSONS)
     // ==========================================
-    const lessonNumber = i + 1;
     if(lessonNumber % 4 === 0){
       const chestNum = lessonNumber / 4;
       const chestId = `${key}-chest-${chestNum}`;
@@ -2843,6 +2881,11 @@ function openPath(key){
       chestNode.className = "path-reward-chest " + (isClaimed ? "claimed" : isReady ? "ready" : "locked");
       // Align chest centered on the path for clean rhythm
       chestNode.style.marginLeft = "0px";
+
+      // Real 3D Ground Contact Shadow for Chest
+      const chestShadow = document.createElement("div");
+      chestShadow.className = "chest-ground-shadow";
+      chestNode.appendChild(chestShadow);
 
       // Chest SVG container
       const svgBox = document.createElement("div");

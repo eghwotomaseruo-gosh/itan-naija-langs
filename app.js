@@ -8,7 +8,10 @@ const PATTERNS = {
   edo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><g fill='%232f8f8a'><circle cx='6' cy='6' r='2.5'/><circle cx='18' cy='6' r='2.5'/><circle cx='30' cy='6' r='2.5'/><circle cx='42' cy='6' r='2.5'/><circle cx='12' cy='18' r='2.5'/><circle cx='24' cy='18' r='2.5'/><circle cx='36' cy='18' r='2.5'/><circle cx='6' cy='30' r='2.5'/><circle cx='18' cy='30' r='2.5'/><circle cx='30' cy='30' r='2.5'/><circle cx='42' cy='30' r='2.5'/></g></svg>`,
   efik: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='40'><g stroke='%233f6fa8' stroke-width='2' fill='none'><path d='M0 10 Q15 0 30 10 T60 10'/><path d='M0 22 Q15 12 30 22 T60 22'/><path d='M0 34 Q15 24 30 34 T60 34'/></g></svg>`,
   urhobo: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><g stroke='%237a4fa0' stroke-width='2' fill='none'><path d='M25 5 L45 25 L25 45 L5 25 Z'/><path d='M25 15 L35 25 L25 35 L15 25 Z'/></g></svg>`,
-  tiv: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><g stroke='%238a2f3f' stroke-width='4' fill='none'><path d='M-5 10 L15 -10'/><path d='M5 25 L25 5'/><path d='M15 40 L35 20'/><path d='M25 50 L45 30'/></g></svg>`
+  tiv: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><g stroke='%238a2f3f' stroke-width='4' fill='none'><path d='M-5 10 L15 -10'/><path d='M5 25 L25 5'/><path d='M15 40 L35 20'/><path d='M25 50 L45 30'/></g></svg>`,
+  uvwie: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><g stroke='%23e06d53' stroke-width='2' fill='none'><polygon points='24,4 44,24 24,44 4,24'/><circle cx='24' cy='24' r='4' fill='%23e06d53'/></g></svg>`,
+  isoko: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><g stroke='%2320948b' stroke-width='2' fill='none'><line x1='0' y1='25' x2='50' y2='25'/><line x1='25' y1='0' x2='25' y2='50'/><circle cx='25' cy='25' r='10'/></g></svg>`,
+  ijaw: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='40'><g stroke='%23247ba0' stroke-width='2' fill='none'><path d='M0 12 C15 4, 30 20, 45 12 S60 4, 75 12'/><path d='M0 26 C15 18, 30 34, 45 26 S60 18, 75 26'/></g></svg>`
 };
 
 /* ====================== VOCAB DATA ======================
@@ -452,6 +455,144 @@ const COURSES = {
         { native: "Va", en: "Come" }, { native: "Nenge", en: "See" }
       ]}
     ]
+  },
+  uvwie: {
+    name: "Uvwie", native: "Ẹvwrẹn Uvwie", color: "uvwie", glyph: "U", speechLang: "en-NG",
+    lessons: [
+      { title: "Greetings", vocab: [
+        { native: "Miguọ", en: "Hello" }, { native: "Ovwiroro", en: "Good morning" },
+        { native: "Meworhe", en: "Welcome" }, { native: "Obe", en: "Thank you" },
+        { native: "Eyen", en: "Yes" }, { native: "Ẹjo", en: "No" }
+      ]},
+      { title: "Numbers 1–5", vocab: [
+        { native: "Ọvo", en: "One" }, { native: "Iwe", en: "Two" }, { native: "Erha", en: "Three" },
+        { native: "Ẹnẹ", en: "Four" }, { native: "Iri", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Ezan", en: "Six" }, { native: "Ighwrẹn", en: "Seven" }, { native: "Ẹrhọrọn", en: "Eight" },
+        { native: "Izi", en: "Nine" }, { native: "Ikhwe", en: "Ten" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Ọsẹ", en: "Father" }, { native: "Oni", en: "Mother" }, { native: "Ọmọ", en: "Child" },
+        { native: "Ọmọte", en: "Daughter" }, { native: "Ọmọshare", en: "Son" }, { native: "Ọshare", en: "Husband" }, { native: "Aye", en: "Wife" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "K'odẹ rẹ?", en: "What is your name" }, { native: "Odẹ mẹ...", en: "My name is..." },
+        { native: "K'oyoma?", en: "How are things" }, { native: "Oyoma", en: "It is good" }, { native: "Biko", en: "Please" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Urhukpe", en: "Head" }, { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" },
+        { native: "Ẹrhọ", en: "Ear" }, { native: "Ọbọ", en: "Hand" }, { native: "Awọ", en: "Leg" }
+      ]},
+      { title: "Nature & Elements", vocab: [
+        { native: "Ame", en: "Water" }, { native: "Ẹrhen", en: "Fire" }, { native: "Ọre", en: "Sun" },
+        { native: "Ukie", en: "Moon" }, { native: "Oso", en: "Rain" }
+      ]},
+      { title: "Food & Dining", vocab: [
+        { native: "Emu", en: "Food" }, { native: "Ole", en: "Yam" }, { native: "Iribo", en: "Soup" },
+        { native: "Iriẹ", en: "Meat" }, { native: "Eri", en: "Fish" }
+      ]},
+      { title: "Market & Trade", vocab: [
+        { native: "Ekia", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
+        { native: "Shia", en: "Sell" }, { native: "Idjerhe", en: "Road" }
+      ]},
+      { title: "Essential Verbs", vocab: [
+        { native: "Re", en: "Eat" }, { native: "Da", en: "Drink" }, { native: "Kpo", en: "Go" },
+        { native: "Rhe", en: "Come" }, { native: "Mrẹ", en: "See" }
+      ]}
+    ]
+  },
+  isoko: {
+    name: "Isoko", native: "Ẹvẹ Isoko", color: "isoko", glyph: "S", speechLang: "en-NG",
+    lessons: [
+      { title: "Greetings", vocab: [
+        { native: "Do", en: "Hello" }, { native: "Koyo", en: "Greetings" },
+        { native: "Wadoo", en: "Thank you" }, { native: "Ẹhẹ", en: "Yes" },
+        { native: "Iye", en: "No" }, { native: "Owerewe", en: "Good morning" }
+      ]},
+      { title: "Numbers 1–5", vocab: [
+        { native: "Ọvo", en: "One" }, { native: "Ive", en: "Two" }, { native: "Isa", en: "Three" },
+        { native: "Ine", en: "Four" }, { native: "Isi", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Izi", en: "Six" }, { native: "Ihre", en: "Seven" }, { native: "Irie", en: "Eight" },
+        { native: "Izii", en: "Nine" }, { native: "Ikpe", en: "Ten" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Ọsẹ", en: "Father" }, { native: "Oni", en: "Mother" }, { native: "Ọmọ", en: "Child" },
+        { native: "Ọmọtọ", en: "Daughter" }, { native: "Ọmọzae", en: "Son" }, { native: "Ọzae", en: "Husband" }, { native: "Aye", en: "Wife" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "K'odẹ ra?", en: "What is your name" }, { native: "Odẹ mẹ...", en: "My name is..." },
+        { native: "K'abọ?", en: "How are things" }, { native: "Abọ r'oma", en: "Things are good" }, { native: "Biko", en: "Please" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Uzon", en: "Head" }, { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" },
+        { native: "Ẹrhọ", en: "Ear" }, { native: "Ọbọ", en: "Hand" }, { native: "Awọ", en: "Leg" }
+      ]},
+      { title: "Nature & Weather", vocab: [
+        { native: "Ame", en: "Water" }, { native: "Ẹrahe", en: "Fire" }, { native: "Ọre", en: "Sun" },
+        { native: "Uki", en: "Moon" }, { native: "Oso", en: "Rain" }, { native: "Isi", en: "Star" }
+      ]},
+      { title: "Food & Crops", vocab: [
+        { native: "Emu", en: "Food" }, { native: "Ole", en: "Yam" }, { native: "Ovi", en: "Soup" },
+        { native: "Usi", en: "Starch" }, { native: "Eri", en: "Fish" }, { native: "Ẹra", en: "Meat" }
+      ]},
+      { title: "Market & Trade", vocab: [
+        { native: "Ẹki", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
+        { native: "Zẹ", en: "Sell" }, { native: "Idhere", en: "Road" }
+      ]},
+      { title: "Essential Verbs", vocab: [
+        { native: "Re", en: "Eat" }, { native: "Da", en: "Drink" }, { native: "Nya", en: "Go" },
+        { native: "Tha", en: "Come" }, { native: "Ruẹ", en: "See" }
+      ]}
+    ]
+  },
+  ijaw: {
+    name: "Ijaw", native: "Ịjọ (Izon)", color: "ijaw", glyph: "Ị", speechLang: "en-NG",
+    lessons: [
+      { title: "Greetings", vocab: [
+        { native: "Dọọ", en: "Hello" }, { native: "Bọda ba", en: "Good morning" },
+        { native: "Nua", en: "Thank you" }, { native: "Iniye", en: "Yes" },
+        { native: "Kẹkẹ", en: "No" }, { native: "Alua", en: "Greetings" }
+      ]},
+      { title: "Numbers 1–5", vocab: [
+        { native: "Kẹnị", en: "One" }, { native: "Mamụ", en: "Two" }, { native: "Tǎrụ", en: "Three" },
+        { native: "Nêi", en: "Four" }, { native: "Sọnrọ", en: "Five" }
+      ]},
+      { title: "Numbers 6–10", vocab: [
+        { native: "Sôndie", en: "Six" }, { native: "Sọnmẹma", en: "Seven" }, { native: "Nîngini", en: "Eight" },
+        { native: "Isêi", en: "Nine" }, { native: "Oyí", en: "Ten" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Dǎu", en: "Father" }, { native: "Yǐngi", en: "Mother" }, { native: "Tọbọụ", en: "Child" },
+        { native: "Tọbọụ-ere", en: "Daughter" }, { native: "Tọbọụ-owei", en: "Son" }, { native: "Owei", en: "Husband" }, { native: "Ere", en: "Wife" }
+      ]},
+      { title: "Common Phrases", vocab: [
+        { native: "I biri kẹnị?", en: "How are you" }, { native: "I biri bọbara", en: "I am fine" },
+        { native: "I eri te ye?", en: "What is your name" }, { native: "Inia eri...", en: "My name is..." }, { native: "Biko", en: "Please" }
+      ]},
+      { title: "Body Parts", vocab: [
+        { native: "Tịbị", en: "Head" }, { native: "Tọrọ", en: "Eye" }, { native: "Bịbị", en: "Mouth" },
+        { native: "Bẹrẹ", en: "Ear" }, { native: "Bara", en: "Hand" }, { native: "Bụọ", en: "Leg" }
+      ]},
+      { title: "Waterways & Nature", vocab: [
+        { native: "Beni", en: "Water" }, { native: "Fịrị", en: "River" }, { native: "Angala", en: "Mangrove" },
+        { native: "Ẹkẹn", en: "Sun" }, { native: "Aki", en: "Moon" }, { native: "Osini", en: "Rain" }
+      ]},
+      { title: "Food & Fish", vocab: [
+        { native: "Fịye", en: "Food" }, { native: "Indi", en: "Fish" }, { native: "Nama", en: "Meat" },
+        { native: "Buru", en: "Yam" }, { native: "Oki", en: "Plantain" }
+      ]},
+      { title: "Market & Trade", vocab: [
+        { native: "Kẹkẹrẹ", en: "Market" }, { native: "Ikịọ", en: "Money" }, { native: "Fẹ", en: "Buy" },
+        { native: "Dẹrị", en: "Sell" }, { native: "Aru", en: "Boat" }
+      ]},
+      { title: "Essential Verbs", vocab: [
+        { native: "Fị", en: "Eat" }, { native: "Bọụ", en: "Drink" }, { native: "Mu", en: "Go" },
+        { native: "Bọ", en: "Come" }, { native: "Ẹrị", en: "See" }
+      ]}
+    ]
   }
 };
 
@@ -598,6 +739,54 @@ const CULTURE = {
         { text: "Say “M sugh ne” (Greetings to you all) with a warm smile", correct: true, feedback: "Wonderful! You'll be warmly received into the circle." },
         { text: "Walk past everyone into a private room", correct: false, feedback: "Always greet the household together first." },
         { text: "Refuse to speak until spoken to", correct: false, feedback: "A cheerful greeting breaks any ice." }
+      ]
+    }
+  },
+  uvwie: {
+    intro: "Heritage, royal traditions, and warm communal wisdom from the Uvwie kingdom in Delta State.",
+    proverbs: [
+      { native: "Ọmọ r'ẹkpeti ọvo ọ rha vwa.", translation: "A child from a united box cannot be scattered.", meaning: "Kinship, mutual support, and unity overcome every obstacle." },
+      { native: "Uku k'emro ọ r'oma re.", translation: "Patience and soft words make hard matters pleasant.", meaning: "Patience and measured speech calm volatile disagreements." }
+    ],
+    etiquette: { title: "The respectful 'Miguọ' greeting", text: "In Uvwie culture, young people greet elders with a respectful bow or knee curtsy saying 'Miguọ' (I kneel), and elders respond with blessings of long life and peace." },
+    scenario: {
+      prompt: "You visit a senior relative in Effurun/Uvwie. How do you respectfully greet them?",
+      options: [
+        { text: "Say “Miguọ” with a respectful bow or knee curtsy", correct: true, feedback: "Spot on! The elder will warmly bless you with prayers for life and peace." },
+        { text: "Give a quick wave and sit down silently", correct: false, feedback: "A respectful spoken greeting with posture is expected." },
+        { text: "Demand refreshments before greeting", correct: false, feedback: "Always greet before anything else!" }
+      ]
+    }
+  },
+  isoko: {
+    intro: "Rich proverbs, farming heritage, and hospitality from the Isoko land in the Niger Delta.",
+    proverbs: [
+      { native: "Ọvo ọ rẹ sa kporo emu vẹ abọ ọvo ho.", translation: "One cannot clap with a single hand.", meaning: "Teamwork and communal solidarity accomplish what solo effort cannot." },
+      { native: "Ubi rẹ edhere ọ rẹ lẹliẹ ọzae jọ.", translation: "Patience on the pathway determines who finishes the journey.", meaning: "Steadfast perseverance always leads to honor." }
+    ],
+    etiquette: { title: "Warm 'Do' and 'Wadoo' reception", text: "Callers announce their arrival at an Isoko home with 'Do' or 'Koyo', and hosts respond with 'Wadoo' while extending hospitality as a sign of goodwill." },
+    scenario: {
+      prompt: "You arrive at an Isoko family home in Oleh or Ozoro. How do you greet the household?",
+      options: [
+        { text: "Say “Do” or “Koyo” and express warmth to the elders", correct: true, feedback: "Excellent! The hosts will warmly welcome you with 'Wadoo'." },
+        { text: "Stand by the gate and say nothing", correct: false, feedback: "Call out a warm 'Do' to announce your presence." },
+        { text: "Ignore everyone and walk right in", correct: false, feedback: "A respectful greeting is the hallmark of Isoko hospitality." }
+      ]
+    }
+  },
+  ijaw: {
+    intro: "Riverine wisdom, waterway etiquette, and coastal proverbs from the Ịjọ (Izon) people of the Niger Delta.",
+    proverbs: [
+      { native: "Aru gbein-gbein pẹlẹmọ gba.", translation: "A steady paddle steers the canoe safely across the tide.", meaning: "Composure and steady discipline navigate life's turbulent moments." },
+      { native: "Kẹnị bara sẹi indi kọnmọ gba.", translation: "One hand alone cannot secure a large slippery fish.", meaning: "Cooperation and unity overcome difficult tasks." }
+    ],
+    etiquette: { title: "The 'Dọọ' peace greeting & river hospitality", text: "In Ịjọ communities, greeting someone with 'Dọọ' literally wishes them peace and calm waters. Offering freshwater to incoming boat travelers is the fundamental welcome gesture." },
+    scenario: {
+      prompt: "You arrive at a waterfront community in Bayelsa or Delta. How do you address the gathering?",
+      options: [
+        { text: "Say “Dọọ” (Peace to you) with warmth and humility", correct: true, feedback: "Spot on! 'Dọọ' immediately establishes peace and warmth." },
+        { text: "Walk past without acknowledging anyone", correct: false, feedback: "A cheerful greeting connects you with the community." },
+        { text: "Refuse the offered drinking water immediately", correct: false, feedback: "Receiving water graciously is a sign of peace." }
       ]
     }
   }
@@ -1006,7 +1195,7 @@ const DEFAULT_STATE = {
   lastPlayedDate: null,
   hearts: STARTING_HEARTS,
   maxHearts: STARTING_HEARTS,
-  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [], urhobo: [], tiv: [] },
+  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [], urhobo: [], tiv: [], uvwie: [], isoko: [], ijaw: [] },
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],
@@ -1017,7 +1206,7 @@ const DEFAULT_STATE = {
   todayXpDate: null,
   practiceSessionsCompleted: 0,
   longestStreak: 0,
-  cultureCompleted: { igbo: false, yoruba: false, hausa: false, edo: false, efik: false, urhobo: false, tiv: false }
+  cultureCompleted: { igbo: false, yoruba: false, hausa: false, edo: false, efik: false, urhobo: false, tiv: false, uvwie: false, isoko: false, ijaw: false }
 };
 
 /* ---- account session (token stored locally; everything else lives on the server) ---- */

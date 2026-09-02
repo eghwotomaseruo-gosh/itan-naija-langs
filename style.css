@@ -21,6 +21,12 @@
   --urhobo-deep: #54366e;
   --tiv: #c98a2c;       /* benue amber */
   --tiv-deep: #8f5e17;
+  --uvwie: #e06d53;     /* effurun terracotta */
+  --uvwie-deep: #9e432e;
+  --isoko: #20948b;     /* delta jade teal */
+  --isoko-deep: #13605a;
+  --ijaw: #247ba0;      /* niger delta marine blue */
+  --ijaw-deep: #13465c;
   --hausa-deep: #a34f22;
   --danger: #d1682f;
 
@@ -114,6 +120,10 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .track-card.edo .track-glyph{ background: var(--edo); }
 .track-card.efik .track-glyph{ background: var(--efik); }
 .track-card.urhobo .track-glyph{ background: var(--urhobo); }
+.track-card.tiv .track-glyph{ background: var(--tiv); }
+.track-card.uvwie .track-glyph{ background: var(--uvwie); }
+.track-card.isoko .track-glyph{ background: var(--isoko); }
+.track-card.ijaw .track-glyph{ background: var(--ijaw); }
 
 /* ===== badges ===== */
 .badges-row{ margin-bottom: 30px; padding-top: 18px; border-top: 1px solid var(--line); }
@@ -367,20 +377,28 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .landing-cta:active{ transform: scale(0.98); }
 
 .landing-languages{
-  max-width:520px; margin:0 auto; padding: 0 20px 36px;
-  display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
+  max-width:600px; margin:0 auto; padding: 0 16px 36px;
+  display:flex; gap:10px; overflow-x:auto; -webkit-overflow-scrolling:touch;
 }
 .landing-lang-card{
+  flex-shrink:0; width:92px;
   background: var(--surface); border:1px solid var(--line); border-radius:16px;
-  padding: 18px 8px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding: 14px 6px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;
 }
 .landing-lang-glyph{
-  width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center;
-  font-family: var(--font-display); font-weight:600; font-size:18px; color: var(--bg-deep);
+  width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-display); font-weight:600; font-size:17px; color: var(--bg-deep);
 }
 .landing-lang-card.igbo .landing-lang-glyph{ background: var(--igbo); }
 .landing-lang-card.yoruba .landing-lang-glyph{ background: var(--yoruba); }
 .landing-lang-card.hausa .landing-lang-glyph{ background: var(--hausa); }
+.landing-lang-card.edo .landing-lang-glyph{ background: var(--edo); }
+.landing-lang-card.efik .landing-lang-glyph{ background: var(--efik); }
+.landing-lang-card.urhobo .landing-lang-glyph{ background: var(--urhobo); }
+.landing-lang-card.tiv .landing-lang-glyph{ background: var(--tiv); }
+.landing-lang-card.uvwie .landing-lang-glyph{ background: var(--uvwie); }
+.landing-lang-card.isoko .landing-lang-glyph{ background: var(--isoko); }
+.landing-lang-card.ijaw .landing-lang-glyph{ background: var(--ijaw); }
 .landing-lang-name{ font-family: var(--font-head); font-weight:700; font-size:14px; margin:0; }
 .landing-lang-native{ font-size:11px; color: var(--cream-dim); margin:0; }
 
@@ -450,6 +468,9 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .practice-card.efik{ border-color: rgba(63,111,168,0.3); }
 .practice-card.urhobo{ border-color: rgba(122,79,160,0.3); }
 .practice-card.tiv{ border-color: rgba(201,138,44,0.3); }
+.practice-card.uvwie{ border-color: rgba(224,109,83,0.3); }
+.practice-card.isoko{ border-color: rgba(32,148,139,0.3); }
+.practice-card.ijaw{ border-color: rgba(36,123,160,0.3); }
 
 .practice-card-head{ display:flex; align-items:center; gap:12px; }
 .practice-glyph{
@@ -464,6 +485,9 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .practice-card.efik .practice-glyph{ background: var(--efik); }
 .practice-card.urhobo .practice-glyph{ background: var(--urhobo); }
 .practice-card.tiv .practice-glyph{ background: var(--tiv); }
+.practice-card.uvwie .practice-glyph{ background: var(--uvwie); }
+.practice-card.isoko .practice-glyph{ background: var(--isoko); }
+.practice-card.ijaw .practice-glyph{ background: var(--ijaw); }
 
 .practice-name{ font-family: var(--font-head); font-weight:700; font-size:16px; margin:0 0 2px; }
 .practice-sub{ font-size:12.5px; color: var(--cream-dim); margin:0; line-height:1.4; }
@@ -826,6 +850,10 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .profile-lang-glyph.edo{ background: var(--edo); }
 .profile-lang-glyph.efik{ background: var(--efik); }
 .profile-lang-glyph.urhobo{ background: var(--urhobo); }
+.profile-lang-glyph.tiv{ background: var(--tiv); }
+.profile-lang-glyph.uvwie{ background: var(--uvwie); }
+.profile-lang-glyph.isoko{ background: var(--isoko); }
+.profile-lang-glyph.ijaw{ background: var(--ijaw); }
 .profile-lang-body{ flex:1; }
 .profile-lang-name{ font-family: var(--font-head); font-weight:600; font-size:13.5px; margin:0 0 5px; }
 .profile-lang-track{ height:5px; border-radius:4px; background: rgba(244,239,227,0.1); overflow:hidden; }
@@ -854,6 +882,10 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .continue-card.edo{ border-color: rgba(47,143,138,0.55); }
 .continue-card.efik{ border-color: rgba(63,111,168,0.55); }
 .continue-card.urhobo{ border-color: rgba(122,79,160,0.55); }
+.continue-card.tiv{ border-color: rgba(201,138,44,0.55); }
+.continue-card.uvwie{ border-color: rgba(224,109,83,0.55); }
+.continue-card.isoko{ border-color: rgba(32,148,139,0.55); }
+.continue-card.ijaw{ border-color: rgba(36,123,160,0.55); }
 .continue-kicker{ font-family: var(--font-head); text-transform:uppercase; letter-spacing:1.3px; font-size:12px; color: var(--gold); margin:0 0 8px; font-weight:700; }
 .continue-title{ font-family: var(--font-display); font-size:25px; font-weight:600; margin:0 0 4px; line-height:1.2; }
 .continue-sub{ font-size:13.5px; color: var(--cream-dim); margin:0 0 18px; }
@@ -904,6 +936,10 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .lang-tab.edo .lang-tab-glyph{ background: var(--edo); }
 .lang-tab.efik .lang-tab-glyph{ background: var(--efik); }
 .lang-tab.urhobo .lang-tab-glyph{ background: var(--urhobo); }
+.lang-tab.tiv .lang-tab-glyph{ background: var(--tiv); }
+.lang-tab.uvwie .lang-tab-glyph{ background: var(--uvwie); }
+.lang-tab.isoko .lang-tab-glyph{ background: var(--isoko); }
+.lang-tab.ijaw .lang-tab-glyph{ background: var(--ijaw); }
 .lang-tab.active .lang-tab-glyph{ border-color: var(--gold); box-shadow: 0 0 0 2px var(--bg); }
 .lang-tab-label{ font-family: var(--font-head); font-weight:600; font-size:12.5px; color: var(--cream-dim); }
 .lang-tab.active .lang-tab-label{ color: var(--cream); }

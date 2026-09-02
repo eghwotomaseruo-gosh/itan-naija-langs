@@ -63,7 +63,7 @@ const DEFAULT_PROGRESS = {
   lastPlayedDate: null,
   hearts: 5,
   maxHearts: 5,
-  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [], urhobo: [], tiv: [] },
+  completed: { igbo: [], yoruba: [], hausa: [], edo: [], efik: [], urhobo: [], tiv: [], uvwie: [], isoko: [], ijaw: [] },
   earnedBadges: [],
   hasPerfect: false,
   practiceDates: [],
@@ -74,7 +74,7 @@ const DEFAULT_PROGRESS = {
   todayXpDate: null,
   practiceSessionsCompleted: 0,
   longestStreak: 0,
-  cultureCompleted: { igbo: false, yoruba: false, hausa: false, edo: false, efik: false, urhobo: false, tiv: false }
+  cultureCompleted: { igbo: false, yoruba: false, hausa: false, edo: false, efik: false, urhobo: false, tiv: false, uvwie: false, isoko: false, ijaw: false }
 };
 
 async function initDb(){

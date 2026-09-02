@@ -2604,19 +2604,77 @@ const SCALLOPED_ROSETTE_SVG = `<svg class="tile-scallop-ring" viewBox="0 0 100 1
   <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity="0.75"/>
 </svg>`;
 
-/* Lesson Tile Icons matching Duolingo aesthetic */
-function getLessonTileIconSvg(i){
-  const iconSet = [
-    // Video camera / conversation (from screenshot)
-    `<svg viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3v-4z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg>`,
-    // Headphones / listening (from screenshot)
-    `<svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>`,
-    // Star / checkpoint (from screenshot)
-    `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
-    // Book / reading
-    `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`
-  ];
-  return iconSet[i % iconSet.length];
+/* Topic-Specific Lesson Tile Icons matching the Nigerian language curriculum */
+function getTopicIconSvg(title, i){
+  const t = (title || "").toLowerCase();
+
+  if(t.includes("greet")){
+    // Friendly greeting wave / hospitality
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v7"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.3L2.3 15.8a1.5 1.5 0 0 1 2.2-2L8 16"/></svg>`;
+  }
+  if(t.includes("number")){
+    // Numbers / counting symbol
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>`;
+  }
+  if(t.includes("fam") || t.includes("elder") || t.includes("compound")){
+    // Family / community / elders
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+  }
+  if(t.includes("color")){
+    // Colors artist palette
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-5-4.5-9-10-9z"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="12" cy="6" r="1.3" fill="currentColor"/><circle cx="16" cy="8" r="1.3" fill="currentColor"/></svg>`;
+  }
+  if(t.includes("time") || t.includes("day") || t.includes("calendar") || t.includes("season")){
+    // Time & calendar clock
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>`;
+  }
+  if(t.includes("phrase") || t.includes("dialogue") || t.includes("chat")){
+    // Common phrases / speech dialogue
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+  }
+  if(t.includes("food") || t.includes("dining") || t.includes("crop") || t.includes("fish")){
+    // Food bowl / traditional dining
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20a10 10 0 0 1-20 0z"/><path d="M12 3v4"/><path d="M7 4v3"/><path d="M17 4v3"/><line x1="5" y1="21" x2="19" y2="21"/></svg>`;
+  }
+  if(t.includes("body")){
+    // Body parts / silhouette
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg>`;
+  }
+  if(t.includes("animal")){
+    // Animals / paw print
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="3.5" fill="currentColor"/><circle cx="7" cy="11" r="2" fill="currentColor"/><circle cx="17" cy="11" r="2" fill="currentColor"/><circle cx="9.5" cy="6.5" r="1.8" fill="currentColor"/><circle cx="14.5" cy="6.5" r="1.8" fill="currentColor"/></svg>`;
+  }
+  if(t.includes("market") || t.includes("shop") || t.includes("trade") || t.includes("commerce")){
+    // Market bag / trade basket
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`;
+  }
+  if(t.includes("place") || t.includes("travel") || t.includes("waterway")){
+    // Places & travel navigation compass
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5 15.5 8.5"/></svg>`;
+  }
+  if(t.includes("weather") || t.includes("nature") || t.includes("element")){
+    // Weather & nature sun
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>`;
+  }
+  if(t.includes("feel") || t.includes("emotion") || t.includes("wellbeing")){
+    // Feelings & emotions smile
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2.5 4 2.5 4-2.5 4-2.5"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/></svg>`;
+  }
+  if(t.includes("home") || t.includes("living")){
+    // Home & living
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20V9.5z"/><polyline points="9 21.5 9 12.5 15 12.5 15 21.5"/></svg>`;
+  }
+  if(t.includes("verb")){
+    // Active verbs & action
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+  }
+  if(t.includes("cloth") || t.includes("attire") || t.includes("style")){
+    // Traditional clothing & style
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>`;
+  }
+
+  // Fallback: Book / Reading study
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
 }
 
 /* Treasure Chest SVG matching the wooden chest with golden latch in screenshot */
@@ -2811,8 +2869,8 @@ function openPath(key){
       numSpan.textContent = `${i + 1}`;
       btn.appendChild(numSpan);
     }else{
-      // Show Duolingo-style icon (camera, headphones, star, book)
-      iconContainer.innerHTML = getLessonTileIconSvg(i);
+      // Show topic-specific icon matching lesson curriculum (Greetings, Numbers, Family, Food, etc.)
+      iconContainer.innerHTML = getTopicIconSvg(lesson.title, i);
       btn.appendChild(iconContainer);
     }
 
@@ -2840,10 +2898,10 @@ function openPath(key){
       startLesson(key, i);
     });
 
-    // Subtitle label below tile
+    // Subtitle label below tile: includes lesson number and topic
     const label = document.createElement("div");
     label.className = "tile-label";
-    label.textContent = lesson.title;
+    label.textContent = `${i + 1}. ${lesson.title}`;
     tileWrap.appendChild(label);
 
     pathEl.appendChild(tileWrap);

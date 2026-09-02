@@ -2517,6 +2517,7 @@ function setAuthMode(mode){
   document.getElementById("auth-card-sub").textContent = isLogin ? "Log in to continue your streak and lessons." : "Join thousands of learners mastering Nigerian languages.";
 
   document.getElementById("auth-btn-text").textContent = isLogin ? "Log In" : "Create Free Account";
+  document.getElementById("auth-google-text").textContent = isLogin ? "Sign in with Google" : "Sign up with Google";
   document.getElementById("landing-nav-switch-btn").textContent = isLogin ? "Create account" : "Log in";
 
   document.getElementById("auth-confirm-group").classList.toggle("hidden", isLogin);
@@ -2567,6 +2568,55 @@ function setupHelpModal(){
   });
 }
 
+function setupGoogleAuth(){
+  const googleBtn = document.getElementById("auth-google-btn");
+  const errEl = document.getElementById("auth-error");
+
+  googleBtn.addEventListener("click", async () => {
+    errEl.classList.add("hidden");
+    try{
+      const origin = window.location.origin;
+      const res = await fetch(`/api/auth/google/url?origin=${encodeURIComponent(origin)}`);
+      const data = await res.json();
+
+      if(!data.configured || !data.url){
+        errEl.textContent = data.message || "Google Sign-In is being initialized. Please configure GOOGLE_CLIENT_ID in your environment settings.";
+        errEl.classList.remove("hidden");
+        return;
+      }
+
+      // Open Google OAuth Provider authorization URL directly in popup
+      const popup = window.open(
+        data.url,
+        "google_oauth_popup",
+        "width=560,height=680,menubar=no,status=no,toolbar=no,location=yes"
+      );
+
+      if(!popup || popup.closed || typeof popup.closed === "undefined"){
+        errEl.textContent = "Popup blocked! Please allow popups for this site to sign in with Google.";
+        errEl.classList.remove("hidden");
+      }
+    }catch(err){
+      errEl.textContent = "Could not start Google Sign-In: " + err.message;
+      errEl.classList.remove("hidden");
+    }
+  });
+
+  // Listen for callback postMessage from popup window
+  window.addEventListener("message", async (event) => {
+    if(event.data?.type === "GOOGLE_AUTH_SUCCESS"){
+      const { token, username } = event.data;
+      setSession(token, username);
+      await fetchProgress();
+      renderHome();
+      showScreen("home");
+    }else if(event.data?.type === "GOOGLE_AUTH_ERROR"){
+      errEl.textContent = event.data.error || "Google authentication failed. Please try again.";
+      errEl.classList.remove("hidden");
+    }
+  });
+}
+
 document.getElementById("auth-tab-login").addEventListener("click", () => setAuthMode("login"));
 document.getElementById("auth-tab-signup").addEventListener("click", () => setAuthMode("signup"));
 
@@ -2580,58 +2630,6 @@ document.getElementById("landing-cta-btn").addEventListener("click", () => {
   setAuthMode("signup");
   document.getElementById("auth-form-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
   setTimeout(() => document.getElementById("auth-username").focus(), 400);
-});
-
-// Demo account quick login
-document.getElementById("auth-demo-btn").addEventListener("click", async () => {
-  const demoUsername = "demo_learner";
-  const demoPassword = "naija_demo_password";
-  const errEl = document.getElementById("auth-error");
-  errEl.classList.add("hidden");
-
-  const submitBtn = document.getElementById("auth-submit");
-  const demoBtn = document.getElementById("auth-demo-btn");
-  const spinner = document.getElementById("auth-spinner");
-  const btnText = document.getElementById("auth-btn-text");
-
-  submitBtn.disabled = true;
-  demoBtn.disabled = true;
-  spinner.classList.remove("hidden");
-  btnText.textContent = "Loading Demo...";
-
-  try{
-    // Try logging into existing demo account first
-    let res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: demoUsername, password: demoPassword })
-    });
-
-    // If demo account doesn't exist yet, sign it up
-    if(!res.ok){
-      res = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: demoUsername, password: demoPassword })
-      });
-    }
-
-    const data = await res.json();
-    if(!res.ok) throw new Error(data.error || "Could not log in to demo account.");
-
-    setSession(data.token, data.username);
-    await fetchProgress();
-    renderHome();
-    showScreen("home");
-  }catch(err){
-    errEl.textContent = err.message;
-    errEl.classList.remove("hidden");
-  }finally{
-    submitBtn.disabled = false;
-    demoBtn.disabled = false;
-    spinner.classList.add("hidden");
-    btnText.textContent = authMode === "login" ? "Log In" : "Create Free Account";
-  }
 });
 
 document.getElementById("auth-form").addEventListener("submit", async e => {
@@ -2678,12 +2676,10 @@ document.getElementById("auth-form").addEventListener("submit", async e => {
   }
 
   const submitBtn = document.getElementById("auth-submit");
-  const demoBtn = document.getElementById("auth-demo-btn");
   const spinner = document.getElementById("auth-spinner");
   const btnText = document.getElementById("auth-btn-text");
 
   submitBtn.disabled = true;
-  demoBtn.disabled = true;
   spinner.classList.remove("hidden");
   btnText.textContent = authMode === "login" ? "Logging in..." : "Creating account...";
 
@@ -2706,7 +2702,6 @@ document.getElementById("auth-form").addEventListener("submit", async e => {
     errEl.classList.remove("hidden");
   }finally{
     submitBtn.disabled = false;
-    demoBtn.disabled = false;
     spinner.classList.add("hidden");
     btnText.textContent = authMode === "login" ? "Log In" : "Create Free Account";
   }
@@ -2716,6 +2711,7 @@ document.getElementById("auth-form").addEventListener("submit", async e => {
 (async function init(){
   setupPasswordToggles();
   setupHelpModal();
+  setupGoogleAuth();
 
   if(!getToken()){ showAuthScreen(); return; }
   try{

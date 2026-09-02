@@ -85,8 +85,14 @@ async function initDb(){
         id SERIAL PRIMARY KEY,
         username TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
+        google_id TEXT,
+        email TEXT,
         created_at TIMESTAMP DEFAULT now()
       );
+    `);
+    await pool.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT;
     `);
     await pool.query(`
       CREATE TABLE IF NOT EXISTS progress (
@@ -200,6 +206,202 @@ app.post("/api/login", async (req, res) => {
   }catch(e){
     console.error(e);
     res.status(500).json({ error: "Login failed. Please try again." });
+  }
+});
+
+/* ---- Google OAuth ---- */
+app.get("/api/auth/google/url", (req, res) => {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  if (!clientId) {
+    return res.json({
+      configured: false,
+      message: "Google Sign-In is not configured yet. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your environment variables."
+    });
+  }
+  const origin = req.query.origin || `${req.headers["x-forwarded-proto"] || req.protocol}://${req.headers["x-forwarded-host"] || req.get("host")}`;
+  const redirectUri = `${origin}/auth/google/callback`;
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: "code",
+    scope: "openid email profile",
+    access_type: "offline",
+    prompt: "select_account"
+  });
+
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+  res.json({ configured: true, url: authUrl, redirectUri });
+});
+
+app.get(["/auth/google/callback", "/auth/google/callback/"], async (req, res) => {
+  const { code, error } = req.query;
+  if (error || !code) {
+    return res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head><title>Google Authentication</title><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+        <body style="font-family:sans-serif; background:#140e0a; color:#f4efe3; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; padding:20px; text-align:center;">
+          <div>
+            <h2 style="color:#ef4444; margin-bottom:8px;">Sign In Cancelled</h2>
+            <p style="color:#cfc5b0;">${error ? String(error) : "No authorization code received."}</p>
+            <script>
+              if (window.opener) {
+                window.opener.postMessage({ type: 'GOOGLE_AUTH_ERROR', error: ${JSON.stringify(error || "Sign in cancelled")} }, '*');
+                setTimeout(() => window.close(), 1500);
+              }
+            </script>
+          </div>
+        </body>
+      </html>
+    `);
+  }
+
+  try {
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+    const origin = `${req.headers["x-forwarded-proto"] || req.protocol}://${req.headers["x-forwarded-host"] || req.get("host")}`;
+    const redirectUri = `${origin}/auth/google/callback`;
+
+    // 1. Exchange code with Google
+    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code: String(code),
+        client_id: clientId,
+        client_secret: clientSecret,
+        redirect_uri: redirectUri,
+        grant_type: "authorization_code"
+      })
+    });
+
+    const tokenData = await tokenRes.json();
+    if (!tokenRes.ok || !tokenData.access_token) {
+      throw new Error(tokenData.error_description || tokenData.error || "Failed to exchange authorization token with Google.");
+    }
+
+    // 2. Retrieve user profile info
+    const userRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: { Authorization: `Bearer ${tokenData.access_token}` }
+    });
+    const userData = await userRes.json();
+    if (!userRes.ok || !userData.sub) {
+      throw new Error("Failed to load user profile from Google.");
+    }
+
+    const googleId = userData.sub;
+    const email = (userData.email || "").toLowerCase();
+    const name = userData.name || userData.given_name || "Learner";
+
+    // Generate clean username from email or name
+    let cleanUsername = (email ? email.split("@")[0] : name)
+      .toLowerCase()
+      .replace(/[^a-z0-9_]/g, "_")
+      .slice(0, 18);
+    if (cleanUsername.length < 3) cleanUsername = "learner_" + cleanUsername;
+
+    let userId;
+    if (pool) {
+      try {
+        const existing = await pool.query(
+          "SELECT id, username FROM users WHERE google_id = $1 OR (email IS NOT NULL AND email = $2)",
+          [googleId, email]
+        );
+        if (existing.rows.length > 0) {
+          userId = existing.rows[0].id;
+          cleanUsername = existing.rows[0].username;
+        } else {
+          // Check username availability
+          const nameCheck = await pool.query("SELECT id FROM users WHERE username = $1", [cleanUsername]);
+          if (nameCheck.rows.length > 0) {
+            cleanUsername = `${cleanUsername}_${Math.floor(100 + Math.random() * 900)}`;
+          }
+          const dummyHash = await bcrypt.hash(googleId + Math.random(), 10);
+          const insertRes = await pool.query(
+            "INSERT INTO users (username, password_hash, google_id, email) VALUES ($1, $2, $3, $4) RETURNING id, username",
+            [cleanUsername, dummyHash, googleId, email]
+          );
+          userId = insertRes.rows[0].id;
+          cleanUsername = insertRes.rows[0].username;
+          await pool.query("INSERT INTO progress (user_id, data) VALUES ($1, $2)", [userId, JSON.stringify(DEFAULT_PROGRESS)]);
+        }
+      } catch (dbErr) {
+        console.warn("Postgres Google auth failed, falling back to memory:", dbErr.message);
+        pool = null;
+      }
+    }
+
+    if (!pool) {
+      let existingUser = null;
+      for (const u of inMemoryUsers.values()) {
+        if (u.google_id === googleId || (email && u.email === email)) {
+          existingUser = u;
+          break;
+        }
+      }
+      if (existingUser) {
+        userId = existingUser.id;
+        cleanUsername = existingUser.username;
+      } else {
+        if (inMemoryUsersByUsername.has(cleanUsername)) {
+          cleanUsername = `${cleanUsername}_${Math.floor(100 + Math.random() * 900)}`;
+        }
+        userId = nextUserId++;
+        const dummyHash = await bcrypt.hash(googleId + Math.random(), 10);
+        const newUser = { id: userId, username: cleanUsername, password_hash: dummyHash, google_id: googleId, email, created_at: new Date() };
+        inMemoryUsers.set(userId, newUser);
+        inMemoryUsersByUsername.set(cleanUsername, newUser);
+        inMemoryProgress.set(userId, JSON.parse(JSON.stringify(DEFAULT_PROGRESS)));
+      }
+    }
+
+    const sessionToken = jwt.sign({ userId, username: cleanUsername }, JWT_SECRET, { expiresIn: "90d" });
+
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head><title>Authentication Successful</title><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+        <body style="font-family:sans-serif; background:#140e0a; color:#f4efe3; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; padding:20px; text-align:center;">
+          <div>
+            <h2 style="color:#20948b; margin-bottom:8px;">Welcome, ${cleanUsername}!</h2>
+            <p style="color:#cfc5b0;">Signing you in to Lingua Naija...</p>
+            <script>
+              if (window.opener) {
+                window.opener.postMessage({
+                  type: 'GOOGLE_AUTH_SUCCESS',
+                  token: ${JSON.stringify(sessionToken)},
+                  username: ${JSON.stringify(cleanUsername)}
+                }, '*');
+                window.close();
+              } else {
+                window.location.href = '/';
+              }
+            </script>
+          </div>
+        </body>
+      </html>
+    `);
+  } catch (err) {
+    console.error("Google OAuth error:", err);
+    res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+        <head><title>Authentication Error</title><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+        <body style="font-family:sans-serif; background:#140e0a; color:#f4efe3; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; padding:20px; text-align:center;">
+          <div>
+            <h2 style="color:#ef4444; margin-bottom:8px;">Google Sign-In Error</h2>
+            <p style="color:#cfc5b0;">${err.message || "An unexpected error occurred."}</p>
+            <script>
+              if (window.opener) {
+                window.opener.postMessage({ type: 'GOOGLE_AUTH_ERROR', error: ${JSON.stringify(err.message || "Authentication failed")} }, '*');
+                setTimeout(() => window.close(), 2500);
+              }
+            </script>
+          </div>
+        </body>
+      </html>
+    `);
   }
 });
 

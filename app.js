@@ -816,35 +816,174 @@ function buildLessonQuestions(course, lessonIndex){
   return questions;
 }
 
-/* ---- missed-word tracking (for Practice mode) ---- */
+/* ====================== EBBINGHAUS SPACED REPETITION ENGINE ====================== */
+/* Mathematical model: R = e^(-t / S)
+   - R: Memory retention probability (0 to 1)
+   - t: Elapsed time since last review / mistake (in hours)
+   - S: Memory stability / strength (in hours)
+   Words nearing the forgetting threshold (R decaying) are prioritized for active recall. */
+function getEbbinghausStats(entry, now = Date.now()){
+  const lastReviewed = entry.lastReviewedAt
+    ? entry.lastReviewedAt
+    : (entry.lastMissed ? new Date(entry.lastMissed).getTime() : (now - 3600000 * 2));
+  const stability = Math.max(1, entry.stability || 4); // default 4 hours on first error
+  const elapsedHours = Math.max(0, (now - lastReviewed) / (1000 * 60 * 60));
+  const retention = Math.exp(-elapsedHours / stability);
+  const retentionPct = Math.max(1, Math.min(100, Math.round(retention * 100)));
+  const count = entry.count || 1;
+  const consecutive = entry.consecutiveCorrect || 0;
+
+  // Higher urgency = word is closer to being forgotten or repeatedly missed
+  const urgency = (1 - retention) * (1 + 0.25 * Math.min(count, 5)) + (elapsedHours >= stability ? 0.4 : 0);
+
+  const isDue = elapsedHours >= stability || retentionPct < 55;
+  let status = "strengthening";
+  let label = "Strengthening";
+  let color = "gold";
+
+  if(consecutive >= 3 && retentionPct >= 85){
+    status = "mastered";
+    label = "Mastered";
+    color = "green";
+  }else if(retentionPct < 45 || elapsedHours >= stability){
+    status = "critical";
+    label = "Critical";
+    color = "danger";
+  }else if(retentionPct < 75){
+    status = "fading";
+    label = "Fading";
+    color = "hausa";
+  }
+
+  let dueInText = "Due now";
+  if(!isDue){
+    const remHours = stability - elapsedHours;
+    if(remHours < 1) dueInText = "Due in <1h";
+    else if(remHours < 24) dueInText = `Due in ${Math.round(remHours)}h`;
+    else dueInText = `Solid for ${Math.round(remHours / 24)}d`;
+  }
+
+  return {
+    retention,
+    retentionPct,
+    urgency,
+    status,
+    label,
+    color,
+    elapsedHours,
+    stability,
+    dueInText,
+    isDue,
+    consecutive,
+    count
+  };
+}
+
+/* ---- missed-word & spaced repetition tracking ---- */
 function recordMiss(courseKey, vocabItem){
   if(!vocabItem) return;
   const key = `${courseKey}|${vocabItem.native}`;
   let entry = state.missedWords.find(m => m.key === key);
+  const now = Date.now();
   if(!entry){
-    entry = { key, courseKey, native: vocabItem.native, en: vocabItem.en, count: 0 };
+    entry = {
+      key,
+      courseKey,
+      native: vocabItem.native,
+      en: vocabItem.en,
+      count: 0,
+      consecutiveCorrect: 0,
+      stability: 4, // 4 hours initial memory stability
+      lastReviewedAt: now,
+      lastMissed: todayStr()
+    };
     state.missedWords.push(entry);
   }
   entry.count++;
+  entry.consecutiveCorrect = 0; // reset active recall streak on error
+  entry.stability = Math.max(2, (entry.stability || 4) * 0.45); // decay memory stability upon mistake
+  entry.lastReviewedAt = now;
   entry.lastMissed = todayStr();
-  if(state.missedWords.length > 100) state.missedWords = state.missedWords.slice(-100);
+  if(state.missedWords.length > 120) state.missedWords = state.missedWords.slice(-120);
 }
+
+function recordPracticeSuccess(courseKey, vocabItem){
+  if(!vocabItem) return;
+  const key = `${courseKey}|${vocabItem.native}`;
+  let entry = state.missedWords.find(m => m.key === key);
+  if(!entry) return;
+  entry.consecutiveCorrect = (entry.consecutiveCorrect || 0) + 1;
+  entry.lastReviewedAt = Date.now();
+
+  // Expand memory stability along the Ebbinghaus reinforcement curve
+  if(entry.consecutiveCorrect === 1){
+    entry.stability = 18; // ~18 hours
+  }else if(entry.consecutiveCorrect === 2){
+    entry.stability = 48; // 2 days
+  }else if(entry.consecutiveCorrect === 3){
+    entry.stability = 120; // 5 days
+  }else{
+    entry.stability = Math.min(2160, Math.round((entry.stability || 120) * 2.2 + 36)); // up to 90 days
+  }
+}
+
 function clearMiss(courseKey, vocabItem){
   if(!vocabItem) return;
   const key = `${courseKey}|${vocabItem.native}`;
   state.missedWords = state.missedWords.filter(m => m.key !== key);
 }
 
-function buildPracticeQuestions(courseKey){
-  const course = COURSES[courseKey];
-  const items = state.missedWords.filter(m => m.courseKey === courseKey);
-  return shuffle(items.map(m => {
-    const v = { native: m.native, en: m.en };
-    const r = Math.random();
-    if(r < 0.34) return makeMcQuestion(v, course);
-    if(r < 0.67) return makeTypeQuestion(v, course);
-    return makeListenQuestion(v, course);
+function buildPracticeQuestions(courseKey = "all", filterMode = "all"){
+  let pool = state.missedWords;
+  if(courseKey !== "all"){
+    pool = pool.filter(m => m.courseKey === courseKey);
+  }
+  if(pool.length === 0) return [];
+
+  // Calculate Ebbinghaus memory metrics for each item
+  const withStats = pool.map(item => ({
+    ...item,
+    stats: getEbbinghausStats(item)
   }));
+
+  let filtered = withStats;
+  if(filterMode === "due"){
+    const dueOnly = withStats.filter(x => x.stats.isDue);
+    if(dueOnly.length > 0) filtered = dueOnly;
+  }else if(filterMode === "critical"){
+    const criticalOnly = withStats.filter(x => x.stats.status === "critical");
+    if(criticalOnly.length > 0) filtered = criticalOnly;
+  }
+
+  // Prioritize strictly by Ebbinghaus Urgency (lowest retention / highest forgetting probability first)
+  filtered.sort((a, b) => b.stats.urgency - a.stats.urgency);
+
+  // Take the top priority batch for this session (up to 10 items)
+  const batch = filtered.slice(0, 10);
+
+  return batch.map(m => {
+    const v = { native: m.native, en: m.en };
+    const course = COURSES[m.courseKey] || COURSES[Object.keys(COURSES)[0]];
+    const r = Math.random();
+    let q;
+
+    if(v.native.includes(" ") && r < 0.35){
+      q = makeSentenceQuestion(v, course);
+    }else if(m.stats.consecutive >= 2 && r < 0.65){
+      q = makeTypeQuestion(v, course);
+    }else if(r < 0.45){
+      q = makeMcQuestion(v, course);
+    }else if(r < 0.75){
+      q = makeListenQuestion(v, course);
+    }else{
+      q = makeBlankQuestion(v, course);
+    }
+
+    q._vocab = v;
+    q._courseKey = m.courseKey;
+    q._ebbinghausStats = m.stats;
+    return q;
+  });
 }
 
 /* ---- daily goal tracking ---- */
@@ -1191,22 +1330,36 @@ function renderPracticeEntry(){
     el.innerHTML = `<div class="practice-entry-empty">No mistakes to review yet — keep learning \u{1F44D}</div>`;
     return;
   }
-  const byLanguage = Object.keys(COURSES).map(k => ({ key: k, count: state.missedWords.filter(m => m.courseKey === k).length })).filter(x => x.count > 0);
-  const summary = byLanguage.map(x => `${COURSES[x.key].name} (${x.count})`).join(", ");
+  const statsList = state.missedWords.map(m => getEbbinghausStats(m));
+  const dueCount = statsList.filter(s => s.isDue).length;
+  const criticalCount = statsList.filter(s => s.status === "critical").length;
+  const avgRetention = Math.round(statsList.reduce((acc, s) => acc + s.retentionPct, 0) / (statsList.length || 1));
+
+  const byLanguage = Object.keys(COURSES).map(k => {
+    const langItems = state.missedWords.filter(m => m.courseKey === k);
+    const langDue = langItems.filter(m => getEbbinghausStats(m).isDue).length;
+    return { key: k, count: langItems.length, due: langDue };
+  }).filter(x => x.count > 0);
+
+  const summary = byLanguage.map(x => `${COURSES[x.key].name} (${x.due > 0 ? `${x.due} due` : `${x.count} words`})`).join(", ");
+  const headline = dueCount > 0
+    ? `${dueCount} word${dueCount === 1 ? "" : "s"} due for spaced review`
+    : `${total} word${total === 1 ? "" : "s"} reinforcing (${avgRetention}% memory health)`;
+
   el.innerHTML = `
     <div class="practice-card">
       <div class="practice-card-head">
         <span class="practice-glyph" style="background:var(--gold);">\u{1F3AF}</span>
         <div>
-          <p class="practice-name">Practice</p>
-          <p class="practice-sub">${total} word${total === 1 ? "" : "s"} to review: ${summary}</p>
+          <p class="practice-name">Spaced Repetition Practice</p>
+          <p class="practice-sub">${headline} \u2014 ${summary}</p>
         </div>
       </div>
-      <button class="continue-btn" id="practice-entry-btn">Review mistakes \u2192</button>
+      <button class="continue-btn" id="practice-entry-btn">Review with Spaced Repetition \u2192</button>
     </div>
   `;
   document.getElementById("practice-entry-btn").addEventListener("click", () => {
-    renderPracticeScreen();
+    renderPracticeScreen("all");
     showScreen("practice");
   });
 }
@@ -1349,35 +1502,196 @@ document.getElementById("culture-quit").addEventListener("click", () => {
 document.getElementById("culture-hub-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
 
 /* ---- practice screen (full breakdown + start buttons) ---- */
-function renderPracticeScreen(){
+let currentPracticeFilter = "all";
+
+function renderPracticeScreen(filterMode = currentPracticeFilter){
+  currentPracticeFilter = filterMode;
+  const bannerEl = document.getElementById("ebbinghaus-summary-banner");
   const container = document.getElementById("practice-list");
+  const filterBtns = document.querySelectorAll(".practice-filter-btn");
+
+  filterBtns.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.filter === currentPracticeFilter);
+  });
+
+  const total = state.missedWords.length;
+  const allStats = state.missedWords.map(m => ({ ...m, stats: getEbbinghausStats(m) }));
+  const dueTotal = allStats.filter(x => x.stats.isDue).length;
+  const criticalTotal = allStats.filter(x => x.stats.status === "critical").length;
+  const avgRetention = total > 0 ? Math.round(allStats.reduce((acc, s) => acc + s.stats.retentionPct, 0) / total) : 100;
+
+  if(bannerEl){
+    if(total === 0){
+      bannerEl.innerHTML = `
+        <div class="ebbinghaus-banner-head">
+          <span class="ebbinghaus-banner-title">\u26A1 Ebbinghaus Memory Model</span>
+          <span class="ebbinghaus-badge-due" style="border-color:var(--igbo); color:#8fd6ac;">Memory 100% Solid</span>
+        </div>
+        <p class="ebbinghaus-info-text">You have no missed words needing review right now. As you complete lessons, any mistakes are automatically tracked along an Ebbinghaus retention curve (<em>R = e<sup>\u2212\u0394t / S</sup></em>) to prioritize review right before you forget.</p>
+      `;
+    }else{
+      bannerEl.innerHTML = `
+        <div class="ebbinghaus-banner-head">
+          <span class="ebbinghaus-banner-title">\u26A1 Ebbinghaus Memory Retention</span>
+          <span class="ebbinghaus-badge-due">${dueTotal > 0 ? `${dueTotal} Due for Recall` : "Memory on Schedule"}</span>
+        </div>
+        <div class="ebbinghaus-stats-grid">
+          <div class="ebbinghaus-stat-item">
+            <span class="ebbinghaus-stat-val gold">${total}</span>
+            <span class="ebbinghaus-stat-label">Tracked Words</span>
+          </div>
+          <div class="ebbinghaus-stat-item">
+            <span class="ebbinghaus-stat-val ${dueTotal > 0 ? "danger" : "green"}">${dueTotal}</span>
+            <span class="ebbinghaus-stat-label">Due Now</span>
+          </div>
+          <div class="ebbinghaus-stat-item">
+            <span class="ebbinghaus-stat-val ${avgRetention < 60 ? "danger" : "green"}">${avgRetention}%</span>
+            <span class="ebbinghaus-stat-label">Avg Retention</span>
+          </div>
+        </div>
+        <p class="ebbinghaus-info-text">Based on the Ebbinghaus forgetting curve, memory decays exponentially over time without recall. Spaced repetition strengthens stability with each successful retrieval.</p>
+      `;
+    }
+  }
+
+  // Hook up filter buttons
+  filterBtns.forEach(btn => {
+    btn.onclick = () => {
+      renderPracticeScreen(btn.dataset.filter);
+    };
+  });
+
+  const smartAllBtn = document.getElementById("practice-smart-all-btn");
+  if(smartAllBtn){
+    smartAllBtn.onclick = () => {
+      if(total === 0){
+        alert("No words to review yet — complete some lessons first!");
+        return;
+      }
+      startPractice("all", currentPracticeFilter);
+    };
+  }
+
   container.innerHTML = "";
   Object.keys(COURSES).forEach(k => {
     const course = COURSES[k];
-    const items = state.missedWords.filter(m => m.courseKey === k);
+    const rawItems = state.missedWords.filter(m => m.courseKey === k);
+    const itemsWithStats = rawItems.map(m => ({ ...m, stats: getEbbinghausStats(m) }));
+
+    let displayedItems = itemsWithStats;
+    if(currentPracticeFilter === "due"){
+      displayedItems = itemsWithStats.filter(x => x.stats.isDue);
+    }else if(currentPracticeFilter === "critical"){
+      displayedItems = itemsWithStats.filter(x => x.stats.status === "critical");
+    }
+
     const card = document.createElement("div");
     card.className = `practice-card ${course.color}`;
-    if(items.length === 0){
+
+    if(rawItems.length === 0){
       card.innerHTML = `
         <div class="practice-card-head">
           <span class="practice-glyph">${course.glyph}</span>
-          <div><p class="practice-name">${course.name}</p><p class="practice-sub">Nothing to review right now.</p></div>
+          <div><p class="practice-name">${course.name}</p><p class="practice-sub">No mistakes logged in this language yet.</p></div>
         </div>
       `;
     }else{
-      const preview = items.slice(0, 6).map(m => m.native).join(", ") + (items.length > 6 ? "\u2026" : "");
+      const courseAvg = Math.round(itemsWithStats.reduce((a, b) => a + b.stats.retentionPct, 0) / itemsWithStats.length);
+      const courseDue = itemsWithStats.filter(x => x.stats.isDue).length;
+      const courseCritical = itemsWithStats.filter(x => x.stats.status === "critical").length;
+      const courseMastered = itemsWithStats.filter(x => x.stats.status === "mastered").length;
+
+      let meterColorClass = "green";
+      if(courseAvg < 50) meterColorClass = "danger";
+      else if(courseAvg < 75) meterColorClass = "hausa";
+
+      const previewText = displayedItems.slice(0, 4).map(m => m.native).join(", ") + (displayedItems.length > 4 ? "\u2026" : "");
+
       card.innerHTML = `
         <div class="practice-card-head">
           <span class="practice-glyph">${course.glyph}</span>
-          <div><p class="practice-name">${course.name}</p><p class="practice-sub">${items.length} word${items.length === 1 ? "" : "s"}: ${preview}</p></div>
+          <div style="flex:1; min-width:0;">
+            <p class="practice-name">${course.name}</p>
+            <p class="practice-sub">${rawItems.length} word${rawItems.length === 1 ? "" : "s"} tracked (${courseDue} due)</p>
+          </div>
         </div>
-        <button class="continue-btn practice-start-btn" data-course="${k}">Start practice \u2192</button>
+
+        <div class="practice-retention-wrap">
+          <div class="practice-retention-head">
+            <span>Memory Retention</span>
+            <span class="practice-retention-pct">${courseAvg}%</span>
+          </div>
+          <div class="practice-retention-bar">
+            <div class="practice-retention-fill ${meterColorClass}" style="width: ${courseAvg}%"></div>
+          </div>
+        </div>
+
+        <div class="practice-pills-row">
+          ${courseDue > 0 ? `<span class="practice-pill-tag due">\u26A0 ${courseDue} due</span>` : ""}
+          ${courseCritical > 0 ? `<span class="practice-pill-tag due">\uD83D\uDD25 ${courseCritical} critical</span>` : ""}
+          <span class="practice-pill-tag solid">\u2713 ${courseMastered} mastered</span>
+          <span class="practice-pill-tag">${itemsWithStats.length - courseDue} solid</span>
+        </div>
+
+        <div class="practice-card-actions">
+          <button class="continue-btn practice-start-btn" data-course="${k}">
+            Practice ${course.name} (${displayedItems.length || rawItems.length}) \u2192
+          </button>
+          <button class="practice-breakdown-toggle" data-toggle="${k}">
+            View Memory Breakdown \u25BC
+          </button>
+        </div>
+
+        <div class="practice-breakdown-list hidden" id="breakdown-${k}">
+          ${displayedItems.length === 0 ? `
+            <div class="practice-entry-empty">No words match filter "${currentPracticeFilter}" in ${course.name}.</div>
+          ` : displayedItems.map(item => `
+            <div class="practice-word-row">
+              <div class="practice-word-left">
+                <button class="practice-word-speak-btn" data-speak="${encodeURIComponent(item.native)}" data-lang="${course.speechLang}" aria-label="Pronounce ${item.native}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <div class="practice-word-text">
+                  <span class="practice-word-native">${item.native}</span>
+                  <span class="practice-word-en">${item.en}</span>
+                </div>
+              </div>
+              <div class="practice-word-right">
+                <span class="practice-word-status ${item.stats.status}">${item.stats.label} (${item.stats.retentionPct}%)</span>
+                <span class="practice-word-due-meta">${item.stats.dueInText} \u00b7 \u00d7${item.count} miss${item.count === 1 ? "" : "es"}</span>
+              </div>
+            </div>
+          `).join("")}
+        </div>
       `;
     }
     container.appendChild(card);
   });
+
+  // Attach start buttons
   container.querySelectorAll(".practice-start-btn").forEach(btn => {
-    btn.addEventListener("click", () => startPractice(btn.dataset.course));
+    btn.addEventListener("click", () => startPractice(btn.dataset.course, currentPracticeFilter));
+  });
+
+  // Attach breakdown toggle
+  container.querySelectorAll(".practice-breakdown-toggle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const listEl = document.getElementById(`breakdown-${btn.dataset.toggle}`);
+      if(listEl){
+        const isHidden = listEl.classList.toggle("hidden");
+        btn.textContent = isHidden ? "View Memory Breakdown \u25BC" : "Hide Memory Breakdown \u25B2";
+      }
+    });
+  });
+
+  // Attach audio pronounce buttons
+  container.querySelectorAll(".practice-word-speak-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const text = decodeURIComponent(btn.dataset.speak);
+      const lang = btn.dataset.lang;
+      speak(text, lang);
+    });
   });
 }
 
@@ -1552,17 +1866,21 @@ function startLesson(courseKey, lessonIndex){
   renderQuestion();
 }
 
-function startPractice(courseKey){
+function startPractice(courseKey = "all", filterMode = "all"){
   if(state.hearts <= 0){
     alert("You're out of hearts. Come back after a short break, or refresh to reset this demo.");
     return;
   }
-  const questions = buildPracticeQuestions(courseKey);
-  if(questions.length === 0) return;
-  state.lastActiveCourse = courseKey;
+  const questions = buildPracticeQuestions(courseKey, filterMode);
+  if(questions.length === 0){
+    alert("No words match the selected practice filter! Switch filter or complete lessons to log words.");
+    return;
+  }
+  if(courseKey !== "all") state.lastActiveCourse = courseKey;
   saveState();
   session = {
-    courseKey, lessonIndex: null,
+    courseKey,
+    lessonIndex: null,
     questions,
     qi: 0,
     correctCount: 0,
@@ -1570,7 +1888,8 @@ function startPractice(courseKey){
     selected: null,
     answered: false,
     matchState: null,
-    isPractice: true
+    isPractice: true,
+    filterMode
   };
   showScreen("lesson");
   renderQuestion();
@@ -1594,7 +1913,8 @@ function resetQuestionUI(){
 
 function renderQuestion(){
   const q = session.questions[session.qi];
-  const course = COURSES[session.courseKey];
+  const activeCourseKey = q._courseKey || (session.courseKey !== "all" ? session.courseKey : Object.keys(COURSES)[0]);
+  const course = COURSES[activeCourseKey] || COURSES[Object.keys(COURSES)[0]];
   session.selected = null;
   session.answered = false;
   session.matchState = null;
@@ -1604,7 +1924,8 @@ function renderQuestion(){
   document.getElementById("lesson-progress").style.width = `${(session.qi / session.questions.length) * 100}%`;
 
   const kickers = { mc: "Translate", type: "Type it", listen: "Listen", match: "Match", blank: "Fill the blank", sentence: "Build it" };
-  document.getElementById("question-kicker").textContent = (q.isRetry ? "Retry · " : "") + (kickers[q.type] || "Question");
+  const prefix = q.isRetry ? "Retry \u00b7 " : (session.isPractice ? "Spaced Recall \u00b7 " : "");
+  document.getElementById("question-kicker").textContent = prefix + (kickers[q.type] || "Question");
   document.getElementById("question-prompt").textContent = q.prompt;
 
   resetQuestionUI();
@@ -1724,7 +2045,7 @@ function onMatchClick(side, btn, idx, q, course){
         session.correctCount++;
         const hadMistake = session.mistakes > session.mistakesAtQuestionStart;
         if(hadMistake) session.questions.push(requeueQuestion(q, course));
-        if(session.isPractice) q.pairs.forEach(p => clearMiss(session.courseKey, p));
+        if(session.isPractice) q.pairs.forEach(p => recordPracticeSuccess(q._courseKey || session.courseKey, p));
         const fb = document.getElementById("feedback");
         fb.className = "feedback ok";
         fb.classList.remove("hidden");
@@ -1739,8 +2060,9 @@ function onMatchClick(side, btn, idx, q, course){
       state.hearts = Math.max(0, state.hearts - 1);
       document.getElementById("lesson-hearts").textContent = state.hearts;
       session.mistakes++;
-      recordMiss(session.courseKey, q.pairs[ms.selNativeIdx]);
-      recordMiss(session.courseKey, q.pairs[ms.selEnIdx]);
+      const targetCourseKey = q._courseKey || (session.courseKey !== "all" ? session.courseKey : Object.keys(COURSES)[0]);
+      recordMiss(targetCourseKey, q.pairs[ms.selNativeIdx]);
+      recordMiss(targetCourseKey, q.pairs[ms.selEnIdx]);
       saveState();
       const nBtn = ms.selNativeBtn, eBtn = ms.selEnBtn;
       setTimeout(() => {
@@ -1783,6 +2105,7 @@ function onSentenceTileTap(e){
 /* ---- grading / advance ---- */
 function checkAnswer(){
   const q = session.questions[session.qi];
+  const activeCourseKey = q._courseKey || (session.courseKey !== "all" ? session.courseKey : Object.keys(COURSES)[0]);
 
   if(!session.answered){
     let correct = false;
@@ -1818,7 +2141,7 @@ function checkAnswer(){
       fb.className = "feedback ok";
       fbText.textContent = "Correct!";
       session.correctCount++;
-      if(session.isPractice && q._vocab) clearMiss(session.courseKey, q._vocab);
+      if(session.isPractice && q._vocab) recordPracticeSuccess(activeCourseKey, q._vocab);
     }else{
       fb.className = "feedback bad";
       const answerText = q.type === "type" ? q.answerDisplay : q.answer;
@@ -1826,9 +2149,9 @@ function checkAnswer(){
       session.mistakes++;
       state.hearts = Math.max(0, state.hearts - 1);
       document.getElementById("lesson-hearts").textContent = state.hearts;
-      recordMiss(session.courseKey, q._vocab);
+      recordMiss(activeCourseKey, q._vocab);
       saveState();
-      session.questions.push(requeueQuestion(q, COURSES[session.courseKey]));
+      session.questions.push(requeueQuestion(q, COURSES[activeCourseKey]));
     }
     document.getElementById("check-btn").textContent = (session.qi === session.questions.length - 1) ? "Finish" : "Continue";
     return;
@@ -1837,7 +2160,7 @@ function checkAnswer(){
   // advance
   if(state.hearts <= 0){
     if(session.isPractice){
-      renderPracticeScreen();
+      renderPracticeScreen(session.filterMode || "all");
       showScreen("practice");
     }else{
       showScreen("path");
@@ -1932,6 +2255,9 @@ document.getElementById("complete-continue").addEventListener("click", () => {
   if(pendingSurprise){
     pendingSurprise = false;
     showSurpriseChest();
+  }else if(session && session.isPractice){
+    renderPracticeScreen();
+    showScreen("practice");
   }else{
     renderHome();
     showScreen("home");

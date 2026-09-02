@@ -153,10 +153,25 @@
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
     <div class="path-title">
-      <span>Practice</span>
-      <span class="path-lang-native">Review what tripped you up</span>
+      <span>Spaced Repetition</span>
+      <span class="path-lang-native">Ebbinghaus Memory Reinforcement</span>
     </div>
   </header>
+  
+  <div id="ebbinghaus-summary-banner" class="ebbinghaus-banner"></div>
+
+  <div class="practice-controls-row">
+    <div class="practice-filters" id="practice-filters">
+      <button class="practice-filter-btn active" data-filter="all">All Words</button>
+      <button class="practice-filter-btn" data-filter="due">Due for Review</button>
+      <button class="practice-filter-btn" data-filter="critical">Critical (&lt;45%)</button>
+    </div>
+    <button class="practice-smart-all-btn" id="practice-smart-all-btn">
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <span>Smart Review</span>
+    </button>
+  </div>
+
   <div id="practice-list" class="practice-list"></div>
 </main>
 

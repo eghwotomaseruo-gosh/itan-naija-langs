@@ -1,6 +1,6 @@
 {
   "name": "Lingua Naija",
-  "description": "Gamified app for learning Nigerian languages (Igbo, Yorùbá, Hausa) with lessons, voice audio, culture hub, and progress tracking.",
+  "description": "Gamified Nigerian language learning app with lessons across 7 languages, voice audio, culture hub, and an Ebbinghaus spaced repetition memory engine.",
   "requestFramePermissions": [
     "microphone"
   ],

@@ -19,6 +19,8 @@
   --efik-deep: #2c4f79;
   --urhobo: #7a4fa0;    /* royal purple */
   --urhobo-deep: #54366e;
+  --tiv: #c98a2c;       /* benue amber */
+  --tiv-deep: #8f5e17;
   --hausa-deep: #a34f22;
   --danger: #d1682f;
 
@@ -437,9 +439,18 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 /* ===== practice entry card (home) ===== */
 .practice-entry{ margin: 0 0 20px; }
 .practice-card{
-  background: var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px;
-  display:flex; flex-direction:column; gap:10px; margin-bottom:10px;
+  background: var(--surface); border:1px solid var(--line); border-radius:18px; padding:18px;
+  display:flex; flex-direction:column; gap:12px; margin-bottom:12px;
+  transition: border-color .2s ease;
 }
+.practice-card.igbo{ border-color: rgba(63,157,107,0.3); }
+.practice-card.yoruba{ border-color: rgba(178,62,120,0.3); }
+.practice-card.hausa{ border-color: rgba(209,104,47,0.3); }
+.practice-card.edo{ border-color: rgba(47,143,138,0.3); }
+.practice-card.efik{ border-color: rgba(63,111,168,0.3); }
+.practice-card.urhobo{ border-color: rgba(122,79,160,0.3); }
+.practice-card.tiv{ border-color: rgba(201,138,44,0.3); }
+
 .practice-card-head{ display:flex; align-items:center; gap:12px; }
 .practice-glyph{
   flex-shrink:0; width:44px; height:44px; border-radius:12px;
@@ -452,10 +463,316 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .practice-card.edo .practice-glyph{ background: var(--edo); }
 .practice-card.efik .practice-glyph{ background: var(--efik); }
 .practice-card.urhobo .practice-glyph{ background: var(--urhobo); }
-.practice-name{ font-family: var(--font-head); font-weight:700; font-size:15px; margin:0 0 2px; }
+.practice-card.tiv .practice-glyph{ background: var(--tiv); }
+
+.practice-name{ font-family: var(--font-head); font-weight:700; font-size:16px; margin:0 0 2px; }
 .practice-sub{ font-size:12.5px; color: var(--cream-dim); margin:0; line-height:1.4; }
-.practice-start-btn{ align-self:flex-start; padding:9px 16px; font-size:13px; }
+.practice-start-btn{ align-self:flex-start; padding:9px 18px; font-size:13px; font-weight:700; }
 .practice-entry-empty{ text-align:center; padding: 22px; color: var(--cream-dim); font-size:13.5px; }
+
+/* ===== EBBINGHAUS SPACED REPETITION ENHANCEMENTS ===== */
+.ebbinghaus-banner{
+  background: linear-gradient(135deg, var(--surface-raised), var(--surface));
+  border: 1px solid rgba(227,167,43,0.3);
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin: 6px 0 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.ebbinghaus-banner-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.ebbinghaus-banner-title{
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ebbinghaus-badge-due{
+  background: rgba(209,104,47,0.2);
+  border: 1px solid var(--danger);
+  color: #f0b088;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.ebbinghaus-stats-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.ebbinghaus-stat-item{
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 10px;
+  text-align: center;
+}
+.ebbinghaus-stat-val{
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--cream);
+  display: block;
+}
+.ebbinghaus-stat-val.gold{ color: var(--gold); }
+.ebbinghaus-stat-val.danger{ color: #f0b088; }
+.ebbinghaus-stat-val.green{ color: #8fd6ac; }
+.ebbinghaus-stat-label{
+  font-size: 10.5px;
+  color: var(--cream-dim);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.ebbinghaus-info-text{
+  font-size: 12px;
+  color: var(--cream-dim);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.practice-controls-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.practice-filters{
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.practice-filter-btn{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--cream-dim);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-family: var(--font-head);
+  font-weight: 600;
+  transition: all .15s ease;
+}
+.practice-filter-btn.active{
+  background: var(--gold);
+  color: var(--bg-deep);
+  border-color: var(--gold);
+}
+.practice-smart-all-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-raised);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 12.5px;
+  transition: background .15s ease, transform .1s ease;
+}
+.practice-smart-all-btn svg{
+  width: 14px;
+  height: 14px;
+  stroke: var(--gold);
+  fill: rgba(227,167,43,0.25);
+}
+.practice-smart-all-btn:active{
+  transform: scale(0.96);
+}
+
+.practice-retention-wrap{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 4px 0;
+}
+.practice-retention-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--cream-dim);
+}
+.practice-retention-pct{
+  font-family: var(--font-head);
+  font-weight: 700;
+  color: var(--cream);
+}
+.practice-retention-bar{
+  height: 6px;
+  border-radius: 4px;
+  background: var(--bg-deep);
+  overflow: hidden;
+}
+.practice-retention-fill{
+  height: 100%;
+  border-radius: 4px;
+  transition: width .4s ease;
+}
+.practice-retention-fill.danger{ background: var(--danger); }
+.practice-retention-fill.hausa{ background: var(--hausa); }
+.practice-retention-fill.gold{ background: var(--gold); }
+.practice-retention-fill.green{ background: var(--igbo); }
+
+.practice-pills-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.practice-pill-tag{
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  font-family: var(--font-head);
+  font-weight: 600;
+}
+.practice-pill-tag.due{
+  color: #f0b088;
+  border-color: rgba(209,104,47,0.4);
+}
+.practice-pill-tag.solid{
+  color: #8fd6ac;
+  border-color: rgba(63,157,107,0.4);
+}
+
+.practice-card-actions{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+.practice-breakdown-toggle{
+  background: none;
+  border: none;
+  color: var(--cream-dim);
+  font-size: 12px;
+  font-family: var(--font-head);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px 0;
+}
+.practice-breakdown-toggle:hover{
+  color: var(--cream);
+}
+
+.practice-breakdown-list{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.practice-word-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.practice-word-left{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.practice-word-speak-btn{
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.practice-word-speak-btn svg{
+  width: 13px;
+  height: 13px;
+}
+.practice-word-text{
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.practice-word-native{
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.practice-word-en{
+  font-size: 11.5px;
+  color: var(--cream-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.practice-word-right{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.practice-word-status{
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.practice-word-status.critical{
+  background: rgba(209,104,47,0.25);
+  color: #f0b088;
+  border: 1px solid var(--danger);
+}
+.practice-word-status.fading{
+  background: rgba(209,104,47,0.12);
+  color: #e8955a;
+  border: 1px solid rgba(209,104,47,0.3);
+}
+.practice-word-status.strengthening{
+  background: rgba(227,167,43,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(227,167,43,0.3);
+}
+.practice-word-status.mastered{
+  background: rgba(63,157,107,0.2);
+  color: #8fd6ac;
+  border: 1px solid var(--igbo);
+}
+.practice-word-due-meta{
+  font-size: 10.5px;
+  color: var(--cream-dim);
+}
 
 /* ===== practice screen (full list) ===== */
 .practice-list{ display:flex; flex-direction:column; gap:12px; padding-top:6px; }

@@ -793,20 +793,174 @@ const CULTURE = {
 };
 
 const BADGES = [
-  { id: "first-lesson", name: "First steps", icon: "\u{1F476}", test: s => s.lessonsCompleted >= 1, target: { type: "lessons", value: 1 } },
-  { id: "three-lessons", name: "Warming up", icon: "\u{1F525}", test: s => s.lessonsCompleted >= 3, target: { type: "lessons", value: 3 } },
-  { id: "ten-lessons", name: "Committed", icon: "\u{1F4DA}", test: s => s.lessonsCompleted >= 10, target: { type: "lessons", value: 10 } },
-  { id: "streak-3", name: "3-day streak", icon: "\u{26A1}", test: s => s.streak >= 3, target: { type: "streak", value: 3 } },
-  { id: "perfect", name: "Perfect lesson", icon: "\u{2B50}", test: s => s.hasPerfect },
-  { id: "polyglot", name: "Polyglot", icon: "\u{1F30D}", test: s => s.languagesStarted >= 3 },
-  { id: "course-clear", name: "Course cleared", icon: "\u{1F3C1}", test: s => s.courseCleared },
-  { id: "xp-100", name: "Century club", icon: "\u{1F3C6}", test: s => s.xp >= 100, target: { type: "xp", value: 100 } },
-  { id: "xp-300", name: "XP machine", icon: "\u{1F4AA}", test: s => s.xp >= 300, target: { type: "xp", value: 300 } },
-  { id: "xp-500", name: "XP legend", icon: "\u{1F680}", test: s => s.xp >= 500, target: { type: "xp", value: 500 } },
-  { id: "streak-7", name: "Week streak", icon: "\u{1F31F}", test: s => s.streak >= 7, target: { type: "streak", value: 7 } },
-  { id: "streak-30", name: "Month streak", icon: "\u{1F451}", test: s => s.streak >= 30, target: { type: "streak", value: 30 } },
-  { id: "practice-5", name: "Practice pro", icon: "\u{1F3AF}", test: s => s.practiceSessionsCompleted >= 5, target: { type: "practice", value: 5 } },
-  { id: "culture-keeper", name: "Culture keeper", icon: "\u{1FAD8}", test: s => s.cultureCompletedCount >= 3 }
+  {
+    id: "first-lesson",
+    name: "First Steps",
+    icon: "\u{1F476}",
+    tier: "Bronze",
+    category: "Milestones",
+    desc: "Complete your very first lesson in any Nigerian language track.",
+    rewardXp: 20,
+    hint: "Complete 1 lesson in any language to unlock this honor.",
+    test: s => s.lessonsCompleted >= 1,
+    target: { type: "lessons", value: 1 }
+  },
+  {
+    id: "three-lessons",
+    name: "Warming Up",
+    icon: "\u{1F525}",
+    tier: "Bronze",
+    category: "Milestones",
+    desc: "Complete 3 language lessons and ignite your learning momentum.",
+    rewardXp: 30,
+    hint: "Finish 3 total lessons across the curriculum.",
+    test: s => s.lessonsCompleted >= 3,
+    target: { type: "lessons", value: 3 }
+  },
+  {
+    id: "ten-lessons",
+    name: "Committed Scholar",
+    icon: "\u{1F4DA}",
+    tier: "Silver",
+    category: "Milestones",
+    desc: "Conquer 10 full lessons across your Nigerian language paths.",
+    rewardXp: 50,
+    hint: "Reach double digits with 10 completed lessons.",
+    test: s => s.lessonsCompleted >= 10,
+    target: { type: "lessons", value: 10 }
+  },
+  {
+    id: "streak-3",
+    name: "3-Day Streak",
+    icon: "\u{26A1}",
+    tier: "Bronze",
+    category: "Streaks",
+    desc: "Practice consistently for 3 consecutive days without missing a beat.",
+    rewardXp: 35,
+    hint: "Keep the fire alive by learning for 3 straight days.",
+    test: s => s.streak >= 3,
+    target: { type: "streak", value: 3 }
+  },
+  {
+    id: "perfect",
+    name: "Flawless Learner",
+    icon: "\u{2B50}",
+    tier: "Silver",
+    category: "Mastery",
+    desc: "Score a 100% accuracy run on any lesson without losing a single heart.",
+    rewardXp: 40,
+    hint: "Complete any lesson with zero mistakes.",
+    test: s => s.hasPerfect,
+    target: { type: "hasPerfect", value: 1 }
+  },
+  {
+    id: "polyglot",
+    name: "Naija Polyglot",
+    icon: "\u{1F30D}",
+    tier: "Silver",
+    category: "Milestones",
+    desc: "Begin your linguistic journey across 3 different Nigerian heritage languages.",
+    rewardXp: 50,
+    hint: "Complete at least 1 lesson each in 3 separate languages.",
+    test: s => s.languagesStarted >= 3,
+    target: { type: "languages", value: 3 }
+  },
+  {
+    id: "course-clear",
+    name: "Path Pioneer",
+    icon: "\u{1F3C1}",
+    tier: "Gold",
+    category: "Mastery",
+    desc: "Clear every lesson in any full language curriculum track.",
+    rewardXp: 100,
+    hint: "Complete all lessons in any language course.",
+    test: s => s.courseCleared,
+    target: { type: "courseClear", value: 1 }
+  },
+  {
+    id: "xp-100",
+    name: "Century Club",
+    icon: "\u{1F3C6}",
+    tier: "Bronze",
+    category: "Mastery",
+    desc: "Accumulate 100 total Experience Points across your studies.",
+    rewardXp: 25,
+    hint: "Earn 100 XP from lessons, culture, and spaced practice.",
+    test: s => s.xp >= 100,
+    target: { type: "xp", value: 100 }
+  },
+  {
+    id: "xp-300",
+    name: "XP Machine",
+    icon: "\u{1F4AA}",
+    tier: "Silver",
+    category: "Mastery",
+    desc: "Accumulate 300 total Experience Points through dedicated study.",
+    rewardXp: 50,
+    hint: "Reach 300 XP to prove your consistency.",
+    test: s => s.xp >= 300,
+    target: { type: "xp", value: 300 }
+  },
+  {
+    id: "xp-500",
+    name: "XP Legend",
+    icon: "\u{1F680}",
+    tier: "Gold",
+    category: "Mastery",
+    desc: "Break past 500 total Experience Points into the master tier.",
+    rewardXp: 75,
+    hint: "Push your knowledge to achieve 500 XP.",
+    test: s => s.xp >= 500,
+    target: { type: "xp", value: 500 }
+  },
+  {
+    id: "streak-7",
+    name: "Week Warrior",
+    icon: "\u{1F31F}",
+    tier: "Silver",
+    category: "Streaks",
+    desc: "Maintain an unbroken 7-day daily practice streak.",
+    rewardXp: 60,
+    hint: "Practice for a full week straight without breaking the chain.",
+    test: s => s.streak >= 7,
+    target: { type: "streak", value: 7 }
+  },
+  {
+    id: "streak-30",
+    name: "Monthly Royalty",
+    icon: "\u{1F451}",
+    tier: "Diamond",
+    category: "Streaks",
+    desc: "Achieve the ultimate milestone: an unbroken 30-day learning streak.",
+    rewardXp: 150,
+    hint: "30 consecutive days of daily Nigerian language learning.",
+    test: s => s.streak >= 30,
+    target: { type: "streak", value: 30 }
+  },
+  {
+    id: "practice-5",
+    name: "Spaced Review Pro",
+    icon: "\u{1F3AF}",
+    tier: "Bronze",
+    category: "Mastery",
+    desc: "Complete 5 memory reinforcement sessions using the Ebbinghaus engine.",
+    rewardXp: 40,
+    hint: "Complete 5 spaced repetition sessions in Practice mode.",
+    test: s => s.practiceSessionsCompleted >= 5,
+    target: { type: "practice", value: 5 }
+  },
+  {
+    id: "culture-keeper",
+    name: "Culture Keeper",
+    icon: "\u{1FAD8}",
+    tier: "Silver",
+    category: "Culture",
+    desc: "Complete cultural immersion hubs for at least 3 heritage languages.",
+    rewardXp: 50,
+    hint: "Explore and finish cultural hubs across 3 languages.",
+    test: s => s.cultureCompletedCount >= 3,
+    target: { type: "culture", value: 3 }
+  }
 ];
 
 /* ====================== HELPERS ====================== */
@@ -1323,9 +1477,21 @@ function checkBadges(){
     practiceSessionsCompleted: state.practiceSessionsCompleted || 0,
     cultureCompletedCount: Object.values(state.cultureCompleted).filter(Boolean).length
   };
+  const newlyUnlocked = [];
   BADGES.forEach(b => {
-    if(!state.earnedBadges.includes(b.id) && b.test(snap)) state.earnedBadges.push(b.id);
+    if(!state.earnedBadges.includes(b.id) && b.test(snap)){
+      state.earnedBadges.push(b.id);
+      newlyUnlocked.push(b);
+    }
   });
+  if(newlyUnlocked.length > 0){
+    newlyUnlocked.forEach(b => {
+      if(typeof showAppToast === "function"){
+        showAppToast(`\u{1F3C6} Achievement Unlocked: "${b.name}" (+${b.rewardXp} XP)!`);
+      }
+      playUiSound("chest_unlock");
+    });
+  }
 }
 
 /* ====================== RENDER: HOME ====================== */
@@ -1377,16 +1543,18 @@ function renderHome(){
     trackSelect.appendChild(card);
   });
 
-  const badgesList = document.getElementById("badges-list");
-  badgesList.innerHTML = "";
-  BADGES.forEach(b => {
-    const earned = state.earnedBadges.includes(b.id);
-    const el = document.createElement("div");
-    el.className = "badge" + (earned ? " earned" : "");
-    el.innerHTML = `<div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div>`;
-    badgesList.appendChild(el);
-  });
-  renderBadgeTeaser();
+  renderBadges();
+  const viewAllBtn = document.getElementById("dash-view-all-badges-btn");
+  if(viewAllBtn){
+    viewAllBtn.onclick = () => {
+      playUiSound("tap");
+      renderProfile();
+      showScreen("profile");
+      setTimeout(() => {
+        document.getElementById("profile-badges-section")?.scrollIntoView({ behavior: "smooth" });
+      }, 120);
+    };
+  }
 
   renderLeaderboard();
 }
@@ -1915,7 +2083,215 @@ function renderPracticeScreen(filterMode = currentPracticeFilter){
   });
 }
 
-/* ---- profile screen ---- */
+/* ====================== BADGE PROGRESS & HELPERS ====================== */
+function getBadgeProgress(badge){
+  const snap = {
+    lessons: lessonsCompletedCount(),
+    streak: state.streak || 0,
+    hasPerfect: state.hasPerfect ? 1 : 0,
+    languages: languagesStartedCount(),
+    courseClear: anyCourseCleared() ? 1 : 0,
+    xp: state.xp || 0,
+    practice: state.practiceSessionsCompleted || 0,
+    culture: Object.values(state.cultureCompleted).filter(Boolean).length
+  };
+
+  const isUnlocked = state.earnedBadges.includes(badge.id);
+  const targetType = badge.target?.type || "lessons";
+  const targetVal = badge.target?.value || 1;
+  const currentVal = snap[targetType] ?? 0;
+  const pct = isUnlocked ? 100 : Math.min(100, Math.max(0, Math.round((currentVal / targetVal) * 100)));
+  const gap = Math.max(0, targetVal - currentVal);
+
+  const units = {
+    lessons: gap === 1 ? "lesson" : "lessons",
+    streak: gap === 1 ? "day" : "days",
+    xp: "XP",
+    practice: gap === 1 ? "session" : "sessions",
+    culture: gap === 1 ? "culture" : "cultures",
+    languages: gap === 1 ? "language" : "languages",
+    hasPerfect: "flawless run",
+    courseClear: "course completion"
+  };
+
+  return {
+    isUnlocked,
+    current: currentVal,
+    target: targetVal,
+    pct,
+    gap,
+    unit: units[targetType] || "steps",
+    targetType
+  };
+}
+
+/* ---- upcoming badge teaser (retention engine) ---- */
+function renderUpcomingBadgeTeaser(){
+  const teaserCard = document.getElementById("upcoming-badge-teaser-card");
+  const oldTeaserText = document.getElementById("badge-teaser");
+
+  // Find all locked badges and compute progress
+  const lockedBadges = BADGES
+    .filter(b => !state.earnedBadges.includes(b.id))
+    .map(b => ({ badge: b, prog: getBadgeProgress(b) }))
+    .sort((a, b) => {
+      // Prioritize highest percentage completed, then smallest gap
+      if(b.prog.pct !== a.prog.pct) return b.prog.pct - a.prog.pct;
+      return a.prog.gap - b.prog.gap;
+    });
+
+  if(lockedBadges.length === 0){
+    // User unlocked all badges!
+    if(teaserCard){
+      teaserCard.innerHTML = `
+        <div class="teaser-card-all-done">
+          <div class="teaser-all-done-icon">\u{1F451}</div>
+          <div class="teaser-all-done-body">
+            <span class="teaser-kicker">PRESTIGE STATUS</span>
+            <h3 class="teaser-title">Grandmaster Naija Polyglot!</h3>
+            <p class="teaser-sub">Incredible achievement! You have unlocked all ${BADGES.length} badges. Maintain your daily streak to preserve your legendary status.</p>
+          </div>
+        </div>
+      `;
+    }
+    if(oldTeaserText) oldTeaserText.textContent = "All achievement badges unlocked! \u{1F3C6}";
+    return;
+  }
+
+  const { badge, prog } = lockedBadges[0];
+
+  // Tailor retention action button based on the target
+  let actionBtnText = "Continue Path to Unlock \u2192";
+  let actionHandler = () => {
+    const key = pickContinueCourse();
+    startLesson(key, state.completed[key].length);
+  };
+
+  if(prog.targetType === "practice"){
+    actionBtnText = "Review Spaced Repetition \u2192";
+    actionHandler = () => { renderPracticeScreen("all"); showScreen("practice"); };
+  } else if(prog.targetType === "culture"){
+    actionBtnText = "Explore Culture Hub \u2192";
+    actionHandler = () => { renderCultureHub(); showScreen("culture-hub"); };
+  } else if(prog.targetType === "languages"){
+    actionBtnText = "Explore Languages \u2193";
+    actionHandler = () => {
+      const el = document.getElementById("track-select");
+      if(el) el.scrollIntoView({ behavior: "smooth" });
+    };
+  } else {
+    const continueKey = pickContinueCourse();
+    const course = COURSES[continueKey];
+    const doneCount = state.completed[continueKey].length;
+    actionBtnText = `Continue ${course.name} Path \u2192`;
+    actionHandler = () => startLesson(continueKey, doneCount);
+  }
+
+  const urgencyText = prog.gap === 1
+    ? `Just <strong>1 more ${prog.unit}</strong> away from earning "${badge.name}" and claiming <strong>+${badge.rewardXp} XP</strong>!`
+    : `Only <strong>${prog.gap} ${prog.unit}</strong> to unlock "${badge.name}" and claim <strong>+${badge.rewardXp} XP</strong>!`;
+
+  if(teaserCard){
+    teaserCard.innerHTML = `
+      <div class="upcoming-teaser-inner" id="upcoming-teaser-click-target">
+        <div class="upcoming-teaser-badge-col">
+          <div class="upcoming-teaser-medallion tier-${badge.tier.toLowerCase()}">
+            <span class="upcoming-teaser-icon">${badge.icon}</span>
+            <span class="upcoming-teaser-lock">\u{1F512}</span>
+          </div>
+        </div>
+
+        <div class="upcoming-teaser-content-col">
+          <div class="upcoming-teaser-topline">
+            <span class="upcoming-teaser-kicker">
+              <span class="kicker-dot"></span> NEXT IN REACH \u00b7 ${badge.tier.toUpperCase()}
+            </span>
+            <span class="upcoming-teaser-reward">+${badge.rewardXp} XP</span>
+          </div>
+
+          <h3 class="upcoming-teaser-title">${badge.name}</h3>
+          <p class="upcoming-teaser-desc">${badge.desc}</p>
+
+          <div class="upcoming-teaser-progress-row">
+            <div class="upcoming-teaser-bar-track">
+              <div class="upcoming-teaser-bar-fill" style="width:${Math.max(6, prog.pct)}%;"></div>
+            </div>
+            <span class="upcoming-teaser-pct">${prog.current} / ${prog.target} (${prog.pct}%)</span>
+          </div>
+
+          <div class="upcoming-teaser-urgency">${urgencyText}</div>
+
+          <div class="upcoming-teaser-action-row">
+            <button type="button" class="btn-check upcoming-teaser-action-btn" id="upcoming-teaser-action-btn">
+              ${actionBtnText}
+            </button>
+            <button type="button" class="upcoming-teaser-inspect-btn" id="upcoming-teaser-inspect-btn">
+              Inspect badge \u2139\uFE0F
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("upcoming-teaser-action-btn")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      playUiSound("tap");
+      actionHandler();
+    });
+
+    document.getElementById("upcoming-teaser-inspect-btn")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openBadgeDetailModal(badge.id);
+    });
+
+    document.getElementById("upcoming-teaser-click-target")?.addEventListener("click", () => {
+      openBadgeDetailModal(badge.id);
+    });
+  }
+
+  if(oldTeaserText){
+    oldTeaserText.textContent = `${prog.gap} more ${prog.unit} to earn "${badge.name}" ${badge.icon}`;
+  }
+}
+
+/* ---- render badges ribbon on dashboard ---- */
+function renderBadges(){
+  const countEl = document.getElementById("dash-badges-count");
+  if(countEl){
+    countEl.textContent = `${state.earnedBadges.length} / ${BADGES.length} Unlocked`;
+  }
+
+  const listEl = document.getElementById("badges-list");
+  if(listEl){
+    listEl.innerHTML = "";
+    BADGES.forEach(b => {
+      const earned = state.earnedBadges.includes(b.id);
+      const prog = getBadgeProgress(b);
+      const badgeBtn = document.createElement("button");
+      badgeBtn.type = "button";
+      badgeBtn.className = "badge" + (earned ? " earned" : " locked") + ` tier-${b.tier.toLowerCase()}`;
+      badgeBtn.title = `${b.name} (${earned ? "Unlocked \u2713" : `${prog.pct}% completed`})`;
+      badgeBtn.innerHTML = `
+        <div class="badge-icon-wrap">
+          <span class="badge-icon">${b.icon}</span>
+          ${earned ? `<span class="badge-check-icon">\u2713</span>` : `<span class="badge-lock-icon">\u{1F512}</span>`}
+        </div>
+        <span class="badge-name">${b.name}</span>
+        <span class="badge-sub-meta">${earned ? "Unlocked" : `${prog.pct}%`}</span>
+      `;
+      badgeBtn.addEventListener("click", () => {
+        openBadgeDetailModal(b.id);
+      });
+      listEl.appendChild(badgeBtn);
+    });
+  }
+
+  renderUpcomingBadgeTeaser();
+}
+
+/* ---- profile screen & badges showcase ---- */
+let currentProfileBadgeFilter = "all";
+
 function renderProfile(){
   const username = getUsername() || "you";
   const lvl = getLevelInfo(state.xp);
@@ -1956,28 +2332,175 @@ function renderProfile(){
     `;
   }).join("");
 
-  const badgesEl = document.getElementById("profile-badges-grid");
-  badgesEl.innerHTML = BADGES.map(b => {
-    const earned = state.earnedBadges.includes(b.id);
-    return `<div class="badge${earned ? " earned" : ""}"><div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div></div>`;
-  }).join("");
+  // BADGES SECTION IN PROFILE
+  const unlockedCount = state.earnedBadges.length;
+  const totalBadges = BADGES.length;
+  const badgePct = Math.round((unlockedCount / totalBadges) * 100);
 
+  const summaryEl = document.getElementById("profile-badges-unlocked-summary");
+  if(summaryEl){
+    summaryEl.textContent = `${unlockedCount} of ${totalBadges} Unlocked (${badgePct}%)`;
+  }
+  const fillEl = document.getElementById("profile-badges-bar-fill");
+  if(fillEl){
+    fillEl.style.width = `${badgePct}%`;
+  }
+
+  const tabUnlocked = document.getElementById("tab-unlocked-count");
+  if(tabUnlocked) tabUnlocked.textContent = unlockedCount;
+  const tabLocked = document.getElementById("tab-locked-count");
+  if(tabLocked) tabLocked.textContent = totalBadges - unlockedCount;
+
+  // Filter tabs click handlers
+  const filterTabs = document.querySelectorAll(".profile-badge-tab");
+  filterTabs.forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.filter === currentProfileBadgeFilter);
+    tab.onclick = () => {
+      playUiSound("tap");
+      currentProfileBadgeFilter = tab.dataset.filter;
+      renderProfileBadgesGrid();
+    };
+  });
+
+  renderProfileBadgesGrid();
   renderProfileReminderCard();
 }
 
-/* ---- badge progress teaser ---- */
-function renderBadgeTeaser(){
-  const el = document.getElementById("badge-teaser");
-  const currentVals = { lessons: lessonsCompletedCount(), streak: state.streak, xp: state.xp, practice: state.practiceSessionsCompleted || 0 };
-  let best = null, bestGap = Infinity;
-  BADGES.forEach(b => {
-    if(state.earnedBadges.includes(b.id) || !b.target) return;
-    const gap = b.target.value - currentVals[b.target.type];
-    if(gap > 0 && gap < bestGap){ bestGap = gap; best = b; }
+function renderProfileBadgesGrid(){
+  const badgesEl = document.getElementById("profile-badges-grid");
+  if(!badgesEl) return;
+
+  // Update tabs active state
+  document.querySelectorAll(".profile-badge-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.filter === currentProfileBadgeFilter);
   });
-  if(!best){ el.textContent = ""; return; }
-  const unitLabel = { lessons: `lesson${bestGap === 1 ? "" : "s"}`, streak: `day${bestGap === 1 ? "" : "s"}`, xp: "XP", practice: `session${bestGap === 1 ? "" : "s"}` }[best.target.type];
-  el.textContent = `${bestGap} more ${unitLabel} to earn "${best.name}" ${best.icon}`;
+
+  let filtered = BADGES;
+  if(currentProfileBadgeFilter === "unlocked"){
+    filtered = BADGES.filter(b => state.earnedBadges.includes(b.id));
+  } else if(currentProfileBadgeFilter === "locked"){
+    filtered = BADGES.filter(b => !state.earnedBadges.includes(b.id));
+  }
+
+  if(filtered.length === 0){
+    badgesEl.innerHTML = `
+      <div class="profile-badges-empty">
+        ${currentProfileBadgeFilter === "unlocked" 
+          ? "No badges unlocked yet \u2014 complete lessons and daily streaks to earn your first achievement!" 
+          : "\u{1F389} Congratulations! You have unlocked every single achievement badge!"}
+      </div>
+    `;
+    return;
+  }
+
+  badgesEl.innerHTML = filtered.map(b => {
+    const earned = state.earnedBadges.includes(b.id);
+    const prog = getBadgeProgress(b);
+    return `
+      <div class="profile-badge-card ${earned ? "unlocked" : "locked"} tier-${b.tier.toLowerCase()}" data-badge-id="${b.id}" tabindex="0" role="button" aria-label="${b.name}">
+        <div class="profile-badge-medallion-wrap">
+          <div class="profile-badge-medallion">
+            <span class="profile-badge-glyph">${b.icon}</span>
+            ${earned ? `<span class="profile-badge-seal">\u2713</span>` : `<span class="profile-badge-lock-mark">\u{1F512}</span>`}
+          </div>
+        </div>
+
+        <div class="profile-badge-info">
+          <div class="profile-badge-meta-row">
+            <span class="profile-badge-tier-tag ${b.tier.toLowerCase()}">${b.tier}</span>
+            <span class="profile-badge-category">${b.category}</span>
+          </div>
+          <h4 class="profile-badge-title">${b.name}</h4>
+          <p class="profile-badge-desc">${b.desc}</p>
+
+          ${earned ? `
+            <div class="profile-badge-unlocked-row">
+              <span class="profile-badge-status-pill unlocked">\u2713 Unlocked</span>
+              <span class="profile-badge-xp-reward">+${b.rewardXp} XP</span>
+            </div>
+          ` : `
+            <div class="profile-badge-progress-wrap">
+              <div class="profile-badge-track">
+                <div class="profile-badge-fill" style="width:${Math.max(4, prog.pct)}%;"></div>
+              </div>
+              <div class="profile-badge-prog-label-row">
+                <span class="profile-badge-prog-txt">${prog.current}/${prog.target} ${prog.unit}</span>
+                <span class="profile-badge-gap-txt">${prog.gap} away</span>
+              </div>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // Attach click to open detail modal
+  badgesEl.querySelectorAll(".profile-badge-card").forEach(card => {
+    const id = card.dataset.badgeId;
+    card.addEventListener("click", () => openBadgeDetailModal(id));
+    card.addEventListener("keydown", e => {
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        openBadgeDetailModal(id);
+      }
+    });
+  });
+}
+
+/* ---- badge detail modal inspector ---- */
+function openBadgeDetailModal(badgeId){
+  const b = BADGES.find(x => x.id === badgeId);
+  if(!b) return;
+
+  const modal = document.getElementById("badge-detail-modal");
+  if(!modal) return;
+
+  const earned = state.earnedBadges.includes(b.id);
+  const prog = getBadgeProgress(b);
+
+  document.getElementById("badge-modal-icon").textContent = b.icon;
+  document.getElementById("badge-modal-tier").textContent = `${b.tier.toUpperCase()} ACHIEVEMENT \u00b7 ${b.category.toUpperCase()}`;
+  document.getElementById("badge-modal-title").textContent = b.name;
+  document.getElementById("badge-modal-desc").textContent = b.desc;
+  document.getElementById("badge-modal-reward-val").textContent = `+${b.rewardXp} XP`;
+
+  const statusText = document.getElementById("badge-modal-status-text");
+  const countText = document.getElementById("badge-modal-count-text");
+  const fill = document.getElementById("badge-modal-fill");
+  const hint = document.getElementById("badge-modal-hint");
+  const iconWrap = document.getElementById("badge-modal-icon-wrap");
+
+  if(earned){
+    statusText.textContent = "\u2713 UNLOCKED ACHIEVEMENT";
+    statusText.style.color = "var(--gold)";
+    countText.textContent = "Mastered (100%)";
+    fill.style.width = "100%";
+    fill.style.background = "var(--gold)";
+    hint.textContent = "You have proven your dedication and unlocked this achievement medallion! Keep pushing forward.";
+    iconWrap.className = "badge-modal-icon-wrap is-unlocked";
+    playUiSound("chest_unlock");
+  } else {
+    statusText.textContent = "IN PROGRESS";
+    statusText.style.color = "#f0b088";
+    countText.textContent = `${prog.current} / ${prog.target} ${prog.unit} (${prog.pct}%)`;
+    fill.style.width = `${Math.max(5, prog.pct)}%`;
+    fill.style.background = "var(--gold)";
+    hint.textContent = b.hint || `Only ${prog.gap} more ${prog.unit} to unlock this badge and claim +${b.rewardXp} XP!`;
+    iconWrap.className = "badge-modal-icon-wrap";
+    playUiSound("tap");
+  }
+
+  modal.showModal();
+
+  const closeBtn = document.getElementById("badge-modal-close");
+  const actionBtn = document.getElementById("badge-modal-action-btn");
+
+  const closeModal = () => {
+    modal.close();
+  };
+
+  closeBtn.onclick = closeModal;
+  actionBtn.onclick = closeModal;
 }
 
 /* ====================== UI AUDIO & PROVERBS ====================== */

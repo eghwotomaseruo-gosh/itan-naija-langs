@@ -338,10 +338,30 @@
 
   <div class="account-row" id="account-row"></div>
 
-  <section class="badges-row">
-    <h2 class="section-label section-label-minor">Badges</h2>
-    <p class="badge-teaser" id="badge-teaser"></p>
-    <div id="badges-list" class="badges-list"></div>
+  <!-- UPCOMING BADGES & ACHIEVEMENTS DASHBOARD SECTION -->
+  <section class="dashboard-badges-section" id="dashboard-badges-section">
+    <div class="dash-badges-head">
+      <div>
+        <h2 class="section-label" style="margin:0;">Upcoming Achievement</h2>
+        <p class="dash-badges-sub">Maintain streaks and master lessons to unlock badges</p>
+      </div>
+      <button type="button" class="dash-view-all-badges-btn" id="dash-view-all-badges-btn">
+        <span>View all in profile</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Upcoming Badge Retention Teaser Card -->
+    <div id="upcoming-badge-teaser-card" class="upcoming-badge-teaser-card"></div>
+
+    <!-- Quick Badges Carousel / Ribbon -->
+    <div class="dash-badges-strip-wrap">
+      <div class="dash-strip-label-row">
+        <span class="dash-strip-label">Achievement Badges</span>
+        <span class="dash-strip-count" id="dash-badges-count">0 / 14 Unlocked</span>
+      </div>
+      <div id="badges-list" class="badges-list"></div>
+    </div>
   </section>
 
   <section class="leaderboard-wrap">
@@ -433,8 +453,30 @@
   <h2 class="section-label">Languages</h2>
   <div class="profile-languages" id="profile-languages"></div>
 
-  <h2 class="section-label">All badges</h2>
-  <div class="profile-badges-grid" id="profile-badges-grid"></div>
+  <!-- PROFILE ACHIEVEMENTS & BADGES SECTION -->
+  <section class="profile-badges-section" id="profile-badges-section">
+    <div class="profile-badges-header">
+      <div class="profile-badges-title-wrap">
+        <h2 class="section-label" style="margin:0;">Achievements &amp; Badges</h2>
+        <p class="profile-badges-sub" id="profile-badges-unlocked-summary">0 of 14 Unlocked (0%)</p>
+      </div>
+      <div class="profile-badges-progress-box">
+        <div class="profile-badges-bar-track">
+          <div class="profile-badges-bar-fill" id="profile-badges-bar-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="profile-badges-filter-tabs" id="profile-badges-filter-tabs">
+      <button type="button" class="profile-badge-tab active" data-filter="all">All (14)</button>
+      <button type="button" class="profile-badge-tab" data-filter="unlocked">Unlocked <span class="tab-badge-pill" id="tab-unlocked-count">0</span></button>
+      <button type="button" class="profile-badge-tab" data-filter="locked">In Progress <span class="tab-badge-pill" id="tab-locked-count">14</span></button>
+    </div>
+
+    <!-- Badges Showcase Grid -->
+    <div class="profile-badges-grid" id="profile-badges-grid"></div>
+  </section>
 
   <h2 class="section-label">Daily Reminders (24-Hour Inactivity)</h2>
   <div class="profile-reminder-card" id="profile-reminder-card"></div>
@@ -619,6 +661,40 @@
     <p class="guidebook-intro" id="guidebook-intro">Master these foundational expressions to glide through the path.</p>
     <div class="guidebook-vocab-list" id="guidebook-vocab-list"></div>
     <button type="button" class="btn-check" id="guidebook-gotit-btn" style="margin-top:18px;">Understood</button>
+  </div>
+</dialog>
+
+<!-- ===== BADGE & ACHIEVEMENT DETAIL MODAL ===== -->
+<dialog id="badge-detail-modal" class="reward-modal">
+  <div class="reward-modal-card badge-modal-card">
+    <button type="button" class="reward-modal-close" id="badge-modal-close" aria-label="Close modal">&times;</button>
+    
+    <div class="badge-modal-icon-wrap" id="badge-modal-icon-wrap">
+      <div class="badge-modal-halo" id="badge-modal-halo"></div>
+      <div class="badge-modal-icon" id="badge-modal-icon">🏆</div>
+    </div>
+
+    <span class="badge-modal-tier" id="badge-modal-tier">GOLD ACHIEVEMENT</span>
+    <h2 class="reward-modal-title" id="badge-modal-title" style="margin-bottom:6px;">Badge Title</h2>
+    <p class="badge-modal-desc" id="badge-modal-desc">Badge Description</p>
+    
+    <div class="badge-modal-progress-box" id="badge-modal-progress-box">
+      <div class="badge-modal-progress-labels">
+        <span id="badge-modal-status-text" class="badge-modal-status-text">In Progress</span>
+        <span id="badge-modal-count-text" class="badge-modal-count-text">3 / 10 lessons</span>
+      </div>
+      <div class="badge-modal-track">
+        <div class="badge-modal-fill" id="badge-modal-fill" style="width: 30%;"></div>
+      </div>
+      <p class="badge-modal-hint" id="badge-modal-hint">Keep learning to unlock this badge!</p>
+    </div>
+
+    <div class="badge-modal-reward-row">
+      <span class="badge-modal-reward-label">Achievement Reward</span>
+      <span class="badge-modal-reward-val" id="badge-modal-reward-val">+50 XP</span>
+    </div>
+
+    <button type="button" class="btn-check" id="badge-modal-action-btn" style="margin-top:16px;">Got It</button>
   </div>
 </dialog>
 

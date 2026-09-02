@@ -14,6 +14,116 @@ const PATTERNS = {
   ijaw: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='40'><g stroke='%23247ba0' stroke-width='2' fill='none'><path d='M0 12 C15 4, 30 20, 45 12 S60 4, 75 12'/><path d='M0 26 C15 18, 30 34, 45 26 S60 18, 75 26'/></g></svg>`
 };
 
+/* ====================== 3D TRIBE EMBLEMS & CULTURAL METADATA ======================
+   Authentic cultural symbols and metadata for the 10 Nigerian tribes to power
+   the tactile 3D physical stepping-stone tiles across all screens. */
+const TRIBE_DETAILS = {
+  igbo: {
+    name: "Igbo",
+    native: "Asụsụ Igbo",
+    greeting: "Ndewo",
+    region: "Southeast",
+    symbolTitle: "Isiagu Lion & Cowrie",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M18 5 C11 5 7 10 7 17 C7 23 11 27 15 28 L15 31 L21 31 L21 28 C25 27 29 23 29 17 C29 10 25 5 18 5 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.18)" stroke-linejoin="round"/><circle cx="13" cy="15" r="1.8" fill="white"/><circle cx="23" cy="15" r="1.8" fill="white"/><path d="M16 20 Q18 22 20 20" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="8" r="2" fill="white" opacity="0.85"/><circle cx="28" cy="8" r="2" fill="white" opacity="0.85"/><circle cx="18" cy="3" r="2" fill="white" opacity="0.85"/></svg>`
+  },
+  yoruba: {
+    name: "Yorùbá",
+    native: "Èdè Yorùbá",
+    greeting: "Bawo ni",
+    region: "Southwest",
+    symbolTitle: "Adé Beaded Crown & Okin Bird",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M10 24 L12 11 L18 16 L24 11 L26 24 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.18)" stroke-linejoin="round"/><circle cx="18" cy="9" r="3" stroke="white" stroke-width="2" fill="white"/><path d="M18 6 L18 4" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M9 24 L27 24 L25 29 L11 29 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.25)"/><line x1="12" y1="29" x2="12" y2="33" stroke="white" stroke-width="1.8" stroke-linecap="round"/><line x1="18" y1="29" x2="18" y2="34" stroke="white" stroke-width="1.8" stroke-linecap="round"/><line x1="24" y1="29" x2="24" y2="33" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>`
+  },
+  hausa: {
+    name: "Hausa",
+    native: "Harshen Hausa",
+    greeting: "Sannu",
+    region: "North",
+    symbolTitle: "Dagin Arewa Northern Knot",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect x="11" y="11" width="14" height="14" transform="rotate(45 18 18)" stroke="white" stroke-width="2.2" fill="rgba(255,255,255,0.16)"/><circle cx="18" cy="6" r="3.5" stroke="white" stroke-width="2" fill="none"/><circle cx="30" cy="18" r="3.5" stroke="white" stroke-width="2" fill="none"/><circle cx="18" cy="30" r="3.5" stroke="white" stroke-width="2" fill="none"/><circle cx="6" cy="18" r="3.5" stroke="white" stroke-width="2" fill="none"/><circle cx="18" cy="18" r="2" fill="white"/></svg>`
+  },
+  edo: {
+    name: "Edo",
+    native: "Ẹ̀dó",
+    greeting: "Kóyo",
+    region: "Midwest",
+    symbolTitle: "Queen Idia Bronze Mask",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M11 11 Q18 7 25 11 C26 18 24 25 18 29 C12 25 10 18 11 11 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.18)" stroke-linejoin="round"/><path d="M9 9 Q18 4 27 9" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="14" y1="15" x2="16" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="20" y1="15" x2="22" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="16" x2="18" y2="21" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M16 23 Q18 24.5 20 23" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="18" cy="32" r="1.5" fill="white"/><circle cx="13" cy="31" r="1.2" fill="white"/><circle cx="23" cy="31" r="1.2" fill="white"/></svg>`
+  },
+  efik: {
+    name: "Efịk",
+    native: "Usem Efịk",
+    greeting: "Mọ́kọ́m",
+    region: "Cross River",
+    symbolTitle: "Ekpe Leopard Society & Nsibidi",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><circle cx="18" cy="18" r="12" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><path d="M12 14 Q18 8 24 14 Q18 20 12 14 Z" stroke="white" stroke-width="1.8" fill="white" opacity="0.35"/><circle cx="18" cy="14" r="2" fill="white"/><path d="M18 19 L18 27" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 24 L22 24" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="10" cy="9" r="2" fill="white" opacity="0.85"/><circle cx="26" cy="9" r="2" fill="white" opacity="0.85"/></svg>`
+  },
+  urhobo: {
+    name: "Urhobo",
+    native: "Ẹvwrẹn Urhobo",
+    greeting: "Migwo",
+    region: "Niger Delta",
+    symbolTitle: "Royal Ivie Beads & Ogbọrọ Fan",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M18 6 C13 6 9 11 9 17 C9 24 14 28 18 29 C22 28 27 24 27 17 C27 11 23 6 18 6 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><circle cx="18" cy="14" r="3" stroke="white" stroke-width="1.8" fill="white"/><circle cx="13" cy="19" r="2" fill="white"/><circle cx="23" cy="19" r="2" fill="white"/><circle cx="18" cy="24" r="2.2" fill="white"/><line x1="18" y1="29" x2="18" y2="34" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>`
+  },
+  tiv: {
+    name: "Tiv",
+    native: "Zwa Tiv",
+    greeting: "M sugh u",
+    region: "Benue Valley",
+    symbolTitle: "A’nger Zebra Cloth & Horn",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect x="7" y="9" width="22" height="18" rx="4" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><line x1="13" y1="9" x2="13" y2="27" stroke="white" stroke-width="2"/><line x1="18" y1="9" x2="18" y2="27" stroke="white" stroke-width="2"/><line x1="23" y1="9" x2="23" y2="27" stroke="white" stroke-width="2"/><path d="M6 31 Q18 26 30 31" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`
+  },
+  uvwie: {
+    name: "Uvwie",
+    native: "Ẹvwrẹn Uvwie",
+    greeting: "Migwo",
+    region: "Effurun Delta",
+    symbolTitle: "Royal Agogo Bell & Staff",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M18 5 L12 25 L24 25 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.2)" stroke-linejoin="round"/><ellipse cx="18" cy="25" rx="6" ry="2.5" stroke="white" stroke-width="1.8" fill="white"/><line x1="18" y1="27" x2="18" y2="31" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="32" r="2" fill="white"/><circle cx="18" cy="5" r="2.5" stroke="white" stroke-width="1.8" fill="white"/></svg>`
+  },
+  isoko: {
+    name: "Isoko",
+    native: "Ẹvẹ Isoko",
+    greeting: "Do",
+    region: "Isoko Delta",
+    symbolTitle: "Okike Ivory Horn & Palm",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M11 28 C10 18 16 8 26 6 C24 14 20 24 11 28 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.2)" stroke-linejoin="round"/><circle cx="26" cy="6" r="2" fill="white"/><path d="M8 29 L14 31" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="20" r="2" fill="white"/><circle cx="21" cy="14" r="1.6" fill="white"/></svg>`
+  },
+  ijaw: {
+    name: "Ijaw",
+    native: "Ịjọ (Izon)",
+    greeting: "Tebidaba",
+    region: "Maritime Delta",
+    symbolTitle: "War Canoe & Sacred Paddle",
+    svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M5 22 Q18 27 31 22 C27 20 9 20 5 22 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.22)" stroke-linejoin="round"/><line x1="18" y1="6" x2="18" y2="28" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 10 L18 6 L22 10 Z" stroke="white" stroke-width="1.8" fill="white"/><path d="M7 29 Q18 33 29 29" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>`
+  }
+};
+
+/**
+ * Renders the high-fidelity 3D Real Tribe Tile DOM structure
+ * (Ground shadow, extruded cushion plinth, gloss curve, minted ring, watermark texture, and cultural SVG emblem)
+ */
+function render3DTribeTile(key, options = {}) {
+  const t = TRIBE_DETAILS[key] || TRIBE_DETAILS.igbo;
+  const isDone = Boolean(options.isDone);
+  const isActive = Boolean(options.isActive);
+  const patternUrl = PATTERNS[key] || "";
+
+  return `
+    <div class="tribe-ground-shadow"></div>
+    <div class="tribe-tile-plinth" aria-hidden="true">
+      <div class="tribe-tile-gloss"></div>
+      <div class="tribe-tile-ring"></div>
+      <div class="tribe-tile-texture" style="background-image: url('${patternUrl}');"></div>
+      <div class="tribe-tile-rim"></div>
+      <div class="tribe-emblem">${t.svg}</div>
+      ${isDone ? `<span class="tribe-done-badge" title="Tribe Mastered">✓</span>` : ""}
+      ${isActive ? `<span class="tribe-active-badge">ACTIVE</span>` : ""}
+    </div>
+  `;
+}
+
 /* ====================== VOCAB DATA ======================
    Each course has rich topical lessons. Question sets are
    generated from this vocab at runtime (see buildLessonQuestions). */
@@ -1527,21 +1637,39 @@ function renderHome(){
   check24HourInactivityReminder();
 
   const trackSelect = document.getElementById("track-select");
-  trackSelect.innerHTML = "";
-  Object.keys(COURSES).forEach(key => {
-    const course = COURSES[key];
-    const done = state.completed[key].length;
-    const total = course.lessons.length;
-    const isDone = done >= total;
-    const card = document.createElement("button");
-    card.className = `track-card ${course.color}`;
-    card.innerHTML = `
-      <div class="track-glyph">${course.glyph}${isDone ? `<span class="track-done-badge">\u2713</span>` : ""}</div>
-      <p class="track-name">${course.name}</p>
-    `;
-    card.addEventListener("click", () => openPath(key));
-    trackSelect.appendChild(card);
-  });
+  if(trackSelect){
+    trackSelect.innerHTML = "";
+    const activeKey = currentCourseKey || pickContinueCourse() || "igbo";
+    Object.keys(COURSES).forEach(key => {
+      const course = COURSES[key];
+      const t = TRIBE_DETAILS[key] || { greeting: "Ndewo" };
+      const done = state.completed[key]?.length || 0;
+      const total = course.lessons.length;
+      const isDone = done >= total;
+      const isActive = (key === activeKey);
+
+      const card = document.createElement("button");
+      card.className = `track-card ${course.color}` + (isActive ? " active" : "");
+      card.setAttribute("type", "button");
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `Switch to ${course.name} tribe track`);
+      card.dataset.tribe = key;
+
+      card.innerHTML = `
+        ${render3DTribeTile(key, { isDone, isActive })}
+        <div class="track-info">
+          <p class="track-name">${course.name}</p>
+          <p class="track-native">${t.greeting}</p>
+          <span class="track-progress-pill ${isDone ? 'done' : ''}">${isDone ? 'Mastered ✓' : `${done}/${total} Lessons`}</span>
+        </div>
+      `;
+      card.addEventListener("click", () => {
+        playUiSound("tap");
+        openPath(key);
+      });
+      trackSelect.appendChild(card);
+    });
+  }
 
   renderBadges();
   const viewAllBtn = document.getElementById("dash-view-all-badges-btn");
@@ -2734,17 +2862,34 @@ function openPath(key){
   patternEl.style.backgroundImage = `url("${PATTERNS[key]}")`;
   patternEl.style.backgroundSize = "60px";
 
-  // Language Track Switcher Tabs
+  // Language Track Switcher Tabs (3D Real Tribe Stepping-Stone Tiles)
   const tabsEl = document.getElementById("lang-tabs");
-  tabsEl.innerHTML = "";
-  Object.keys(COURSES).forEach(k => {
-    const c = COURSES[k];
-    const tab = document.createElement("button");
-    tab.className = `lang-tab ${c.color}` + (k === key ? " active" : "");
-    tab.innerHTML = `<span class="lang-tab-glyph">${c.glyph}</span><span class="lang-tab-label">${c.name}</span>`;
-    tab.addEventListener("click", () => openPath(k));
-    tabsEl.appendChild(tab);
-  });
+  if(tabsEl){
+    tabsEl.innerHTML = "";
+    Object.keys(COURSES).forEach(k => {
+      const c = COURSES[k];
+      const done = state.completed[k]?.length || 0;
+      const isDone = done >= c.lessons.length;
+      const isActive = (k === key);
+
+      const tab = document.createElement("button");
+      tab.className = `lang-tab ${c.color}` + (isActive ? " active" : "");
+      tab.setAttribute("type", "button");
+      tab.setAttribute("role", "button");
+      tab.setAttribute("aria-label", `Switch to ${c.name} track`);
+      tab.dataset.tribe = k;
+
+      tab.innerHTML = `
+        ${render3DTribeTile(k, { isDone, isActive })}
+        <span class="lang-tab-label">${c.name}</span>
+      `;
+      tab.addEventListener("click", () => {
+        playUiSound("tap");
+        openPath(k);
+      });
+      tabsEl.appendChild(tab);
+    });
+  }
 
   // Calculate Unit & Progress
   const doneCount = state.completed[key].length;
@@ -3569,10 +3714,24 @@ function showScreen(name){
 }
 
 document.getElementById("lang-pill-toggle").addEventListener("click", () => {
+  playUiSound("tap");
+  const trackSection = document.getElementById("home-track-section") || document.getElementById("track-select");
   const trackSelect = document.getElementById("track-select");
   const pill = document.getElementById("lang-pill-toggle");
-  trackSelect.classList.toggle("hidden");
-  pill.classList.toggle("open", !trackSelect.classList.contains("hidden"));
+  const homeScreen = document.getElementById("screen-home");
+
+  if(homeScreen && homeScreen.classList.contains("hidden")){
+    renderHome();
+    showScreen("home");
+  }
+
+  if(trackSelect){
+    trackSelect.classList.remove("hidden");
+    pill.classList.add("open");
+    if(trackSection){
+      trackSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
 });
 document.getElementById("path-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
 document.getElementById("practice-back").addEventListener("click", () => { renderHome(); showScreen("home"); });
@@ -3793,6 +3952,31 @@ document.getElementById("landing-cta-btn").addEventListener("click", () => {
   setAuthMode("signup");
   document.getElementById("auth-form-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
   setTimeout(() => document.getElementById("auth-username").focus(), 400);
+});
+
+// Interactive 3D Tribe Cards on Landing Screen
+document.querySelectorAll(".landing-lang-card").forEach(card => {
+  card.addEventListener("click", () => {
+    playUiSound("tap");
+    const tribe = card.dataset.tribe;
+    if(tribe && COURSES[tribe]){
+      state.lastActiveCourse = tribe;
+      currentCourseKey = tribe;
+      saveState();
+    }
+    setAuthMode("signup");
+    const authWrap = document.getElementById("auth-form-wrap");
+    if(authWrap){
+      authWrap.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => document.getElementById("auth-username")?.focus(), 400);
+    }
+  });
+  card.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      card.click();
+    }
+  });
 });
 
 document.getElementById("auth-form").addEventListener("submit", async e => {

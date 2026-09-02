@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "Lingua Naija — Learn Nigerian Languages",
+  "short_name": "LinguaNaija",
+  "description": "Bite-sized lessons, spaced repetition practice, and cultural wisdom across 10 Nigerian languages.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#140e0a",
+  "theme_color": "#140e0a",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

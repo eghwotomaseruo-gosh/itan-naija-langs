@@ -1206,6 +1206,10 @@ const DEFAULT_STATE = {
   todayXpDate: null,
   practiceSessionsCompleted: 0,
   longestStreak: 0,
+  notificationsEnabled: true,
+  lastActiveTime: Date.now(),
+  lastNotifiedTime: 0,
+  claimedChests: [],
   cultureCompleted: { igbo: false, yoruba: false, hausa: false, edo: false, efik: false, urhobo: false, tiv: false, uvwie: false, isoko: false, ijaw: false }
 };
 
@@ -1246,6 +1250,7 @@ async function fetchProgress(){
   Object.keys(CULTURE).forEach(k => {
     if(typeof state.cultureCompleted[k] !== "boolean") state.cultureCompleted[k] = false;
   });
+  if(!Array.isArray(state.claimedChests)) state.claimedChests = [];
   if(TESTING_MODE) state.hearts = STARTING_HEARTS;
 }
 
@@ -1347,10 +1352,13 @@ function renderHome(){
   pillGlyph.style.background = `var(--${pillCourse.color})`;
 
   renderContinueCard();
+  renderReminderCard();
   renderWeekCal();
   renderDailyGoal();
   renderPracticeEntry();
   renderCultureEntry();
+
+  check24HourInactivityReminder();
 
   const trackSelect = document.getElementById("track-select");
   trackSelect.innerHTML = "";
@@ -1953,6 +1961,8 @@ function renderProfile(){
     const earned = state.earnedBadges.includes(b.id);
     return `<div class="badge${earned ? " earned" : ""}"><div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div></div>`;
   }).join("");
+
+  renderProfileReminderCard();
 }
 
 /* ---- badge progress teaser ---- */
@@ -1970,8 +1980,166 @@ function renderBadgeTeaser(){
   el.textContent = `${bestGap} more ${unitLabel} to earn "${best.name}" ${best.icon}`;
 }
 
+/* ====================== UI AUDIO & PROVERBS ====================== */
+let uiAudioCtx = null;
+function playUiSound(type){
+  try{
+    if(!uiAudioCtx) uiAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(uiAudioCtx.state === "suspended") uiAudioCtx.resume();
+    const now = uiAudioCtx.currentTime;
+
+    if(type === "tap"){
+      const osc = uiAudioCtx.createOscillator();
+      const gain = uiAudioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(540, now);
+      osc.frequency.exponentialRampToValueAtTime(820, now + 0.08);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      osc.connect(gain);
+      gain.connect(uiAudioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    }else if(type === "chest_unlock"){
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, idx) => {
+        const osc = uiAudioCtx.createOscillator();
+        const gain = uiAudioCtx.createGain();
+        osc.type = "triangle";
+        const startT = now + idx * 0.09;
+        osc.frequency.setValueAtTime(freq, startT);
+        gain.gain.setValueAtTime(0.001, startT);
+        gain.gain.linearRampToValueAtTime(0.28, startT + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, startT + 0.38);
+        osc.connect(gain);
+        gain.connect(uiAudioCtx.destination);
+        osc.start(startT);
+        osc.stop(startT + 0.38);
+      });
+    }else if(type === "locked"){
+      const osc = uiAudioCtx.createOscillator();
+      const gain = uiAudioCtx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.setValueAtTime(170, now + 0.08);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+      osc.connect(gain);
+      gain.connect(uiAudioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.16);
+    }
+  }catch(e){}
+}
+
+const CULTURAL_PROVERBS = {
+  igbo: [
+    { text: "Onye fee eze, eze eruo ya aka.", translation: "He who respects the king will himself become king." },
+    { text: "Nku di na mba na-eghere mba nri.", translation: "The firewood of a people is what cooks their meal." },
+    { text: "Gidi gidi bụ ugwu eze.", translation: "Unity and collective strength are the glory of the people." }
+  ],
+  yoruba: [
+    { text: "Àgbájọ ọwọ́ la fi ń sọ̀yà.", translation: "A single finger cannot lift a heavy load; unity brings triumph." },
+    { text: "Bí ẹ̀mí bá wà, ìrètí ń bẹ.", translation: "As long as there is life and effort, there is bright hope." },
+    { text: "Ilé la ti ń kọ́ ẹ̀ṣọ́ ròde.", translation: "Wisdom and character begin within the household." }
+  ],
+  hausa: [
+    { text: "Gani ya kori ji.", translation: "Seeing is believing; true deeds surpass mere words." },
+    { text: "Da hankali ake kama dila.", translation: "With patience and wisdom, one catches the fox." },
+    { text: "Hannu daya ba ya daukar jinka.", translation: "One hand cannot lift the roof of a house alone." }
+  ],
+  edo: [
+    { text: "Agho vbe okhuo, erhamwen.", translation: "Perseverance and steady patience conquer all hardship." },
+    { text: "Ọta n'imwẹ ẹkikẹ, ọre ọ gbe okhuọ.", translation: "Words spoken with calm wisdom bring lasting victory." }
+  ],
+  efik: [
+    { text: "Kpukpru owo enyene ubok ke ufok.", translation: "Every hand is treasured in building a great community." },
+    { text: "Idem mfo odu ke ifiok.", translation: "Your true strength is rooted in understanding and knowledge." }
+  ],
+  urhobo: [
+    { text: "Orovwori r'otọ ọye riẹn idjerhe.", translation: "The dweller of the land knows its cherished paths." },
+    { text: "Ogbukpa ọvo gb'urhe ọvo-o.", translation: "One tree alone cannot make a forest." }
+  ],
+  tiv: [
+    { text: "Kasev mba aondo sha kwaghfan.", translation: "Patience and understanding bring enduring peace." },
+    { text: "Or môm gbe iyol ga.", translation: "No person can stand completely separated from community." }
+  ],
+  uvwie: [
+    { text: "Urhuvwun r'omote ọye epha.", translation: "Patience and respect pave the honorable road to victory." }
+  ],
+  isoko: [
+    { text: "Oghene ru emu kpobi re o ghale.", translation: "Every grand milestone begins with humble, steady steps." }
+  ],
+  ijaw: [
+    { text: "Beni gba tubo kpobi.", translation: "Small steady streams join together to form the mighty ocean." }
+  ]
+};
+
+/* Rosette scalloped ring SVG (the 16-lobed flower badge from the Duolingo screenshot) */
+const SCALLOPED_ROSETTE_SVG = `<svg class="tile-scallop-ring" viewBox="0 0 100 100" fill="currentColor">
+  <path d="M 50 3 C 54 3 57 8 60 10 C 64 12 68 13 71 16 C 74 19 75 23 77 27 C 80 30 84 33 85 37 C 87 41 87 45 87 50 C 87 55 87 59 85 63 C 84 67 80 70 77 73 C 75 77 74 81 71 84 C 68 87 64 88 60 90 C 57 92 54 97 50 97 C 46 97 43 92 40 90 C 36 88 32 87 29 84 C 26 81 25 77 23 73 C 20 70 16 67 15 63 C 13 59 13 55 13 50 C 13 45 13 41 15 37 C 16 33 20 30 23 27 C 25 23 26 19 29 16 C 32 13 36 12 40 10 C 43 8 46 3 50 3 Z" opacity="0.32"/>
+  <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity="0.75"/>
+</svg>`;
+
+/* Lesson Tile Icons matching Duolingo aesthetic */
+function getLessonTileIconSvg(i){
+  const iconSet = [
+    // Video camera / conversation (from screenshot)
+    `<svg viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3v-4z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg>`,
+    // Headphones / listening (from screenshot)
+    `<svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>`,
+    // Star / checkpoint (from screenshot)
+    `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    // Book / reading
+    `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`
+  ];
+  return iconSet[i % iconSet.length];
+}
+
+/* Treasure Chest SVG matching the wooden chest with golden latch in screenshot */
+function getChestSvg(status){
+  if(status === "claimed"){
+    return `<svg viewBox="0 0 100 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 16 32 L 25 8 Q 50 2 75 8 L 84 32 Z" fill="#6a3413" stroke="#e3a72b" stroke-width="3"/>
+      <path d="M 28 8 L 34 32 M 72 8 L 66 32" stroke="#ffd700" stroke-width="2.5"/>
+      <ellipse cx="50" cy="37" rx="33" ry="11" fill="#ffd700" opacity="0.95"/>
+      <circle cx="43" cy="35" r="5" fill="#fff5b8"/>
+      <circle cx="57" cy="35" r="4.5" fill="#fff5b8"/>
+      <circle cx="50" cy="39" r="4" fill="#ffffff"/>
+      <rect x="15" y="34" width="70" height="42" rx="7" fill="#8b4513" stroke="#e3a72b" stroke-width="3"/>
+      <line x1="28" y1="34" x2="28" y2="76" stroke="#ffd700" stroke-width="3"/>
+      <line x1="72" y1="34" x2="72" y2="76" stroke="#ffd700" stroke-width="3"/>
+      <rect x="20" y="75" width="12" height="6" rx="2" fill="#4d240c"/>
+      <rect x="68" y="75" width="12" height="6" rx="2" fill="#4d240c"/>
+    </svg>`;
+  }
+
+  // Closed Chest (Locked or Ready to claim)
+  return `<svg viewBox="0 0 100 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 14 36 Q 14 12 50 12 Q 86 12 86 36 Z" fill="#9c5427" stroke="#e3a72b" stroke-width="3"/>
+    <path d="M 18 35 Q 22 17 50 17 Q 78 17 82 35" fill="none" stroke="#7d3d19" stroke-width="1.5"/>
+    <path d="M 28 36 Q 30 14 32 12" stroke="#ffd700" stroke-width="3.5"/>
+    <path d="M 72 36 Q 70 14 68 12" stroke="#ffd700" stroke-width="3.5"/>
+    <rect x="14" y="34" width="72" height="42" rx="7" fill="#8b4513" stroke="#e3a72b" stroke-width="3"/>
+    <line x1="16" y1="54" x2="84" y2="54" stroke="#683109" stroke-width="2"/>
+    <line x1="28" y1="34" x2="28" y2="76" stroke="#ffd700" stroke-width="3.5"/>
+    <line x1="72" y1="34" x2="72" y2="76" stroke="#ffd700" stroke-width="3.5"/>
+    <path d="M 14 42 L 20 42 L 20 34" stroke="#ffd700" stroke-width="2.5" fill="none"/>
+    <path d="M 86 42 L 80 42 L 80 34" stroke="#ffd700" stroke-width="2.5" fill="none"/>
+    <path d="M 14 68 L 20 68 L 20 76" stroke="#ffd700" stroke-width="2.5" fill="none"/>
+    <path d="M 86 68 L 80 68 L 80 76" stroke="#ffd700" stroke-width="2.5" fill="none"/>
+    <circle cx="50" cy="38" r="9.5" fill="#ffd700" stroke="#b9840f" stroke-width="2"/>
+    <circle cx="50" cy="38" r="5" fill="#fff2a3"/>
+    <circle cx="50" cy="38" r="2.2" fill="#42210b"/>
+    <path d="M 48 38 L 47 43 L 53 43 L 52 38 Z" fill="#42210b"/>
+    <rect x="18" y="75" width="13" height="6" rx="2" fill="#4d240c"/>
+    <rect x="69" y="75" width="13" height="6" rx="2" fill="#4d240c"/>
+  </svg>`;
+}
+
 /* ====================== RENDER: PATH ====================== */
 let currentCourseKey = null;
+let activePendingChestInfo = null;
 
 function openPath(key){
   currentCourseKey = key;
@@ -1985,6 +2153,7 @@ function openPath(key){
   patternEl.style.backgroundImage = `url("${PATTERNS[key]}")`;
   patternEl.style.backgroundSize = "60px";
 
+  // Language Track Switcher Tabs
   const tabsEl = document.getElementById("lang-tabs");
   tabsEl.innerHTML = "";
   Object.keys(COURSES).forEach(k => {
@@ -1996,48 +2165,383 @@ function openPath(key){
     tabsEl.appendChild(tab);
   });
 
+  // Calculate Unit & Progress
+  const doneCount = state.completed[key].length;
+  const currentUnitIndex = Math.min(3, Math.floor(doneCount / 4) + 1);
+
+  // Update Unit Header Banner (matching pink card in Duolingo screenshot)
+  const unitBanner = document.getElementById("unit-banner");
+  if(unitBanner){
+    unitBanner.className = `unit-banner ${course.color}`;
+    const unitKicker = document.getElementById("unit-banner-kicker");
+    const unitTitle = document.getElementById("unit-banner-title");
+    if(unitKicker) unitKicker.textContent = `SECTION 1, UNIT ${currentUnitIndex}`;
+
+    // Topical Titles by unit
+    const unitTitles = {
+      1: "Greetings, Numbers & Everyday Words",
+      2: "Family, Food & Cultural Expressions",
+      3: "Mastery, Wisdom & Fluency"
+    };
+    if(unitTitle) unitTitle.textContent = unitTitles[currentUnitIndex] || `${course.name} Core Foundations`;
+
+    // Guidebook button handler
+    const guidebookBtn = document.getElementById("unit-guidebook-btn");
+    if(guidebookBtn){
+      guidebookBtn.onclick = () => openGuidebookModal(key, currentUnitIndex);
+    }
+  }
+
+  // Winding serpentine path offsets (smooth wave)
+  const PATH_OFFSETS = [0, -50, -75, -45, 0, 45, 75, 50];
+
   const pathEl = document.getElementById("lesson-path");
   pathEl.innerHTML = "";
-  const doneCount = state.completed[key].length;
+
   let currentNodeEl = null;
+  let layoutItemIndex = 0;
+
   course.lessons.forEach((lesson, i) => {
     const isDone = i < doneCount;
     const isNext = i === doneCount;
     const locked = !isDone && !isNext;
-    const node = document.createElement("button");
-    node.className = "lesson-node" + (locked ? " locked" : "") + (isDone ? " complete" : "");
-    node.style.background = locked ? "" : `var(--${course.color})`;
-    node.style.position = "relative";
-    node.innerHTML = locked
-      ? `<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`
-      : `${i + 1}`;
-    if(!locked) node.addEventListener("click", () => startLesson(key, i));
-    if(isNext) currentNodeEl = node;
-    if(isDone && doneCount < course.lessons.length){
-      const nextBadge = document.createElement("span");
-      nextBadge.className = "lesson-node-next-badge";
-      nextBadge.textContent = "✓";
-      nextBadge.setAttribute("aria-label", "Go to next lesson");
-      nextBadge.addEventListener("click", e => {
-        e.stopPropagation();
-        startLesson(key, doneCount);
-      });
-      node.appendChild(nextBadge);
-    }else if(isDone){
-      const doneBadge = document.createElement("span");
-      doneBadge.className = "lesson-node-next-badge";
-      doneBadge.textContent = "✓";
-      node.appendChild(doneBadge);
+
+    // Outer tile wrapper with serpentine winding offset
+    const tileWrap = document.createElement("div");
+    const currentOffset = PATH_OFFSETS[layoutItemIndex % PATH_OFFSETS.length];
+    layoutItemIndex++;
+
+    tileWrap.className = "lesson-tile" + (locked ? " locked" : "") + (isDone ? " complete" : "") + (isNext ? " active" : "");
+    tileWrap.style.marginLeft = `${currentOffset}px`;
+
+    // 3D tactile button
+    const btn = document.createElement("button");
+    btn.className = "tile-button";
+    btn.style.setProperty("--tile-bg", locked ? "#222c3a" : `var(--${course.color})`);
+    btn.style.setProperty("--tile-depth", locked ? "#151b24" : `var(--${course.color}-deep)`);
+
+    // Top specular gloss shine
+    const gloss = document.createElement("div");
+    gloss.className = "tile-gloss";
+    btn.appendChild(gloss);
+
+    // If active (current) node, add 16-lobed scalloped rosette ring, sparkles, and "START" tooltip
+    if(isNext){
+      const activeWrap = document.createElement("div");
+      activeWrap.className = "tile-active-wrap";
+      activeWrap.innerHTML = SCALLOPED_ROSETTE_SVG;
+
+      // Floating sparkles
+      const s1 = document.createElement("span"); s1.className = "tile-sparkle s1"; s1.textContent = "✨";
+      const s2 = document.createElement("span"); s2.className = "tile-sparkle s2"; s2.textContent = "✨";
+      const s3 = document.createElement("span"); s3.className = "tile-sparkle s3"; s3.textContent = "✨";
+      activeWrap.appendChild(s1);
+      activeWrap.appendChild(s2);
+      activeWrap.appendChild(s3);
+
+      // "START" speech bubble pill tooltip
+      const tooltip = document.createElement("div");
+      tooltip.className = "tile-tooltip";
+      tooltip.textContent = "START";
+      activeWrap.appendChild(tooltip);
+
+      activeWrap.appendChild(btn);
+      tileWrap.appendChild(activeWrap);
+      currentNodeEl = tileWrap;
+    }else{
+      tileWrap.appendChild(btn);
     }
+
+    // Inside the button: Icon or Number
+    const iconContainer = document.createElement("div");
+    iconContainer.className = "tile-icon";
+
+    if(locked){
+      iconContainer.innerHTML = `<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
+      btn.appendChild(iconContainer);
+    }else if(isNext){
+      // Show lesson number inside active disc (like the "8" in screenshot)
+      const numSpan = document.createElement("span");
+      numSpan.className = "tile-number";
+      numSpan.textContent = `${i + 1}`;
+      btn.appendChild(numSpan);
+    }else{
+      // Show Duolingo-style icon (camera, headphones, star, book)
+      iconContainer.innerHTML = getLessonTileIconSvg(i);
+      btn.appendChild(iconContainer);
+    }
+
+    // Completed node badge: 3 golden stars on top (from screenshot) and gold checkmark
+    if(isDone){
+      const stars = document.createElement("div");
+      stars.className = "tile-stars";
+      stars.innerHTML = "<span>★</span><span>★</span><span>★</span>";
+      btn.appendChild(stars);
+
+      const checkBadge = document.createElement("div");
+      checkBadge.className = "tile-check-badge";
+      checkBadge.textContent = "✓";
+      btn.appendChild(checkBadge);
+    }
+
+    // Click handler for tile
+    btn.addEventListener("click", () => {
+      if(locked){
+        playUiSound("locked");
+        showAppToast("Complete previous lessons to unlock this topic!");
+        return;
+      }
+      playUiSound("tap");
+      startLesson(key, i);
+    });
+
+    // Subtitle label below tile
     const label = document.createElement("div");
-    label.className = "lesson-node-label";
+    label.className = "tile-label";
     label.textContent = lesson.title;
-    node.appendChild(label);
-    pathEl.appendChild(node);
+    tileWrap.appendChild(label);
+
+    pathEl.appendChild(tileWrap);
+
+    // ==========================================
+    // REWARD CHEST AFTER EVERY 4 GAMES (LESSONS)
+    // ==========================================
+    const lessonNumber = i + 1;
+    if(lessonNumber % 4 === 0){
+      const chestNum = lessonNumber / 4;
+      const chestId = `${key}-chest-${chestNum}`;
+      const requiredGames = chestNum * 4;
+
+      const isClaimed = Array.isArray(state.claimedChests) && state.claimedChests.includes(chestId);
+      const isReady = !isClaimed && doneCount >= requiredGames;
+      const isLocked = !isClaimed && !isReady;
+
+      const chestNode = document.createElement("div");
+      chestNode.className = "path-reward-chest " + (isClaimed ? "claimed" : isReady ? "ready" : "locked");
+      // Align chest centered on the path for clean rhythm
+      chestNode.style.marginLeft = "0px";
+
+      // Chest SVG container
+      const svgBox = document.createElement("div");
+      svgBox.className = "chest-svg-box";
+      svgBox.innerHTML = getChestSvg(isClaimed ? "claimed" : "closed");
+
+      if(isReady){
+        const aura = document.createElement("div");
+        aura.className = "chest-aura";
+        svgBox.appendChild(aura);
+
+        const badgeTag = document.createElement("div");
+        badgeTag.className = "chest-badge-tag";
+        badgeTag.textContent = "CLAIM REWARD!";
+        chestNode.appendChild(badgeTag);
+      }else if(isClaimed){
+        const claimedTag = document.createElement("div");
+        claimedTag.className = "chest-claimed-tag";
+        claimedTag.textContent = "✓ CLAIMED";
+        chestNode.appendChild(claimedTag);
+      }
+
+      chestNode.appendChild(svgBox);
+
+      // Chest Labels
+      const chestLabel = document.createElement("div");
+      chestLabel.className = "chest-label";
+      chestLabel.textContent = `Reward Chest #${chestNum}`;
+      chestNode.appendChild(chestLabel);
+
+      const chestSub = document.createElement("div");
+      chestSub.className = "chest-sub";
+      if(isClaimed){
+        chestSub.textContent = "+35 XP Collected";
+      }else if(isReady){
+        chestSub.textContent = "Tap to open & claim!";
+      }else{
+        chestSub.textContent = `${doneCount}/${requiredGames} games finished`;
+      }
+      chestNode.appendChild(chestSub);
+
+      // Chest Click Handler
+      chestNode.addEventListener("click", () => {
+        if(isReady){
+          openRewardChestModal(key, chestId, chestNum, doneCount, requiredGames);
+        }else if(isLocked){
+          playUiSound("locked");
+          const remaining = requiredGames - doneCount;
+          showAppToast(`Complete ${remaining} more lesson${remaining > 1 ? 's' : ''} to unlock Reward Chest #${chestNum}! 🎁`);
+        }else if(isClaimed){
+          playUiSound("tap");
+          showAppToast(`Reward Chest #${chestNum} already claimed! +35 XP collected. Keep going! ✨`);
+        }
+      });
+
+      pathEl.appendChild(chestNode);
+    }
   });
 
   setupJumpToCurrentButton(currentNodeEl);
   showScreen("path");
+}
+
+/* ====================== REWARD CHEST MODAL LOGIC ====================== */
+function openRewardChestModal(courseKey, chestId, chestNum, doneCount, reqCount){
+  activePendingChestInfo = { courseKey, chestId, chestNum };
+  playUiSound("chest_unlock");
+
+  const modal = document.getElementById("reward-chest-modal");
+  if(!modal) return;
+
+  const title = document.getElementById("reward-modal-title");
+  const sub = document.getElementById("reward-modal-sub");
+  const kicker = document.getElementById("reward-modal-kicker");
+  const proverbText = document.getElementById("reward-proverb-text");
+  const proverbAuthor = document.getElementById("reward-proverb-author");
+  const confettiWrap = document.getElementById("reward-confetti-wrap");
+
+  if(kicker) kicker.textContent = `${reqCount}-GAME MILESTONE`;
+  if(title) title.textContent = `Reward Chest #${chestNum} Unlocked!`;
+  if(sub) sub.textContent = `Outstanding! You conquered ${reqCount} lessons in ${COURSES[courseKey].name}. Here are your rewards!`;
+
+  // Select cultural proverb for this course
+  const proverbs = CULTURAL_PROVERBS[courseKey] || CULTURAL_PROVERBS.igbo;
+  const selectedProverb = proverbs[(chestNum - 1) % proverbs.length] || proverbs[0];
+  if(proverbText) proverbText.textContent = `"${selectedProverb.text}" — ${selectedProverb.translation}`;
+  if(proverbAuthor) proverbAuthor.textContent = `${COURSES[courseKey].name} Cultural Wisdom`;
+
+  // Confetti particles
+  if(confettiWrap){
+    confettiWrap.innerHTML = "";
+    for(let i = 0; i < 24; i++){
+      const piece = document.createElement("span");
+      piece.style.position = "absolute";
+      piece.style.width = `${Math.floor(Math.random() * 8 + 6)}px`;
+      piece.style.height = `${Math.floor(Math.random() * 10 + 6)}px`;
+      piece.style.left = `${Math.random() * 100}%`;
+      piece.style.top = `${Math.random() * 30}%`;
+      piece.style.backgroundColor = ["#ffd700", "#e3a72b", "#3f9d6b", "#b23e78", "#247ba0"][Math.floor(Math.random() * 5)];
+      piece.style.borderRadius = "3px";
+      piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+      piece.style.animation = `confettiFall ${1.5 + Math.random()}s ease-out forwards`;
+      confettiWrap.appendChild(piece);
+    }
+  }
+
+  if(typeof modal.showModal === "function"){
+    modal.showModal();
+  }else{
+    modal.classList.remove("hidden");
+  }
+}
+
+// Reward Claim Button Event Listener
+const claimConfirmBtn = document.getElementById("reward-claim-confirm-btn");
+if(claimConfirmBtn){
+  claimConfirmBtn.onclick = () => {
+    if(activePendingChestInfo){
+      const { courseKey, chestId, chestNum } = activePendingChestInfo;
+      if(!Array.isArray(state.claimedChests)) state.claimedChests = [];
+      if(!state.claimedChests.includes(chestId)){
+        state.claimedChests.push(chestId);
+        state.xp += 35;
+        addDailyXp(35);
+        state.hearts = 5; // Refill hearts to maximum!
+        saveState();
+        showAppToast(`Claimed +35 XP and full hearts refilled! 🎁✨`);
+      }
+      activePendingChestInfo = null;
+    }
+    const modal = document.getElementById("reward-chest-modal");
+    if(modal){
+      if(typeof modal.close === "function") modal.close();
+      else modal.classList.add("hidden");
+    }
+    if(currentCourseKey) openPath(currentCourseKey);
+  };
+}
+
+const rewardCloseBtn = document.getElementById("reward-modal-close");
+if(rewardCloseBtn){
+  rewardCloseBtn.onclick = () => {
+    const modal = document.getElementById("reward-chest-modal");
+    if(modal){
+      if(typeof modal.close === "function") modal.close();
+      else modal.classList.add("hidden");
+    }
+  };
+}
+
+/* ====================== GUIDEBOOK MODAL LOGIC ====================== */
+function openGuidebookModal(courseKey, unitNum){
+  playUiSound("tap");
+  const modal = document.getElementById("guidebook-modal");
+  if(!modal) return;
+
+  const course = COURSES[courseKey];
+  const kicker = document.getElementById("guidebook-kicker");
+  const title = document.getElementById("guidebook-title");
+  const vocabList = document.getElementById("guidebook-vocab-list");
+
+  if(kicker) kicker.textContent = `${course.name.toUpperCase()} • UNIT ${unitNum} GUIDEBOOK`;
+  if(title) title.textContent = "Key Vocabulary & Phrases";
+
+  if(vocabList){
+    vocabList.innerHTML = "";
+    // Gather words from lessons in this unit (each unit has 4 lessons)
+    const startIdx = (unitNum - 1) * 4;
+    const endIdx = startIdx + 4;
+    const unitLessons = course.lessons.slice(startIdx, endIdx);
+
+    unitLessons.forEach(l => {
+      l.vocab.forEach(v => {
+        const item = document.createElement("div");
+        item.className = "guidebook-item";
+        item.innerHTML = `
+          <div>
+            <div class="guidebook-native">${v.native}</div>
+            <div class="guidebook-en">${v.en}</div>
+          </div>
+          <button type="button" class="speaker-btn" style="width:34px; height:34px;" title="Listen">
+            <svg viewBox="0 0 24 24" style="width:16px; height:16px;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </button>
+        `;
+        const speakBtn = item.querySelector(".speaker-btn");
+        if(speakBtn){
+          speakBtn.onclick = (e) => {
+            e.stopPropagation();
+            speakNative(v.native, course.speechLang);
+          };
+        }
+        vocabList.appendChild(item);
+      });
+    });
+  }
+
+  if(typeof modal.showModal === "function"){
+    modal.showModal();
+  }else{
+    modal.classList.remove("hidden");
+  }
+}
+
+const guidebookCloseBtn = document.getElementById("guidebook-close-btn");
+if(guidebookCloseBtn){
+  guidebookCloseBtn.onclick = () => {
+    const modal = document.getElementById("guidebook-modal");
+    if(modal){
+      if(typeof modal.close === "function") modal.close();
+      else modal.classList.add("hidden");
+    }
+  };
+}
+const guidebookGotItBtn = document.getElementById("guidebook-gotit-btn");
+if(guidebookGotItBtn){
+  guidebookGotItBtn.onclick = () => {
+    const modal = document.getElementById("guidebook-modal");
+    if(modal){
+      if(typeof modal.close === "function") modal.close();
+      else modal.classList.add("hidden");
+    }
+  };
 }
 
 let jumpButtonObserver = null;
@@ -2062,6 +2566,7 @@ function startLesson(courseKey, lessonIndex){
     return;
   }
   state.lastActiveCourse = courseKey;
+  recordActivity();
   saveState();
   session = {
     courseKey, lessonIndex,
@@ -2402,6 +2907,7 @@ function finishLesson(){
   }
   if(session.mistakes === 0) state.hasPerfect = true;
   checkBadges();
+  recordActivity();
 
   const totalActivities = lessonsCompletedCount() + (state.practiceSessionsCompleted || 0);
   pendingSurprise = totalActivities > 0 && totalActivities % 3 === 0;
@@ -2571,6 +3077,32 @@ function setupHelpModal(){
 function setupGoogleAuth(){
   const googleBtn = document.getElementById("auth-google-btn");
   const errEl = document.getElementById("auth-error");
+  const guideModal = document.getElementById("auth-google-guide-modal");
+  const guideClose = document.getElementById("auth-google-guide-close");
+  const guideOk = document.getElementById("auth-google-guide-ok");
+  const copyBtn = document.getElementById("btn-copy-redirect-uri");
+  const uriDisplay = document.getElementById("auth-redirect-uri-display");
+
+  const expectedRedirectUri = `${window.location.origin}/auth/google/callback`;
+  if(uriDisplay) uriDisplay.textContent = expectedRedirectUri;
+
+  if(copyBtn){
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(expectedRedirectUri);
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => copyBtn.textContent = "Copy", 2000);
+      } catch(e) {
+        copyBtn.textContent = "Copied!";
+      }
+    });
+  }
+
+  if(guideClose) guideClose.addEventListener("click", () => guideModal.close && guideModal.close());
+  if(guideOk) guideOk.addEventListener("click", () => guideModal.close && guideModal.close());
+  if(guideModal) guideModal.addEventListener("click", (e) => {
+    if(e.target === guideModal && guideModal.close) guideModal.close();
+  });
 
   googleBtn.addEventListener("click", async () => {
     errEl.classList.add("hidden");
@@ -2580,8 +3112,15 @@ function setupGoogleAuth(){
       const data = await res.json();
 
       if(!data.configured || !data.url){
-        errEl.textContent = data.message || "Google Sign-In is being initialized. Please configure GOOGLE_CLIENT_ID in your environment settings.";
+        errEl.innerHTML = `Google Sign-In needs OAuth credentials. <button type="button" class="auth-error-guide-btn" id="open-google-guide-btn">View 2-step setup</button>`;
         errEl.classList.remove("hidden");
+        const guideTrigger = document.getElementById("open-google-guide-btn");
+        if(guideTrigger){
+          guideTrigger.addEventListener("click", () => {
+            if(guideModal.showModal) guideModal.showModal();
+          });
+        }
+        if(guideModal.showModal) guideModal.showModal();
         return;
       }
 
@@ -2593,8 +3132,8 @@ function setupGoogleAuth(){
       );
 
       if(!popup || popup.closed || typeof popup.closed === "undefined"){
-        errEl.textContent = "Popup blocked! Please allow popups for this site to sign in with Google.";
-        errEl.classList.remove("hidden");
+        // If popup blocked on mobile, navigate directly
+        window.location.href = data.url;
       }
     }catch(err){
       errEl.textContent = "Could not start Google Sign-In: " + err.message;
@@ -2707,15 +3246,449 @@ document.getElementById("auth-form").addEventListener("submit", async e => {
   }
 });
 
+/* ====================== LOCAL 24-HOUR NOTIFICATION SYSTEM ====================== */
+const INACTIVITY_THRESHOLD_MS = 24 * 60 * 60 * 1000; // 24 hours
+const NOTIFICATION_COOLDOWN_MS = 18 * 60 * 60 * 1000; // 18 hours between system notifications
+let swRegistration = null;
+let inactivityTimer = null;
+let lastActivitySaveTime = 0;
+
+// Culturally resonant Nigerian notification copy based on current or active language
+const NOTIFICATION_MESSAGES = {
+  igbo: [
+    { title: "🇳🇬 Ndewo! Don't break your Igbo streak", body: "It's been 24 hours since your last lesson. 3 minutes of Igbo today keeps your streak burning bright!" },
+    { title: "🔥 Ka anyị mụta Igbo!", body: "Your daily Igbo lesson is ready on Lingua Naija. Protect your streak and vocabulary now." }
+  ],
+  yoruba: [
+    { title: "🇳🇬 Ẹ n lẹ o! Time for Yorùbá", body: "24 hours passed since your last session. Practice your Yorùbá phrases to keep your streak!" },
+    { title: "🔥 Má jẹ́ kí streak rẹ tẹ́!", body: "3 minutes of Yorùbá today keeps memory sharp and unlocks your next badges." }
+  ],
+  hausa: [
+    { title: "🇳🇬 Sannu! Time for Hausa lesson", body: "It's been a day since your last practice. Keep your Hausa learning streak alive!" },
+    { title: "🔥 Ci gaba da koyo!", body: "Your daily Hausa lesson is waiting. Earn XP and protect your day streak on Lingua Naija." }
+  ],
+  edo: [
+    { title: "🇳🇬 Kóyo! Complete today's Edo lesson", body: "It's been 24 hours! Don't let your Edo vocabulary slip away." }
+  ],
+  efik: [
+    { title: "🇳🇬 Mọ́kọ́m! Time for Efịk practice", body: "Keep your Efịk streak going strong with a quick 3-minute lesson." }
+  ],
+  urhobo: [
+    { title: "🇳🇬 Migwo! Keep your Urhobo streak", body: "24 hours since your last session. Practice your Urhobo phrases now!" }
+  ],
+  tiv: [
+    { title: "🇳🇬 M sugh u! Daily Tiv Lesson", body: "Protect your streak! Complete today's Tiv phrases on Lingua Naija." }
+  ],
+  uvwie: [
+    { title: "🇳🇬 Migwo! Uvwie lesson waiting", body: "Don't break your daily streak! Practice your Uvwie lesson now." }
+  ],
+  isoko: [
+    { title: "🇳🇬 Do! Keep your Isoko streak alive", body: "24 hours have passed — jump in for your daily Isoko lesson!" }
+  ],
+  ijaw: [
+    { title: "🇳🇬 Tebidaba! Time for Ijaw practice", body: "Keep your Nigerian language skills strong with today's Ijaw lesson." }
+  ],
+  default: [
+    { title: "🇳🇬 Lingua Naija: Daily Lesson Reminder", body: "It's been 24 hours since your last lesson! Protect your streak with a quick 3-minute session." },
+    { title: "🔥 Don't let your streak slip away!", body: "Your Nigerian language journey is waiting. Jump in for today's lesson now." }
+  ]
+};
+
+function initServiceWorker(){
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("/sw.js").then(reg => {
+      swRegistration = reg;
+    }).catch(err => {
+      console.warn("ServiceWorker registration:", err.message);
+    });
+
+    navigator.serviceWorker.addEventListener("message", e => {
+      if(e.data && e.data.type === "NOTIFICATION_CLICKED"){
+        if(getToken()){
+          renderHome();
+          showScreen("home");
+        }
+      }
+    });
+  }
+}
+
+// Show visual in-app toast for notifications
+function showToast(title, message, icon = "🔔", duration = 5000){
+  const container = document.getElementById("toast-container");
+  if(!container) return;
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `
+    <div class="toast-icon">${icon}</div>
+    <div class="toast-body">
+      <div class="toast-title">${title}</div>
+      <div class="toast-msg">${message}</div>
+    </div>
+    <button type="button" class="toast-close" aria-label="Dismiss">&times;</button>
+  `;
+  const closeBtn = toast.querySelector(".toast-close");
+  const removeToast = () => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(10px)";
+    setTimeout(() => toast.remove(), 250);
+  };
+  closeBtn.addEventListener("click", removeToast);
+  container.appendChild(toast);
+  setTimeout(removeToast, duration);
+}
+
+// Record user activity timestamp
+function recordActivity(){
+  const now = Date.now();
+  state.lastActiveTime = now;
+  try {
+    localStorage.setItem("lingua_last_active_time", now.toString());
+  } catch(e) {}
+  
+  // Hide the 24h inactivity banner if currently showing
+  const banner = document.getElementById("inactivity-reminder-banner");
+  if(banner) banner.classList.add("hidden");
+
+  // Save debounced to server if at least 10 seconds since last save
+  if(now - lastActivitySaveTime > 10000){
+    lastActivitySaveTime = now;
+    saveState();
+  }
+
+  scheduleNext24HourCheck();
+}
+
+function getLastActiveTimestamp(){
+  let stored = null;
+  try {
+    stored = Number(localStorage.getItem("lingua_last_active_time"));
+  } catch(e) {}
+  return (stored && !isNaN(stored) && stored > 0) ? stored : (state.lastActiveTime || Date.now());
+}
+
+function formatTimeAgo(ms){
+  if(ms < 0) ms = 0;
+  const seconds = Math.floor(ms / 1000);
+  if(seconds < 60) return "Just now";
+  const minutes = Math.floor(seconds / 60);
+  if(minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if(hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
+function getActiveReminderCopy(){
+  const langKey = pickContinueCourse() || state.lastActiveCourse || "igbo";
+  const list = NOTIFICATION_MESSAGES[langKey] || NOTIFICATION_MESSAGES.default;
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+async function triggerLocalNotification(isTest = false){
+  const copy = getActiveReminderCopy();
+  const title = isTest ? `🔔 Test Reminder: ${copy.title}` : copy.title;
+  const body = isTest ? `[Sample 24h Alert] ${copy.body}` : copy.body;
+
+  // System notification
+  if("Notification" in window && Notification.permission === "granted"){
+    try{
+      if(swRegistration && swRegistration.showNotification){
+        await swRegistration.showNotification(title, {
+          body,
+          icon: "/favicon.ico",
+          badge: "/favicon.ico",
+          tag: isTest ? "lingua-test-alert" : "lingua-24h-inactivity",
+          renotify: true,
+          data: { url: "/" },
+          vibrate: [200, 100, 200]
+        });
+      } else {
+        new Notification(title, {
+          body,
+          icon: "/favicon.ico",
+          tag: isTest ? "lingua-test-alert" : "lingua-24h-inactivity"
+        });
+      }
+    }catch(err){
+      console.warn("System notification error:", err);
+    }
+  }
+
+  // Also display in-app toast
+  showToast(title, body, isTest ? "🧪" : "🔥", 6500);
+
+  if(!isTest){
+    state.lastNotifiedTime = Date.now();
+    saveState();
+  }
+}
+
+function check24HourInactivityReminder(){
+  if(state.notificationsEnabled === false) return;
+  const lastActive = getLastActiveTimestamp();
+  const elapsed = Date.now() - lastActive;
+
+  if(elapsed >= INACTIVITY_THRESHOLD_MS){
+    // Show in-app banner on home dashboard
+    const banner = document.getElementById("inactivity-reminder-banner");
+    const bannerSub = document.getElementById("inactivity-banner-sub");
+    if(banner){
+      const hours = Math.floor(elapsed / (60 * 60 * 1000));
+      const days = Math.floor(hours / 24);
+      const timeStr = days > 1 ? `${days} days` : `${hours} hours`;
+      if(bannerSub) bannerSub.textContent = `It's been ${timeStr} since your last lesson! Keep your ${state.streak || 0}-day streak and memory retention alive.`;
+      banner.classList.remove("hidden");
+    }
+
+    // Check if we should fire the OS / browser notification (respecting 18h cooldown)
+    const lastNotified = state.lastNotifiedTime || 0;
+    if(Date.now() - lastNotified >= NOTIFICATION_COOLDOWN_MS){
+      triggerLocalNotification(false);
+    }
+  }
+}
+
+function scheduleNext24HourCheck(){
+  if(inactivityTimer) clearTimeout(inactivityTimer);
+  const lastActive = getLastActiveTimestamp();
+  const elapsed = Date.now() - lastActive;
+  const remaining = Math.max(1000, INACTIVITY_THRESHOLD_MS - elapsed);
+
+  // Set local timeout for this tab session
+  inactivityTimer = setTimeout(() => {
+    check24HourInactivityReminder();
+  }, remaining);
+}
+
+async function requestNotificationPermissionAndEnable(){
+  if(!("Notification" in window)){
+    showToast("Notifications Unsupported", "Your browser does not support Web Notifications, but in-app 24h reminders are active!", "ℹ️");
+    state.notificationsEnabled = true;
+    saveState();
+    renderReminderCard();
+    renderProfileReminderCard();
+    return;
+  }
+
+  if(Notification.permission === "granted"){
+    state.notificationsEnabled = true;
+    saveState();
+    showToast("Reminders Active", "24-hour lesson reminders are enabled. We'll ping you if you haven't logged in for 24h.", "✅");
+    renderReminderCard();
+    renderProfileReminderCard();
+    return;
+  }
+
+  try{
+    const permission = await Notification.requestPermission();
+    if(permission === "granted"){
+      state.notificationsEnabled = true;
+      saveState();
+      showToast("Reminders Enabled", "You'll receive a reminder if 24 hours pass without completing a daily lesson!", "🎉");
+      setTimeout(() => triggerLocalNotification(true), 400);
+    } else {
+      state.notificationsEnabled = false;
+      saveState();
+      showToast("Notifications Blocked", "Browser permission was not granted. You can re-enable notifications in browser site settings.", "⚠️");
+    }
+  }catch(err){
+    console.warn("Notification permission error:", err);
+  }
+  renderReminderCard();
+  renderProfileReminderCard();
+}
+
+function renderReminderCard(){
+  const el = document.getElementById("reminder-card");
+  if(!el) return;
+
+  const isEnabled = state.notificationsEnabled !== false;
+  const lastActive = getLastActiveTimestamp();
+  const timeAgoStr = formatTimeAgo(Date.now() - lastActive);
+
+  let statusText = "Active · Reminds after 24h inactive";
+  let statusClass = "active";
+  if(!isEnabled){
+    statusText = "Reminders turned off";
+    statusClass = "off";
+  }else if("Notification" in window && Notification.permission === "denied"){
+    statusText = "Browser blocked · In-app active";
+  }else if("Notification" in window && Notification.permission === "default"){
+    statusText = "Tap toggle to enable alerts";
+  }
+
+  el.innerHTML = `
+    <div class="reminder-card-head">
+      <div class="reminder-card-left">
+        <div class="reminder-bell-icon">🔔</div>
+        <div>
+          <p class="reminder-card-title">Daily Lesson Reminder</p>
+          <p class="reminder-card-sub">Get reminded after 24 hours of inactivity so your streak never resets.</p>
+        </div>
+      </div>
+      <label class="toggle-switch" title="Toggle 24h reminders">
+        <input type="checkbox" id="reminder-toggle-home" ${isEnabled ? "checked" : ""}>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="reminder-status-row">
+      <span class="reminder-badge-status ${statusClass}">
+        <span class="reminder-status-dot"></span>
+        <span>${statusText} (Last active: ${timeAgoStr})</span>
+      </span>
+      <button type="button" class="reminder-btn-test" id="reminder-test-btn" title="Send a test notification">
+        <span>⚡ Test Alert</span>
+      </button>
+    </div>
+  `;
+
+  const toggle = document.getElementById("reminder-toggle-home");
+  if(toggle){
+    toggle.addEventListener("change", async () => {
+      if(toggle.checked){
+        await requestNotificationPermissionAndEnable();
+      }else{
+        state.notificationsEnabled = false;
+        saveState();
+        showToast("Reminders Paused", "Daily 24-hour lesson reminders have been disabled.", "⏸️");
+        renderReminderCard();
+        renderProfileReminderCard();
+      }
+    });
+  }
+
+  const testBtn = document.getElementById("reminder-test-btn");
+  if(testBtn){
+    testBtn.addEventListener("click", () => {
+      triggerLocalNotification(true);
+    });
+  }
+}
+
+function renderProfileReminderCard(){
+  const el = document.getElementById("profile-reminder-card");
+  if(!el) return;
+
+  const isEnabled = state.notificationsEnabled !== false;
+  const lastActive = getLastActiveTimestamp();
+  const timeAgoStr = formatTimeAgo(Date.now() - lastActive);
+
+  el.innerHTML = `
+    <div class="reminder-card-head" style="margin-bottom:8px;">
+      <div class="reminder-card-left">
+        <div class="reminder-bell-icon" style="background:rgba(32,148,139,0.18);">⏰</div>
+        <div>
+          <p class="reminder-card-title">24-Hour Streak Saver Alerts</p>
+          <p class="reminder-card-sub">Sends a local device notification whenever 24 hours pass without study.</p>
+        </div>
+      </div>
+      <label class="toggle-switch" title="Toggle 24h reminders">
+        <input type="checkbox" id="reminder-toggle-profile" ${isEnabled ? "checked" : ""}>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="reminder-status-row">
+      <span class="reminder-badge-status ${isEnabled ? "active" : ""}">
+        <span class="reminder-status-dot"></span>
+        <span>${isEnabled ? "Enabled" : "Disabled"} · Last active ${timeAgoStr}</span>
+      </span>
+      <button type="button" class="reminder-btn-test" id="profile-reminder-test-btn">
+        <span>Send Test Notification</span>
+      </button>
+    </div>
+  `;
+
+  const toggle = document.getElementById("reminder-toggle-profile");
+  if(toggle){
+    toggle.addEventListener("change", async () => {
+      if(toggle.checked){
+        await requestNotificationPermissionAndEnable();
+      }else{
+        state.notificationsEnabled = false;
+        saveState();
+        showToast("Reminders Paused", "Daily 24-hour lesson reminders have been disabled.", "⏸️");
+        renderReminderCard();
+        renderProfileReminderCard();
+      }
+    });
+  }
+
+  const testBtn = document.getElementById("profile-reminder-test-btn");
+  if(testBtn){
+    testBtn.addEventListener("click", () => triggerLocalNotification(true));
+  }
+}
+
+function setupInactivityBanner(){
+  const resumeBtn = document.getElementById("inactivity-resume-btn");
+  const closeBtn = document.getElementById("inactivity-close-btn");
+  const banner = document.getElementById("inactivity-reminder-banner");
+
+  if(resumeBtn){
+    resumeBtn.addEventListener("click", () => {
+      recordActivity();
+      const courseKey = pickContinueCourse() || "igbo";
+      const doneCount = state.completed[courseKey]?.length || 0;
+      startLesson(courseKey, doneCount < COURSES[courseKey].lessons.length ? doneCount : 0);
+    });
+  }
+
+  if(closeBtn){
+    closeBtn.addEventListener("click", () => {
+      if(banner) banner.classList.add("hidden");
+      recordActivity();
+    });
+  }
+}
+
+function setupUserActivityTracking(){
+  let lastThrottle = 0;
+  const handleInteraction = () => {
+    const now = Date.now();
+    if(now - lastThrottle > 60000){ // update at most once a minute
+      lastThrottle = now;
+      recordActivity();
+    }
+  };
+  window.addEventListener("pointerdown", handleInteraction, { passive: true });
+  window.addEventListener("keydown", handleInteraction, { passive: true });
+
+  document.addEventListener("visibilitychange", () => {
+    if(!document.hidden){
+      check24HourInactivityReminder();
+      handleInteraction();
+    }
+  });
+
+  // Check periodically every 10 minutes
+  setInterval(() => {
+    check24HourInactivityReminder();
+  }, 10 * 60 * 1000);
+}
+
 /* ====================== INIT ====================== */
 (async function init(){
   setupPasswordToggles();
   setupHelpModal();
   setupGoogleAuth();
+  initServiceWorker();
+  setupInactivityBanner();
+  setupUserActivityTracking();
+
+  // Check URL query parameters for OAuth redirect
+  const params = new URLSearchParams(window.location.search);
+  const paramToken = params.get("auth_token") || params.get("token");
+  const paramUsername = params.get("auth_username") || params.get("username");
+  if(paramToken && paramUsername){
+    setSession(paramToken, paramUsername);
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
 
   if(!getToken()){ showAuthScreen(); return; }
   try{
     await fetchProgress();
+    recordActivity();
     renderHome();
     showScreen("home");
   }catch(e){

@@ -74,6 +74,10 @@ const DEFAULT_PROGRESS = {
   todayXpDate: null,
   practiceSessionsCompleted: 0,
   longestStreak: 0,
+  notificationsEnabled: true,
+  lastActiveTime: Date.now(),
+  lastNotifiedTime: 0,
+  claimedChests: [],
   cultureCompleted: { igbo: false, yoruba: false, hausa: false, edo: false, efik: false, urhobo: false, tiv: false, uvwie: false, isoko: false, ijaw: false }
 };
 
@@ -367,13 +371,17 @@ app.get(["/auth/google/callback", "/auth/google/callback/"], async (req, res) =>
             <h2 style="color:#20948b; margin-bottom:8px;">Welcome, ${cleanUsername}!</h2>
             <p style="color:#cfc5b0;">Signing you in to Lingua Naija...</p>
             <script>
+              try {
+                localStorage.setItem("lingua-token", ${JSON.stringify(sessionToken)});
+                localStorage.setItem("lingua-username", ${JSON.stringify(cleanUsername)});
+              } catch(e) {}
               if (window.opener) {
                 window.opener.postMessage({
                   type: 'GOOGLE_AUTH_SUCCESS',
                   token: ${JSON.stringify(sessionToken)},
                   username: ${JSON.stringify(cleanUsername)}
                 }, '*');
-                window.close();
+                setTimeout(() => window.close(), 300);
               } else {
                 window.location.href = '/';
               }

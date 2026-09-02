@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Lingua Naija — Learn Nigerian Languages</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#140e0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lingua Naija">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -191,7 +196,7 @@
         <p><strong>Lingua Naija</strong> stores accounts securely so you can switch devices without losing your streaks, badges, or progress.</p>
         <div class="auth-help-item">
           <p class="auth-help-q">Google Sign-In</p>
-          <p class="auth-help-a">Use the <strong>Continue with Google</strong> button for one-click instant sign-in with your Google profile.</p>
+          <p class="auth-help-a">Use the <strong>Sign in with Google</strong> button for one-click instant sign-in with your Google profile.</p>
         </div>
         <div class="auth-help-item">
           <p class="auth-help-q">Standard Username Account</p>
@@ -204,6 +209,45 @@
       </div>
       <div class="auth-modal-actions">
         <button type="button" class="btn-check small" id="auth-modal-ok-btn">Got it</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Google OAuth Quick Setup Guide Modal -->
+  <dialog id="auth-google-guide-modal" class="auth-modal">
+    <div class="auth-modal-box">
+      <div class="auth-modal-head">
+        <h3 class="auth-modal-title">Setting Up Google Sign-In</h3>
+        <button type="button" class="auth-modal-close" id="auth-google-guide-close" aria-label="Close guide">&times;</button>
+      </div>
+      <div class="auth-modal-content">
+        <p>To enable 1-click Google Sign-In on this domain, add your Google OAuth credentials to your server environment:</p>
+        
+        <div class="auth-help-item">
+          <p class="auth-help-q">1. Your Authorized Redirect URI</p>
+          <div class="auth-copy-box">
+            <code id="auth-redirect-uri-display">https://your-domain/auth/google/callback</code>
+            <button type="button" class="btn-copy-uri" id="btn-copy-redirect-uri">Copy</button>
+          </div>
+          <p class="auth-help-a" style="margin-top:6px;">Add this URL to <em>Authorized redirect URIs</em> in your <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">Google Cloud Console Credentials</a>.</p>
+        </div>
+
+        <div class="auth-help-item">
+          <p class="auth-help-q">2. Environment Variables to Set</p>
+          <p class="auth-help-a">In Render Dashboard (or AI Studio Settings), add these 2 environment variables:</p>
+          <ul class="auth-env-list">
+            <li><code>GOOGLE_CLIENT_ID</code></li>
+            <li><code>GOOGLE_CLIENT_SECRET</code></li>
+          </ul>
+        </div>
+
+        <div class="auth-help-item" style="border-color: rgba(32, 148, 139, 0.4);">
+          <p class="auth-help-q" style="color: var(--igbo);">💡 Instant Alternative</p>
+          <p class="auth-help-a">You can also create a free account right now using the <strong>Username &amp; Password</strong> fields below without needing any Google API keys!</p>
+        </div>
+      </div>
+      <div class="auth-modal-actions">
+        <button type="button" class="btn-check small" id="auth-google-guide-ok">Understood</button>
       </div>
     </div>
   </dialog>
@@ -241,10 +285,25 @@
     <!-- language track cards injected by JS -->
   </section>
 
+  <!-- 24-Hour Inactivity Catch-Up Alert -->
+  <aside id="inactivity-reminder-banner" class="inactivity-banner hidden" aria-live="polite">
+    <div class="inactivity-banner-icon">🔥</div>
+    <div class="inactivity-banner-body">
+      <p class="inactivity-banner-title" id="inactivity-banner-title">It's been over 24 hours since your last lesson!</p>
+      <p class="inactivity-banner-sub" id="inactivity-banner-sub">Protect your streak and memory retention with a quick 3-minute lesson.</p>
+    </div>
+    <button type="button" class="inactivity-banner-btn" id="inactivity-resume-btn">Start Lesson →</button>
+    <button type="button" class="inactivity-banner-close" id="inactivity-close-btn" aria-label="Dismiss alert">&times;</button>
+  </aside>
+
   <p class="home-greeting" id="home-greeting">Welcome back</p>
 
   <section class="continue-card" id="continue-card">
     <!-- populated by JS: next-lesson call to action -->
+  </section>
+
+  <section class="reminder-card" id="reminder-card">
+    <!-- populated by JS: 24h notification reminder card with toggle and test button -->
   </section>
 
   <section class="week-cal-wrap">
@@ -377,6 +436,9 @@
   <h2 class="section-label">All badges</h2>
   <div class="profile-badges-grid" id="profile-badges-grid"></div>
 
+  <h2 class="section-label">Daily Reminders (24-Hour Inactivity)</h2>
+  <div class="profile-reminder-card" id="profile-reminder-card"></div>
+
   <button class="btn-logout" id="profile-logout-btn">Log out</button>
 </main>
 
@@ -393,8 +455,24 @@
     <div class="pill pill-hearts small"><svg viewBox="0 0 24 24" class="pill-icon"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2.2 4.6 6 4.1c2-.3 3.9.7 6 3 2.1-2.3 4-3.3 6-3 3.8.5 5.6 4.1 4 7.6C19.5 16.4 12 21 12 21z"/></svg><span id="path-hearts">5</span></div>
   </header>
   <div class="lang-tabs" id="lang-tabs"></div>
+  <div class="unit-banner" id="unit-banner">
+    <div class="unit-banner-content">
+      <span class="unit-banner-kicker" id="unit-banner-kicker">SECTION 1, UNIT 1</span>
+      <h2 class="unit-banner-title" id="unit-banner-title">Greetings &amp; Everyday Phrases</h2>
+    </div>
+    <button type="button" class="unit-guidebook-btn" id="unit-guidebook-btn" title="View Unit Guidebook" aria-label="Unit Guidebook">
+      <svg viewBox="0 0 24 24" width="22" height="22">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        <line x1="9" y1="7" x2="15" y2="7"/>
+        <line x1="9" y1="11" x2="15" y2="11"/>
+      </svg>
+    </button>
+  </div>
   <div class="path-pattern" id="path-pattern" aria-hidden="true"></div>
-  <div class="lesson-path" id="lesson-path"></div>
+  <div class="lesson-path-wrapper">
+    <div class="lesson-path" id="lesson-path"></div>
+  </div>
   <button class="jump-to-current-btn hidden" id="jump-to-current-btn" aria-label="Jump to current lesson" type="button">
     <svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </button>
@@ -491,6 +569,60 @@
   </div>
 </main>
 
+<!-- ===== MILESTONE REWARD CHEST MODAL (After 4 games) ===== -->
+<dialog id="reward-chest-modal" class="reward-modal">
+  <div class="reward-modal-card">
+    <button type="button" class="reward-modal-close" id="reward-modal-close" aria-label="Close dialog">&times;</button>
+    <div class="reward-confetti-wrap" id="reward-confetti-wrap" aria-hidden="true"></div>
+    <div class="reward-chest-graphic" id="reward-chest-graphic">
+      <div class="chest-box-anim">
+        <div class="chest-glow-disc"></div>
+        <div class="chest-lid-graphic"></div>
+        <div class="chest-body-graphic"></div>
+        <div class="chest-burst-particles">✨ 🪙 ✨</div>
+      </div>
+    </div>
+    <span class="reward-modal-kicker" id="reward-modal-kicker">4-LESSON MILESTONE</span>
+    <h2 class="reward-modal-title" id="reward-modal-title">Reward Chest Unlocked!</h2>
+    <p class="reward-modal-sub" id="reward-modal-sub">Magnificent work! You conquered 4 lessons on your learning path.</p>
+
+    <div class="reward-loot-grid">
+      <div class="reward-loot-item">
+        <span class="reward-loot-val" id="reward-loot-xp">+35</span>
+        <span class="reward-loot-lbl">Bonus XP</span>
+      </div>
+      <div class="reward-loot-item">
+        <span class="reward-loot-val" id="reward-loot-hearts">5/5 ❤️</span>
+        <span class="reward-loot-lbl">Full Hearts</span>
+      </div>
+      <div class="reward-loot-item">
+        <span class="reward-loot-val" id="reward-loot-badge">👑 Master</span>
+        <span class="reward-loot-lbl">Milestone</span>
+      </div>
+    </div>
+
+    <div class="reward-proverb-box" id="reward-proverb-box">
+      <p class="reward-proverb-text" id="reward-proverb-text">"Mmụta bu ike" — Learning is power.</p>
+      <p class="reward-proverb-author" id="reward-proverb-author">Traditional Nigerian Wisdom</p>
+    </div>
+
+    <button type="button" class="btn-check" id="reward-claim-confirm-btn">Claim Rewards &amp; Continue</button>
+  </div>
+</dialog>
+
+<!-- ===== UNIT GUIDEBOOK MODAL ===== -->
+<dialog id="guidebook-modal" class="reward-modal">
+  <div class="reward-modal-card guidebook-card">
+    <button type="button" class="reward-modal-close" id="guidebook-close-btn" aria-label="Close dialog">&times;</button>
+    <span class="reward-modal-kicker" id="guidebook-kicker">UNIT GUIDEBOOK</span>
+    <h2 class="reward-modal-title" id="guidebook-title">Unit Vocabulary &amp; Notes</h2>
+    <p class="guidebook-intro" id="guidebook-intro">Master these foundational expressions to glide through the path.</p>
+    <div class="guidebook-vocab-list" id="guidebook-vocab-list"></div>
+    <button type="button" class="btn-check" id="guidebook-gotit-btn" style="margin-top:18px;">Understood</button>
+  </div>
+</dialog>
+
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
 <script src="app.js"></script>
 </body>
   </html>

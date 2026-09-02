@@ -2494,6 +2494,9 @@ document.getElementById("surprise-continue").addEventListener("click", () => {
 /* ====================== AUTH ====================== */
 let authMode = "login";
 
+const EYE_OPEN_SVG = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>`;
+const EYE_CLOSED_SVG = `<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>`;
+
 function showAuthScreen(message){
   showScreen("auth");
   const err = document.getElementById("auth-error");
@@ -2503,39 +2506,119 @@ function showAuthScreen(message){
 
 function setAuthMode(mode){
   authMode = mode;
-  document.getElementById("auth-tab-login").classList.toggle("active", mode === "login");
-  document.getElementById("auth-tab-signup").classList.toggle("active", mode === "signup");
-  document.getElementById("auth-submit").textContent = mode === "login" ? "Log in" : "Sign up";
-  document.getElementById("auth-password").autocomplete = mode === "login" ? "current-password" : "new-password";
+  const isLogin = mode === "login";
+
+  document.getElementById("auth-tab-login").classList.toggle("active", isLogin);
+  document.getElementById("auth-tab-login").setAttribute("aria-selected", isLogin ? "true" : "false");
+  document.getElementById("auth-tab-signup").classList.toggle("active", !isLogin);
+  document.getElementById("auth-tab-signup").setAttribute("aria-selected", !isLogin ? "true" : "false");
+
+  document.getElementById("auth-card-title").textContent = isLogin ? "Welcome back" : "Create your account";
+  document.getElementById("auth-card-sub").textContent = isLogin ? "Log in to continue your streak and lessons." : "Join thousands of learners mastering Nigerian languages.";
+
+  document.getElementById("auth-btn-text").textContent = isLogin ? "Log In" : "Create Free Account";
+  document.getElementById("landing-nav-switch-btn").textContent = isLogin ? "Create account" : "Log in";
+
+  document.getElementById("auth-confirm-group").classList.toggle("hidden", isLogin);
+  document.getElementById("auth-remember-row").classList.toggle("hidden", !isLogin);
+
+  document.getElementById("auth-password").autocomplete = isLogin ? "current-password" : "new-password";
+  document.getElementById("auth-error").classList.add("hidden");
+}
+
+function setupPasswordToggles(){
+  const pwInput = document.getElementById("auth-password");
+  const pwToggle = document.getElementById("auth-pw-toggle");
+  const confirmInput = document.getElementById("auth-confirm-password");
+  const confirmToggle = document.getElementById("auth-confirm-pw-toggle");
+
+  pwToggle.addEventListener("click", () => {
+    const isPw = pwInput.type === "password";
+    pwInput.type = isPw ? "text" : "password";
+    pwToggle.querySelector("svg").innerHTML = isPw ? EYE_CLOSED_SVG : EYE_OPEN_SVG;
+    pwToggle.setAttribute("title", isPw ? "Hide password" : "Show password");
+  });
+
+  confirmToggle.addEventListener("click", () => {
+    const isPw = confirmInput.type === "password";
+    confirmInput.type = isPw ? "text" : "password";
+    confirmToggle.querySelector("svg").innerHTML = isPw ? EYE_CLOSED_SVG : EYE_OPEN_SVG;
+    confirmToggle.setAttribute("title", isPw ? "Hide password" : "Show password");
+  });
+}
+
+function setupHelpModal(){
+  const helpModal = document.getElementById("auth-help-modal");
+  const forgotBtn = document.getElementById("auth-forgot-btn");
+  const closeBtn = document.getElementById("auth-modal-close-btn");
+  const okBtn = document.getElementById("auth-modal-ok-btn");
+
+  forgotBtn.addEventListener("click", () => {
+    if(helpModal.showModal) helpModal.showModal();
+  });
+  closeBtn.addEventListener("click", () => {
+    if(helpModal.close) helpModal.close();
+  });
+  okBtn.addEventListener("click", () => {
+    if(helpModal.close) helpModal.close();
+  });
+  helpModal.addEventListener("click", (e) => {
+    if(e.target === helpModal && helpModal.close) helpModal.close();
+  });
 }
 
 document.getElementById("auth-tab-login").addEventListener("click", () => setAuthMode("login"));
+document.getElementById("auth-tab-signup").addEventListener("click", () => setAuthMode("signup"));
+
+document.getElementById("landing-nav-switch-btn").addEventListener("click", () => {
+  setAuthMode(authMode === "login" ? "signup" : "login");
+  document.getElementById("auth-form-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
+  setTimeout(() => document.getElementById("auth-username").focus(), 400);
+});
+
 document.getElementById("landing-cta-btn").addEventListener("click", () => {
   setAuthMode("signup");
   document.getElementById("auth-form-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
   setTimeout(() => document.getElementById("auth-username").focus(), 400);
 });
-document.getElementById("auth-tab-signup").addEventListener("click", () => setAuthMode("signup"));
 
-document.getElementById("auth-form").addEventListener("submit", async e => {
-  e.preventDefault();
-  const username = document.getElementById("auth-username").value.trim();
-  const password = document.getElementById("auth-password").value;
+// Demo account quick login
+document.getElementById("auth-demo-btn").addEventListener("click", async () => {
+  const demoUsername = "demo_learner";
+  const demoPassword = "naija_demo_password";
   const errEl = document.getElementById("auth-error");
   errEl.classList.add("hidden");
-  if(!username || !password) return;
 
   const submitBtn = document.getElementById("auth-submit");
+  const demoBtn = document.getElementById("auth-demo-btn");
+  const spinner = document.getElementById("auth-spinner");
+  const btnText = document.getElementById("auth-btn-text");
+
   submitBtn.disabled = true;
+  demoBtn.disabled = true;
+  spinner.classList.remove("hidden");
+  btnText.textContent = "Loading Demo...";
+
   try{
-    const path = authMode === "login" ? "/api/login" : "/api/signup";
-    const res = await fetch(path, {
+    // Try logging into existing demo account first
+    let res = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username: demoUsername, password: demoPassword })
     });
+
+    // If demo account doesn't exist yet, sign it up
+    if(!res.ok){
+      res = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: demoUsername, password: demoPassword })
+      });
+    }
+
     const data = await res.json();
-    if(!res.ok) throw new Error(data.error || "Something went wrong.");
+    if(!res.ok) throw new Error(data.error || "Could not log in to demo account.");
+
     setSession(data.token, data.username);
     await fetchProgress();
     renderHome();
@@ -2545,11 +2628,95 @@ document.getElementById("auth-form").addEventListener("submit", async e => {
     errEl.classList.remove("hidden");
   }finally{
     submitBtn.disabled = false;
+    demoBtn.disabled = false;
+    spinner.classList.add("hidden");
+    btnText.textContent = authMode === "login" ? "Log In" : "Create Free Account";
+  }
+});
+
+document.getElementById("auth-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const username = document.getElementById("auth-username").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const confirmPassword = document.getElementById("auth-confirm-password").value;
+  const errEl = document.getElementById("auth-error");
+  errEl.classList.add("hidden");
+
+  if(!username){
+    errEl.textContent = "Please enter your username.";
+    errEl.classList.remove("hidden");
+    document.getElementById("auth-username").focus();
+    return;
+  }
+
+  if(username.length < 3){
+    errEl.textContent = "Username must be at least 3 characters.";
+    errEl.classList.remove("hidden");
+    document.getElementById("auth-username").focus();
+    return;
+  }
+
+  if(!password){
+    errEl.textContent = "Please enter your password.";
+    errEl.classList.remove("hidden");
+    document.getElementById("auth-password").focus();
+    return;
+  }
+
+  if(password.length < 4){
+    errEl.textContent = "Password must be at least 4 characters.";
+    errEl.classList.remove("hidden");
+    document.getElementById("auth-password").focus();
+    return;
+  }
+
+  if(authMode === "signup" && password !== confirmPassword){
+    errEl.textContent = "Passwords do not match. Please check and re-enter.";
+    errEl.classList.remove("hidden");
+    document.getElementById("auth-confirm-password").focus();
+    return;
+  }
+
+  const submitBtn = document.getElementById("auth-submit");
+  const demoBtn = document.getElementById("auth-demo-btn");
+  const spinner = document.getElementById("auth-spinner");
+  const btnText = document.getElementById("auth-btn-text");
+
+  submitBtn.disabled = true;
+  demoBtn.disabled = true;
+  spinner.classList.remove("hidden");
+  btnText.textContent = authMode === "login" ? "Logging in..." : "Creating account...";
+
+  try{
+    const path = authMode === "login" ? "/api/login" : "/api/signup";
+    const res = await fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || "Something went wrong.");
+
+    setSession(data.token, data.username);
+    await fetchProgress();
+    renderHome();
+    showScreen("home");
+  }catch(err){
+    errEl.textContent = err.message;
+    errEl.classList.remove("hidden");
+  }finally{
+    submitBtn.disabled = false;
+    demoBtn.disabled = false;
+    spinner.classList.add("hidden");
+    btnText.textContent = authMode === "login" ? "Log In" : "Create Free Account";
   }
 });
 
 /* ====================== INIT ====================== */
 (async function init(){
+  setupPasswordToggles();
+  setupHelpModal();
+
   if(!getToken()){ showAuthScreen(); return; }
   try{
     await fetchProgress();

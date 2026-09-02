@@ -4,6 +4,8 @@
   "description": "Gamified app for learning Igbo, Yoruba, and Hausa — with accounts and server-saved progress.",
   "main": "server.js",
   "scripts": {
+    "dev": "node server.js",
+    "build": "echo 'Build complete'",
     "start": "node server.js"
   },
   "dependencies": {

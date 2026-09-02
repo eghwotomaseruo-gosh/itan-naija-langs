@@ -12,7 +12,7 @@ const PATTERNS = {
 };
 
 /* ====================== VOCAB DATA ======================
-   Each course has 10 topical lessons. Question sets are
+   Each course has rich topical lessons. Question sets are
    generated from this vocab at runtime (see buildLessonQuestions). */
 const COURSES = {
   igbo: {
@@ -58,6 +58,38 @@ const COURSES = {
       { title: "Animals", vocab: [
         { native: "Nkịta", en: "Dog" }, { native: "Nwamba", en: "Cat" }, { native: "Ehi", en: "Cow" },
         { native: "Ọkụkọ", en: "Chicken" }, { native: "Aturu", en: "Sheep" }, { native: "Enyi", en: "Elephant" }
+      ]},
+      { title: "Market & Shopping", vocab: [
+        { native: "Ahịa", en: "Market" }, { native: "Ego", en: "Money" }, { native: "Ọnụego", en: "Price" },
+        { native: "Zụọ", en: "Buy" }, { native: "Ree", en: "Sell" }, { native: "Nnukwu", en: "Big" }, { native: "Obere", en: "Small" }
+      ]},
+      { title: "Places & Travel", vocab: [
+        { native: "Ụlọ", en: "House" }, { native: "Ụzọ", en: "Road" }, { native: "Obodo", en: "Town" },
+        { native: "Ụgbọala", en: "Car" }, { native: "Ọdụ ụgbọ", en: "Station" }, { native: "Ọdụ ụgbọelu", en: "Airport" }
+      ]},
+      { title: "Weather & Nature", vocab: [
+        { native: "Anwụ", en: "Sun" }, { native: "Mmiri ozuzo", en: "Rain" }, { native: "Ikuku", en: "Wind" },
+        { native: "Osimiri", en: "River" }, { native: "Ugwu", en: "Mountain" }, { native: "Ọhịa", en: "Forest" }
+      ]},
+      { title: "Feelings & Emotions", vocab: [
+        { native: "Ọñụ", en: "Joy" }, { native: "Iwe", en: "Anger" }, { native: "Egwu", en: "Fear" },
+        { native: "Udo", en: "Peace" }, { native: "Ike ọgwụgwụ", en: "Tiredness" }, { native: "Ịhụnanya", en: "Love" }
+      ]},
+      { title: "Home & Living", vocab: [
+        { native: "Àkwa", en: "Bed" }, { native: "Oche", en: "Chair" }, { native: "Tebụl", en: "Table" },
+        { native: "Efere", en: "Plate" }, { native: "Iko", en: "Cup" }, { native: "Ọkụ", en: "Light" }
+      ]},
+      { title: "Daily Verbs", vocab: [
+        { native: "Rie", en: "Eat" }, { native: "Ñụọ", en: "Drink" }, { native: "Gaa", en: "Go" },
+        { native: "Bia", en: "Come" }, { native: "Hụ", en: "See" }, { native: "Mee", en: "Do" }
+      ]},
+      { title: "Calendar & Seasons", vocab: [
+        { native: "Ụtụtụ ọma", en: "Good morning" }, { native: "Ehihie", en: "Afternoon" }, { native: "Mgbede", en: "Evening" },
+        { native: "Izù", en: "Week" }, { native: "Ọnwa", en: "Month" }, { native: "Afọ", en: "Year" }
+      ]},
+      { title: "Clothing & Style", vocab: [
+        { native: "Uwe", en: "Clothes" }, { native: "Akpụkpọ ụkwụ", en: "Shoes" }, { native: "Okpu", en: "Hat" },
+        { native: "Akwa", en: "Cloth" }, { native: "Ọlaedo", en: "Gold" }
       ]}
     ]
   },
@@ -104,6 +136,38 @@ const COURSES = {
       { title: "Animals", vocab: [
         { native: "Aja", en: "Dog" }, { native: "Ologbo", en: "Cat" }, { native: "Malu", en: "Cow" },
         { native: "Adiye", en: "Chicken" }, { native: "Agutan", en: "Sheep" }, { native: "Erin", en: "Elephant" }
+      ]},
+      { title: "Market & Shopping", vocab: [
+        { native: "Ọjà", en: "Market" }, { native: "Owó", en: "Money" }, { native: "Èlò ni", en: "How much" },
+        { native: "Rà", en: "Buy" }, { native: "Tà", en: "Sell" }, { native: "Dínkù", en: "Discount" }, { native: "Wúrà", en: "Gold" }
+      ]},
+      { title: "Places & Travel", vocab: [
+        { native: "Ilé", en: "House" }, { native: "Ọ̀nà", en: "Road" }, { native: "Ìlú", en: "Town" },
+        { native: "Ọkọ̀", en: "Car" }, { native: "Òtún", en: "Right" }, { native: "Òsì", en: "Left" }
+      ]},
+      { title: "Weather & Nature", vocab: [
+        { native: "Oòrùn", en: "Sun" }, { native: "Òjò", en: "Rain" }, { native: "Afẹ́fẹ́", en: "Wind" },
+        { native: "Odò", en: "River" }, { native: "Òkè", en: "Mountain" }, { native: "Igbó", en: "Forest" }
+      ]},
+      { title: "Feelings & Emotions", vocab: [
+        { native: "Ayọ̀", en: "Joy" }, { native: "Ìbànújẹ́", en: "Sadness" }, { native: "Ìbẹ̀rù", en: "Fear" },
+        { native: "Àlàáfíà", en: "Peace" }, { native: "Ìfẹ́", en: "Love" }, { native: "Àárẹ̀", en: "Tiredness" }
+      ]},
+      { title: "Home & Living", vocab: [
+        { native: "Àga", en: "Chair" }, { native: "Tábìlì", en: "Table" }, { native: "Ibùsùn", en: "Bed" },
+        { native: "Àwo", en: "Plate" }, { native: "Ife", en: "Cup" }, { native: "Iná", en: "Light" }
+      ]},
+      { title: "Daily Verbs", vocab: [
+        { native: "Jẹ", en: "Eat" }, { native: "Mu", en: "Drink" }, { native: "Lọ", en: "Go" },
+        { native: "Wá", en: "Come" }, { native: "Rí", en: "See" }, { native: "Ṣe", en: "Do" }
+      ]},
+      { title: "Calendar & Seasons", vocab: [
+        { native: "Òwúrọ̀", en: "Morning" }, { native: "Ọ̀sán", en: "Afternoon" }, { native: "Ìrọ̀lẹ́", en: "Evening" },
+        { native: "Ọ̀sẹ̀", en: "Week" }, { native: "Oṣù", en: "Month" }, { native: "Ọdún", en: "Year" }
+      ]},
+      { title: "Clothing & Attire", vocab: [
+        { native: "Aṣọ", en: "Clothes" }, { native: "Bàtà", en: "Shoes" }, { native: "Fìlà", en: "Cap" },
+        { native: "Ẹ̀wù", en: "Shirt" }, { native: "Gèlè", en: "Head tie" }
       ]}
     ]
   },
@@ -150,6 +214,38 @@ const COURSES = {
       { title: "Animals", vocab: [
         { native: "Kare", en: "Dog" }, { native: "Kyanwa", en: "Cat" }, { native: "Saniya", en: "Cow" },
         { native: "Kaza", en: "Chicken" }, { native: "Tunkiya", en: "Sheep" }, { native: "Giwa", en: "Elephant" }
+      ]},
+      { title: "Market & Commerce", vocab: [
+        { native: "Kasuwa", en: "Market" }, { native: "Kudi", en: "Money" }, { native: "Nawa ne", en: "How much" },
+        { native: "Saya", en: "Buy" }, { native: "Sayar", en: "Sell" }, { native: "Sauki", en: "Cheap" }, { native: "Tsada", en: "Expensive" }
+      ]},
+      { title: "Travel & Places", vocab: [
+        { native: "Gida", en: "House" }, { native: "Hanya", en: "Road" }, { native: "Birni", en: "City" },
+        { native: "Mota", en: "Car" }, { native: "Dama", en: "Right" }, { native: "Hagu", en: "Left" }
+      ]},
+      { title: "Weather & Nature", vocab: [
+        { native: "Rana", en: "Sun" }, { native: "Ruwan sama", en: "Rain" }, { native: "Iska", en: "Wind" },
+        { native: "Kogi", en: "River" }, { native: "Dutse", en: "Mountain" }, { native: "Daji", en: "Forest" }
+      ]},
+      { title: "Feelings & Wellbeing", vocab: [
+        { native: "Farin ciki", en: "Happiness" }, { native: "Bakin ciki", en: "Sadness" }, { native: "Tsoro", en: "Fear" },
+        { native: "Lafiya", en: "Health" }, { native: "Soyayya", en: "Love" }, { native: "Gajiya", en: "Tiredness" }
+      ]},
+      { title: "Home & Living", vocab: [
+        { native: "Kujera", en: "Chair" }, { native: "Tebur", en: "Table" }, { native: "Gado", en: "Bed" },
+        { native: "Kwano", en: "Plate" }, { native: "Kofin", en: "Cup" }, { native: "Fitila", en: "Lamp" }
+      ]},
+      { title: "Essential Verbs", vocab: [
+        { native: "Ci", en: "Eat" }, { native: "Sha", en: "Drink" }, { native: "Je", en: "Go" },
+        { native: "Zo", en: "Come" }, { native: "Gani", en: "See" }, { native: "Yi", en: "Do" }
+      ]},
+      { title: "Calendar & Seasons", vocab: [
+        { native: "Safe", en: "Morning" }, { native: "Rana", en: "Afternoon" }, { native: "Yamma", en: "Evening" },
+        { native: "Mako", en: "Week" }, { native: "Wata", en: "Month" }, { native: "Shekara", en: "Year" }
+      ]},
+      { title: "Clothing & Style", vocab: [
+        { native: "Kaya", en: "Clothes" }, { native: "Takalmi", en: "Shoes" }, { native: "Hula", en: "Cap" },
+        { native: "Riga", en: "Gown" }, { native: "Mayafi", en: "Scarf" }
       ]}
     ]
   },
@@ -171,7 +267,7 @@ const COURSES = {
       ]},
       { title: "Family", vocab: [
         { native: "Érhá", en: "Father" }, { native: "Iye", en: "Mother" }, { native: "Ovbi", en: "Child" },
-        { native: "Erha nokhua", en: "Grandfather" }
+        { native: "Erha nokhua", en: "Grandfather" }, { native: "Iye nokhua", en: "Grandmother" }
       ]},
       { title: "Common Phrases", vocab: [
         { native: "Vbèè óye hé", en: "How are you" }, { native: "Obo kia", en: "Welcome" },
@@ -189,6 +285,22 @@ const COURSES = {
       { title: "Body Parts", vocab: [
         { native: "Uhun", en: "Head" }, { native: "Ehor", en: "Ear" }, { native: "Aro", en: "Eye" },
         { native: "Ihue", en: "Nose" }, { native: "Unu", en: "Mouth" }, { native: "Atata owẹ", en: "Foot" }
+      ]},
+      { title: "Market & Trade", vocab: [
+        { native: "Ẹki", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
+        { native: "Khiẹn", en: "Sell" }, { native: "Esen", en: "Gift" }
+      ]},
+      { title: "Time & Days", vocab: [
+        { native: "Ẹdẹ", en: "Day" }, { native: "Akhuẹ", en: "Tomorrow" }, { native: "Ẹdẹrẹ", en: "Yesterday" },
+        { native: "Owie", en: "Morning" }, { native: "Ason", en: "Night" }
+      ]},
+      { title: "Nature & Elements", vocab: [
+        { native: "Amẹ", en: "Rain" }, { native: "Ovẹn", en: "Sun" }, { native: "Éhẹn", en: "Fish" },
+        { native: "Erhan", en: "Tree" }, { native: "Okun", en: "Ocean" }
+      ]},
+      { title: "Daily Verbs", vocab: [
+        { native: "Re", en: "Eat" }, { native: "Wọn", en: "Drink" }, { native: "Khian", en: "Go" },
+        { native: "Gualọ", en: "Search" }, { native: "Guan", en: "Speak" }
       ]}
     ]
   },
@@ -212,6 +324,30 @@ const COURSES = {
         { native: "Idem fo?", en: "How are you" }, { native: "Nso ke Ekot fi?", en: "What is your name" },
         { native: "Mbọk", en: "Please" }, { native: "Sosongo", en: "Thank you" },
         { native: "Nfana ibaga", en: "No problem" }
+      ]},
+      { title: "Family", vocab: [
+        { native: "Ete", en: "Father" }, { native: "Eka", en: "Mother" }, { native: "Eyen", en: "Child" },
+        { native: "Ndito", en: "Children" }, { native: "Ebe", en: "Husband" }, { native: "Nwan", en: "Wife" }
+      ]},
+      { title: "Food & Dining", vocab: [
+        { native: "Udia", en: "Food" }, { native: "Mmong", en: "Water" }, { native: "Bia", en: "Yam" },
+        { native: "Iyak", en: "Fish" }, { native: "Unam", en: "Meat" }
+      ]},
+      { title: "Colors & Nature", vocab: [
+        { native: "Afia", en: "White" }, { native: "Obubit", en: "Black" }, { native: "Ndatndat", en: "Red" },
+        { native: "Utin", en: "Sun" }, { native: "Edim", en: "Rain" }
+      ]},
+      { title: "Animals", vocab: [
+        { native: "Ewa", en: "Dog" }, { native: "Anwa", en: "Cat" }, { native: "Enang", en: "Cow" },
+        { native: "Unen", en: "Chicken" }, { native: "Erong", en: "Sheep" }
+      ]},
+      { title: "Market & Commerce", vocab: [
+        { native: "Urua", en: "Market" }, { native: "Okuk", en: "Money" }, { native: "Dep", en: "Buy" },
+        { native: "Nyam", en: "Sell" }, { native: "Idahaemi", en: "Now" }
+      ]},
+      { title: "Essential Verbs", vocab: [
+        { native: "Dia", en: "Eat" }, { native: "Nwong", en: "Drink" }, { native: "Ka", en: "Go" },
+        { native: "Di", en: "Come" }, { native: "Kut", en: "See" }
       ]}
     ]
   },
@@ -249,6 +385,18 @@ const COURSES = {
       { title: "Animals", vocab: [
         { native: "Eráko", en: "Dog" }, { native: "Erhué", en: "Cow" }, { native: "Ogodẹ", en: "Sheep" },
         { native: "Óhọ", en: "Chicken" }, { native: "Ewéri", en: "Monkey" }, { native: "Eni", en: "Elephant" }
+      ]},
+      { title: "Time & Nature", vocab: [
+        { native: "Nonẹ", en: "Today" }, { native: "Odrẹ", en: "Tomorrow" }, { native: "Ede", en: "Day" },
+        { native: "Aso", en: "Night" }, { native: "Urhukpẹ", en: "Light" }
+      ]},
+      { title: "Market & Commerce", vocab: [
+        { native: "Iki", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
+        { native: "Shẹ", en: "Sell" }, { native: "Oware", en: "Thing" }
+      ]},
+      { title: "Daily Verbs", vocab: [
+        { native: "Re", en: "Eat" }, { native: "Da", en: "Drink" }, { native: "Kpo", en: "Go" },
+        { native: "Cha", en: "Come" }, { native: "Ta", en: "Speak" }
       ]}
     ]
   },
@@ -286,6 +434,22 @@ const COURSES = {
       { title: "Animals", vocab: [
         { native: "Iyou", en: "Dog" }, { native: "Anyam", en: "Cat" }, { native: "Ishu", en: "Fish" },
         { native: "Inyon", en: "Bird" }
+      ]},
+      { title: "Food & Dining", vocab: [
+        { native: "Igyande", en: "Yam" }, { native: "Ruam", en: "Food" }, { native: "Mnger", en: "Water" },
+        { native: "Nyinya", en: "Horse" }
+      ]},
+      { title: "Time & Days", vocab: [
+        { native: "Nyian", en: "Today" }, { native: "Kper", en: "Tomorrow" }, { native: "Hegen", en: "Now" },
+        { native: "Tugh", en: "Night" }, { native: "Tetan", en: "Afternoon" }
+      ]},
+      { title: "Market & Trade", vocab: [
+        { native: "Kasuwa", en: "Market" }, { native: "Inyaregh", en: "Money" }, { native: "Yam", en: "Buy" },
+        { native: "Te", en: "Sell" }, { native: "Gbenda", en: "Road" }
+      ]},
+      { title: "Essential Verbs", vocab: [
+        { native: "Ya", en: "Eat" }, { native: "Ma", en: "Drink" }, { native: "Dza", en: "Go" },
+        { native: "Va", en: "Come" }, { native: "Nenge", en: "See" }
       ]}
     ]
   }
@@ -302,8 +466,8 @@ function splitIntoSubLessons(lessons){
     const vocab = lesson.vocab;
     if(vocab.length < 5){ expanded.push(lesson); return; }
     const mid = Math.ceil(vocab.length / 2);
-    expanded.push({ title: `${lesson.title} \u00b7 Part 1`, vocab: vocab.slice(0, mid) });
-    expanded.push({ title: `${lesson.title} \u00b7 Part 2`, vocab: vocab.slice(mid) });
+    expanded.push({ title: `${lesson.title} · Part 1`, vocab: vocab.slice(0, mid) });
+    expanded.push({ title: `${lesson.title} · Part 2`, vocab: vocab.slice(mid) });
   });
   return expanded;
 }
@@ -312,64 +476,128 @@ Object.keys(COURSES).forEach(k => {
 });
 
 const SURPRISE_FACTS = [
-  "Nigeria is home to over 250 ethnic groups and more than 500 living languages \u2014 you're learning just a few of them!",
-  "Nollywood, Nigeria's film industry, produces more movies per year than Hollywood \u2014 second in the world only to India's Bollywood by volume.",
+  "Nigeria is home to over 250 ethnic groups and more than 500 living languages — you're learning just a few of them!",
+  "Nollywood, Nigeria's film industry, produces more movies per year than Hollywood — second in the world only to India's Bollywood by volume.",
   "Lagos is one of the fastest-growing megacities on Earth, with a metro population bigger than many entire countries.",
-  "The name \u201cNigeria\u201d was reportedly coined by journalist Flora Shaw in 1897, after the Niger River.",
-  "Nigeria has three major river systems \u2014 the Niger, the Benue, and the Cross River \u2014 which shaped where many of its languages developed.",
+  "The name “Nigeria” was reportedly coined by journalist Flora Shaw in 1897, after the Niger River.",
+  "Nigeria has three major river systems — the Niger, the Benue, and the Cross River — which shaped where many of its languages developed.",
   "Nigerian jollof rice has sparked a decades-long, good-natured rivalry with Ghana over whose version is better.",
   "Amina of Zazzau, a 16th-century Hausa warrior queen, is remembered for expanding her kingdom's territory and trade routes.",
-  "Nigeria has more than one \u201cofficial\u201d greeting for almost every hour of the day \u2014 many languages have separate words for morning, afternoon, and evening greetings.",
+  "Nigeria has more than one “official” greeting for almost every hour of the day — many languages have separate words for morning, afternoon, and evening greetings.",
   "The University of Ibadan, founded in 1948, is Nigeria's oldest university.",
   "Afrobeats, a genre with deep roots in Nigerian music, is now streamed by millions of people worldwide."
 ];
 
 const CULTURE = {
   igbo: {
-    intro: "A few pieces of everyday Igbo wisdom and custom \u2014 the kind of thing you'd pick up from elders, not textbooks.",
+    intro: "A few pieces of everyday Igbo wisdom and custom — the kind of thing you'd pick up from elders, not textbooks.",
     proverbs: [
-      { native: "Egbe belụ, ugo belụ, nke si ibe ya ebena, nku kwaa ya.", translation: "Let the hawk perch, let the eagle perch; whichever says the other should not perch, may its wing break.", meaning: "Live and let live \u2014 everyone deserves the chance to thrive." },
+      { native: "Egbe belụ, ugo belụ, nke si ibe ya ebena, nku kwaa ya.", translation: "Let the hawk perch, let the eagle perch; whichever says the other should not perch, may its wing break.", meaning: "Live and let live — everyone deserves the chance to thrive." },
       { native: "Onye kwe, chi ya ekwe.", translation: "If a person agrees, their personal god agrees.", meaning: "Self-belief and determination pave the way to success." }
     ],
     etiquette: { title: "Greeting elders", text: "When greeting an elder, a slight bow shows respect, and it's customary to use both hands when giving or receiving something from them." },
     scenario: {
       prompt: "You meet your friend's mother for the first time. What's the respectful thing to do?",
       options: [
-        { text: "Say \u201cNdewo\u201d and offer a slight bow", correct: true, feedback: "That's the respectful way to greet an elder you're meeting for the first time." },
-        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected \u2014 a wave alone can come across as distant." },
+        { text: "Say “Ndewo” and offer a slight bow", correct: true, feedback: "That's the respectful way to greet an elder you're meeting for the first time." },
+        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected — a wave alone can come across as distant." },
         { text: "Ask for her phone number right away", correct: false, feedback: "Save the small talk for after a proper greeting!" }
       ]
     }
   },
   yoruba: {
-    intro: "A few pieces of everyday Yorùbá wisdom and custom \u2014 the kind of thing you'd pick up from elders, not textbooks.",
+    intro: "A few pieces of everyday Yorùbá wisdom and custom — the kind of thing you'd pick up from elders, not textbooks.",
     proverbs: [
-      { native: "Ilé ọba tí ó jóná, ẹwà ló bù sí i.", translation: "A king's palace that gets burnt has only added more beauty.", meaning: "Make the best of hardship \u2014 necessity is the mother of invention." },
+      { native: "Ilé ọba tí ó jóná, ẹwà ló bù sí i.", translation: "A king's palace that gets burnt has only added more beauty.", meaning: "Make the best of hardship — necessity is the mother of invention." },
       { native: "Ìdí méjèèjì ló tó olúwa rẹ̀ jókòó.", translation: "The two buttocks are sufficient for their owner to sit on.", meaning: "Be content with what you have." }
     ],
-    etiquette: { title: "Greeting elders", text: "Young men traditionally prostrate flat on the ground (\u00ecdobal\u00e8) when greeting an elder, while young women kneel (k\u00fanl\u1eb9) \u2014 a sign of deep respect still practiced today." },
+    etiquette: { title: "Greeting elders", text: "Young men traditionally prostrate flat on the ground (ìdobalẹ̀) when greeting an elder, while young women kneel (kúnlẹ̀) — a sign of deep respect still practiced today." },
     scenario: {
       prompt: "You meet your friend's mother for the first time. What's the respectful thing to do?",
       options: [
-        { text: "Say \u201cBawo ni\u201d and kneel or prostrate briefly", correct: true, feedback: "That's the traditional, respectful way to greet an elder." },
-        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected \u2014 a wave alone can come across as distant." },
+        { text: "Say “Bawo ni” and kneel or prostrate briefly", correct: true, feedback: "That's the traditional, respectful way to greet an elder." },
+        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected — a wave alone can come across as distant." },
         { text: "Ask for her phone number right away", correct: false, feedback: "Save the small talk for after a proper greeting!" }
       ]
     }
   },
   hausa: {
-    intro: "A few pieces of everyday Hausa wisdom and custom \u2014 the kind of thing you'd pick up from elders, not textbooks.",
+    intro: "A few pieces of everyday Hausa wisdom and custom — the kind of thing you'd pick up from elders, not textbooks.",
     proverbs: [
-      { native: "A yi, a gama, ta fi takama, gobe a koma.", translation: "To do and finish is better than \u2018don't care, come back tomorrow.\u2019", meaning: "Don't put off until tomorrow what you can do today." },
+      { native: "A yi, a gama, ta fi takama, gobe a koma.", translation: "To do and finish is better than ‘don't care, come back tomorrow.’", meaning: "Don't put off until tomorrow what you can do today." },
       { native: "Ruwa ba ta tsami banza.", translation: "Water does not get sour without a cause.", meaning: "Everything happens for a reason." }
     ],
     etiquette: { title: "Greeting elders", text: "A handshake is the customary greeting, and it's considered polite to ask after someone's family and health before getting to the point of a conversation." },
     scenario: {
       prompt: "You meet your friend's mother for the first time. What's the respectful thing to do?",
       options: [
-        { text: "Say \u201cSannu\u201d and ask after her health and family", correct: true, feedback: "That's the respectful, customary way to open a greeting." },
-        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected \u2014 a wave alone can come across as distant." },
+        { text: "Say “Sannu” and ask after her health and family", correct: true, feedback: "That's the respectful, customary way to open a greeting." },
+        { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected — a wave alone can come across as distant." },
         { text: "Ask for her phone number right away", correct: false, feedback: "Save the small talk for after a proper greeting!" }
+      ]
+    }
+  },
+  edo: {
+    intro: "Everyday wisdom and rich cultural etiquette from the ancient Benin kingdom (Ẹ̀dó).",
+    proverbs: [
+      { native: "Aro n'ekhoe ẹkhoe, ọrọ vbe ẹro.", translation: "The eyes that look down see the path clearly.", meaning: "Humility and caution lead to peace and enduring honor." },
+      { native: "Ai gbe ovbi ẹnwanre vb'unu.", translation: "One does not strike an elder on the mouth.", meaning: "Always respect the counsel and words of elders." }
+    ],
+    etiquette: { title: "Greeting elders and leaders", text: "When greeting elders, Edo men bow respectfully saying 'Kọyọ' or family morning greetings, and gifts are always presented or received with both hands as a sign of purity and gratitude." },
+    scenario: {
+      prompt: "You enter an Edo elder's parlor for a family visit. How should you greet them?",
+      options: [
+        { text: "Say “Kọyọ” or “Ọbowiẹ” with a polite bow", correct: true, feedback: "Perfect — this shows genuine honor and warmth in Edo culture." },
+        { text: "Nod silently without addressing anyone", correct: false, feedback: "Speaking a clear, warm greeting is expected." },
+        { text: "Walk directly to a chair and sit before speaking", correct: false, feedback: "Always greet before taking your seat!" }
+      ]
+    }
+  },
+  efik: {
+    intro: "Heritage, coastal proverbs, and etiquette from Calabar and the Efịk culture.",
+    proverbs: [
+      { native: "Owo idaha ke mkpa owo ebiet mbuk.", translation: "You do not use another person's tragedy as casual gossip.", meaning: "Cultivate deep empathy and never celebrate other people's misfortune." },
+      { native: "Ubok kiet isibọhọ ekpat.", translation: "One hand cannot easily lift a heavy sack.", meaning: "Unity and teamwork achieve what solitary effort cannot." }
+    ],
+    etiquette: { title: "Warm Calabar hospitality", text: "Efịk culture is renowned for lavish hospitality. Guests are warmly welcomed with water and refreshments, and visitors are expected to receive them with two hands saying 'Sosongo' (Thank you)." },
+    scenario: {
+      prompt: "Your Calabar host hands you a cup of water upon your arrival. What is polite?",
+      options: [
+        { text: "Receive it with both hands and say “Sosongo”", correct: true, feedback: "Spot on! That reflects the true grace of Efịk hospitality." },
+        { text: "Push it aside and demand your favorite soda", correct: false, feedback: "Always receive the offered hospitality graciously first." },
+        { text: "Grab it with left hand and turn away", correct: false, feedback: "Using both hands expresses deep gratitude." }
+      ]
+    }
+  },
+  urhobo: {
+    intro: "Wisdom, pride, and heartfelt customs from the Urhobo people of the Niger Delta.",
+    proverbs: [
+      { native: "Oshare rẹ evwro kẹ oghwẹ.", translation: "A truthful man earns honor in the assembly.", meaning: "Integrity and honesty outlast deception every time." },
+      { native: "Ọrhẹ ọvo cha sa vwo rhe.", translation: "One plantain tree begins a thriving plantation.", meaning: "Small beginnings with diligence grow into great prosperity." }
+    ],
+    etiquette: { title: "The 'Míguẹ' greeting", text: "Urhobo youth greet elders by kneeling slightly or touching the knee and saying 'Míguẹ' (I kneel), to which the elder responds with a blessing 'Vrendon' (Rise and live long)." },
+    scenario: {
+      prompt: "You meet an Urhobo elder at a community gathering. What is the traditional respectful greeting?",
+      options: [
+        { text: "Say “Míguẹ” with a slight knee touch/curtsey", correct: true, feedback: "Excellent! The elder will warmly bless you with 'Vrendon'." },
+        { text: "Give a fist bump from afar", correct: false, feedback: "Traditional greetings are much warmer and more respectful." },
+        { text: "Wait for the elder to stand and greet you first", correct: false, feedback: "Youth and newcomers always initiate respectful greetings." }
+      ]
+    }
+  },
+  tiv: {
+    intro: "Rich traditions, unity, and agrarian proverbs from the Tiv people of the Benue Valley.",
+    proverbs: [
+      { native: "Ka wea lu a nombor dedoo, u kpe a mough.", translation: "A sweet and kind tongue builds enduring relationships.", meaning: "Kind words and diplomacy solve disputes better than anger." },
+      { native: "Ior mba kpen er a nyam ga.", translation: "People do not perish when working together in fellowship.", meaning: "Mutual aid and community solidarity preserve the society." }
+    ],
+    etiquette: { title: "Sharing food & the compound welcome", text: "In Tiv compounds, visitors are welcomed with fresh water in a calabash and invited to share meals from the communal dish as brothers and sisters." },
+    scenario: {
+      prompt: "You visit a friend's Tiv family compound in Benue. How do you greet the household?",
+      options: [
+        { text: "Say “M sugh ne” (Greetings to you all) with a warm smile", correct: true, feedback: "Wonderful! You'll be warmly received into the circle." },
+        { text: "Walk past everyone into a private room", correct: false, feedback: "Always greet the household together first." },
+        { text: "Refuse to speak until spoken to", correct: false, feedback: "A cheerful greeting breaks any ice." }
       ]
     }
   }
@@ -650,7 +878,7 @@ const DEFAULT_STATE = {
   todayXpDate: null,
   practiceSessionsCompleted: 0,
   longestStreak: 0,
-  cultureCompleted: { igbo: false, yoruba: false, hausa: false }
+  cultureCompleted: { igbo: false, yoruba: false, hausa: false, edo: false, efik: false, urhobo: false, tiv: false }
 };
 
 /* ---- account session (token stored locally; everything else lives on the server) ---- */

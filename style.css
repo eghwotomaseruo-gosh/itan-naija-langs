@@ -180,339 +180,56 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
   margin: 0 0 18px; color: var(--cream);
 }
 
-/* ===== REAL 3D TRIBE TILE SYSTEM (10 Nigerian Cultural Tracks) ===== */
+/* ===== language switch tiles (home screen) — horizontal icon row ===== */
 .section-label{ font-family: var(--font-head); font-size:13px; text-transform:uppercase; letter-spacing:1.2px; color: var(--cream-dim); margin: 0 0 12px; }
 .section-label-minor{ font-size:11.5px; opacity:.75; }
-
-/* Home screen track section container */
-.home-track-section{
-  margin: 4px 0 24px;
-  position: relative;
-}
-.home-track-head{
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding: 0 2px;
-}
-.home-track-head .section-label{ margin: 0; }
-.home-track-head-sub{
-  font-size: 11.5px;
-  color: var(--cream-dim);
-  margin: 2px 0 0;
-}
-.home-track-count-badge{
-  font-family: var(--font-head);
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--gold);
-  background: rgba(227, 167, 43, 0.12);
-  border: 1px solid rgba(227, 167, 43, 0.28);
-  border-radius: 999px;
-  padding: 2px 8px;
-  flex-shrink: 0;
-}
-
-/* Horizontal scrollable track tray */
-.track-select{
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  margin: 4px 0 16px;
-  padding: 8px 4px 16px;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(244,239,227,0.2) transparent;
-}
-.track-select::-webkit-scrollbar{
-  height: 5px;
-}
-.track-select::-webkit-scrollbar-thumb{
-  background: rgba(244,239,227,0.22);
-  border-radius: 4px;
-}
-
-/* Tribe Tile Master Card */
+.track-select{ display:flex; gap:16px; overflow-x:auto; margin: 4px 0 30px; padding: 4px 2px 8px; -webkit-overflow-scrolling:touch; }
 .track-card{
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
-  padding: 4px 4px 8px;
-  color: var(--cream);
-  width: 92px;
-  cursor: pointer;
-  position: relative;
+  flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:8px;
+  background:none; border:none; padding:0; color: var(--cream); width:68px;
+  cursor:pointer;
   outline: none;
-  border-radius: 20px;
-  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
-
-/* 3D Ground Contact Shadow (simulates physical surface placement) */
-.tribe-ground-shadow{
-  position: absolute;
-  top: 60px;
-  width: 68px;
-  height: 18px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.25) 55%, transparent 75%);
-  filter: blur(2px);
-  pointer-events: none;
-  z-index: 1;
-  transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.16s ease;
-}
-
-/* Master 3D Cushion Plinth Token */
-.tribe-tile-plinth{
-  position: relative;
-  width: 74px;
-  height: 72px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  user-select: none;
-  /* Multi-stage 3D cylindrical bevel & side wall:
-     1. Inset top light bevel (0 1.8px 0)
-     2. Inset bottom rim ambient occlusion (0 -3.5px 4px)
-     3. 3D side cylinder wall extrusion in --tile-depth (0 3.5px 0, 0 7px 0)
-     4. Dark under-lip chamfer in --tile-depth-dark (0 10px 0)
-     5. Ground ambient drop shadow (0 13px 18px) */
-  box-shadow:
-    0 1.8px 0 rgba(255,255,255,0.6) inset,
-    0 -3.5px 4px rgba(0,0,0,0.4) inset,
-    0 3.5px 0 var(--tile-depth, #1d5338),
-    0 7px 0 var(--tile-depth, #1d5338),
-    0 10px 0 var(--tile-depth-dark, #123724),
-    0 13px 18px rgba(0,0,0,0.48);
-  background: radial-gradient(circle at 45% 22%, var(--tile-light, #5cd193) 0%, var(--tile-bg, #3f9d6b) 58%, var(--tile-shade, #2b7350) 100%);
+.track-card:active{ transform: translateY(1px); }
+.track-glyph{
+  position:relative;
+  width:60px; height:60px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
   color: #ffffff;
-  transform: translateY(0);
-  transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.16s cubic-bezier(0.2, 0.9, 0.3, 1), filter 0.16s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
-/* 3D Hover Levitation */
-.track-card:hover:not(:disabled) .tribe-tile-plinth{
-  transform: translateY(-4px);
-  filter: brightness(1.08);
-  box-shadow:
-    0 2px 0 rgba(255,255,255,0.7) inset,
-    0 -3.5px 4px rgba(0,0,0,0.3) inset,
-    0 4.5px 0 var(--tile-depth, #1d5338),
-    0 9px 0 var(--tile-depth, #1d5338),
-    0 13px 0 var(--tile-depth-dark, #123724),
-    0 18px 24px rgba(0,0,0,0.52);
+.track-card:hover .track-glyph{
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.32);
 }
-.track-card:hover:not(:disabled) .tribe-ground-shadow{
-  transform: scale(1.1);
-  opacity: 0.85;
+.track-symbol{
+  width:36px; height:36px;
+  display:flex; align-items:center; justify-content:center;
 }
-
-/* 3D Tactile Physical Compression (push down into surface) */
-.track-card:active:not(:disabled) .tribe-tile-plinth{
-  transform: translateY(6px);
-  filter: brightness(0.96);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.35) inset,
-    0 -2px 3px rgba(0,0,0,0.45) inset,
-    0 2px 0 var(--tile-depth, #1d5338),
-    0 3.5px 0 var(--tile-depth-dark, #123724),
-    0 6px 9px rgba(0,0,0,0.42);
-}
-.track-card:active:not(:disabled) .tribe-ground-shadow{
-  transform: scale(0.9) translateY(-2px);
-  opacity: 0.95;
-}
-
-/* Top Specular Curved Gloss Dome Arc */
-.tribe-tile-gloss{
-  position: absolute;
-  top: 3px;
-  left: 7px;
-  right: 7px;
-  height: 27px;
-  border-radius: 14px 14px 22px 22px;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.18) 55%, transparent 100%);
-  border-top: 1.8px solid rgba(255,255,255,0.92);
-  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.12));
-  z-index: 4;
-}
-
-/* Minted Inner Coin / Filigree Ring (3D Embossed Edge) */
-.tribe-tile-ring{
-  position: absolute;
-  inset: 5px;
-  border-radius: 15px;
-  pointer-events: none;
-  border: 1.2px solid rgba(255,255,255,0.28);
-  box-shadow: inset 0 1.5px 2px rgba(0,0,0,0.22), 0 1px 1px rgba(255,255,255,0.25);
-  z-index: 3;
-}
-
-/* Authentic Cultural Textile Pattern Watermark */
-.tribe-tile-texture{
-  position: absolute;
-  inset: 0;
-  opacity: 0.18;
-  background-size: 38px 38px;
-  background-repeat: repeat;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  border-radius: 19px;
-  z-index: 2;
-}
-
-/* Bottom Fresnel Rim Bounce Light */
-.tribe-tile-rim{
-  position: absolute;
-  bottom: 4px;
-  left: 12px;
-  right: 12px;
-  height: 6px;
-  border-radius: 50%;
-  pointer-events: none;
-  background: radial-gradient(ellipse at center, rgba(255,255,255,0.32) 0%, transparent 80%);
-  z-index: 4;
-}
-
-/* Cultural Emblem SVG Artwork */
-.tribe-emblem{
-  position: relative;
-  z-index: 5;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45));
-}
-.tribe-emblem svg{
-  width: 38px;
-  height: 38px;
+.track-symbol svg{
+  width:34px; height:34px;
   stroke: #ffffff;
-  stroke-width: 2;
-  transition: transform 0.16s ease;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
 }
-.track-card:hover .tribe-emblem svg{
-  transform: scale(1.06);
+.track-done-badge{
+  position:absolute; top:-5px; right:-5px; width:20px; height:20px; border-radius:50%;
+  background: var(--gold); color: var(--bg-deep); font-size:10.5px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; border:2px solid var(--bg);
 }
+.track-name{ font-family: var(--font-head); font-weight:600; font-size:12.5px; text-align:center; margin:0; }
 
-/* 3D Completed Golden Seal Medallion */
-.tribe-done-badge{
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff1b8 0%, #e3a72b 60%, #b9840f 100%);
-  color: #121822;
-  font-size: 11px;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--bg);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
-  z-index: 10;
-}
-
-/* Active Selected Tribe Indicator */
-.track-card.active .tribe-tile-plinth{
-  box-shadow:
-    0 0 0 3px var(--bg),
-    0 0 0 5.5px var(--gold),
-    0 1.8px 0 rgba(255,255,255,0.6) inset,
-    0 -3.5px 4px rgba(0,0,0,0.4) inset,
-    0 3.5px 0 var(--tile-depth, #1d5338),
-    0 7px 0 var(--tile-depth, #1d5338),
-    0 10px 0 var(--tile-depth-dark, #123724),
-    0 14px 22px rgba(227, 167, 43, 0.4);
-}
-.track-card.active .tribe-tile-plinth::after{
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 23px;
-  border: 1.5px solid rgba(227, 167, 43, 0.65);
-  pointer-events: none;
-  animation: tribeActiveGlow 2.2s ease-in-out infinite;
-}
-@keyframes tribeActiveGlow{
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.95; }
-}
-.tribe-active-badge{
-  position: absolute;
-  bottom: -6px;
-  background: var(--gold);
-  color: var(--bg-deep);
-  font-family: var(--font-head);
-  font-size: 8.5px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 1.5px 6px;
-  border-radius: 999px;
-  border: 1.5px solid var(--bg);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-  z-index: 10;
-  text-transform: uppercase;
-}
-
-/* Tribe Card Labels & Metadata */
-.track-info{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  text-align: center;
-  width: 100%;
-}
-.track-name{
-  font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 13px;
-  margin: 0;
-  color: var(--cream);
-  white-space: nowrap;
-}
-.track-card.active .track-name{
-  color: var(--gold);
-}
-.track-native{
-  font-size: 10.5px;
-  color: var(--cream-dim);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 88px;
-}
-.track-progress-pill{
-  font-size: 9.5px;
-  font-weight: 700;
-  color: var(--gold);
-  background: rgba(227, 167, 43, 0.14);
-  border: 1px solid rgba(227, 167, 43, 0.28);
-  border-radius: 999px;
-  padding: 1px 6px;
-  margin-top: 2px;
-  white-space: nowrap;
-}
-.track-progress-pill.done{
-  color: #5cd193;
-  background: rgba(92, 209, 147, 0.14);
-  border-color: rgba(92, 209, 147, 0.3);
-}
+.track-card.igbo .track-glyph{ background: var(--igbo); }
+.track-card.yoruba .track-glyph{ background: var(--yoruba); }
+.track-card.hausa .track-glyph{ background: var(--hausa); }
+.track-card.edo .track-glyph{ background: var(--edo); }
+.track-card.efik .track-glyph{ background: var(--efik); }
+.track-card.urhobo .track-glyph{ background: var(--urhobo); }
+.track-card.tiv .track-glyph{ background: var(--tiv); }
+.track-card.uvwie .track-glyph{ background: var(--uvwie); }
+.track-card.isoko .track-glyph{ background: var(--isoko); }
+.track-card.ijaw .track-glyph{ background: var(--ijaw); }
 
 /* ===== DASHBOARD BADGES & RETENTION TEASER ===== */
 .dashboard-badges-section{
@@ -1443,41 +1160,41 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .landing-cta:active{ transform: scale(0.98); }
 
 .landing-languages{
-  max-width: 620px; margin: 0 auto; padding: 4px 16px 36px;
-  display: flex; gap: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+  max-width: 600px; margin: 0 auto; padding: 0 16px 32px;
+  display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch;
 }
 .landing-lang-card{
-  flex-shrink: 0; width: 104px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 22px;
-  padding: 14px 8px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px;
-  position: relative; cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-.landing-lang-card .tribe-ground-shadow{
-  top: 56px; width: 64px; height: 16px;
-}
-.landing-lang-card .tribe-tile-plinth{
-  width: 66px; height: 64px; border-radius: 18px;
-}
-.landing-lang-card .tribe-emblem{
-  width: 36px; height: 36px;
-}
-.landing-lang-card .tribe-emblem svg{
-  width: 32px; height: 32px;
+  flex-shrink: 0; width: 92px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+  padding: 14px 6px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
 }
 .landing-lang-card:hover{
   border-color: var(--gold);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  transform: translateY(-2px);
 }
-.landing-lang-name{ font-family: var(--font-head); font-weight: 700; font-size: 13.5px; margin: 2px 0 0; color: var(--cream); }
-.landing-lang-native{ font-size: 10.5px; color: var(--cream-dim); margin: 0; white-space: nowrap; }
-.landing-lang-greeting{
-  font-size: 10px; font-weight: 700; color: var(--gold);
-  background: rgba(227, 167, 43, 0.12); border: 1px solid rgba(227, 167, 43, 0.25);
-  border-radius: 999px; padding: 1px 7px; margin-top: 1px;
+.landing-lang-glyph{
+  width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  color: #ffffff;
 }
+.landing-lang-glyph svg{
+  width: 24px; height: 24px;
+  stroke: #ffffff;
+  stroke-width: 2.2;
+}
+.landing-lang-card.igbo .landing-lang-glyph{ background: var(--igbo); }
+.landing-lang-card.yoruba .landing-lang-glyph{ background: var(--yoruba); }
+.landing-lang-card.hausa .landing-lang-glyph{ background: var(--hausa); }
+.landing-lang-card.edo .landing-lang-glyph{ background: var(--edo); }
+.landing-lang-card.efik .landing-lang-glyph{ background: var(--efik); }
+.landing-lang-card.urhobo .landing-lang-glyph{ background: var(--urhobo); }
+.landing-lang-card.tiv .landing-lang-glyph{ background: var(--tiv); }
+.landing-lang-card.uvwie .landing-lang-glyph{ background: var(--uvwie); }
+.landing-lang-card.isoko .landing-lang-glyph{ background: var(--isoko); }
+.landing-lang-card.ijaw .landing-lang-glyph{ background: var(--ijaw); }
+.landing-lang-name{ font-family: var(--font-head); font-weight: 700; font-size: 14px; margin: 0; color: var(--cream); }
+.landing-lang-native{ font-size: 11px; color: var(--cream-dim); margin: 0; }
 
 /* ===== standard auth card ===== */
 .auth-wrap{
@@ -2391,78 +2108,46 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .badge-teaser{ font-size:12.5px; color: var(--cream-dim); margin: -6px 0 12px; }
 .lb-gap{ font-size:12.5px; color: var(--cream-dim); margin: -6px 0 12px; }
 
-/* ===== language quick-switch tabs (path screen) — 3D real tribe tiles ===== */
-.lang-tabs{
-  display: flex; gap: 12px; margin: 4px 0 14px; overflow-x: auto;
-  padding: 4px 2px 12px; -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-}
+/* ===== language quick-switch tabs (path screen) — icon tile style ===== */
+.lang-tabs{ display:flex; gap:14px; margin: 4px 0 10px; overflow-x:auto; padding: 4px 2px 8px; -webkit-overflow-scrolling:touch; }
 .lang-tab{
-  flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
-  background: none; border: none; padding: 2px; cursor: pointer;
-  position: relative; width: 72px;
+  flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:8px;
+  background:none; border:none; padding:0; cursor:pointer;
   outline: none;
 }
-.lang-tab .tribe-ground-shadow{
-  top: 48px; width: 52px; height: 14px;
+.lang-tab-glyph{
+  position:relative;
+  width:60px; height:60px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  color: #ffffff;
+  border: 3px solid transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease;
 }
-.lang-tab .tribe-tile-plinth{
-  width: 58px; height: 56px; border-radius: 16px;
-  box-shadow:
-    0 1.5px 0 rgba(255,255,255,0.6) inset,
-    0 -2.5px 3px rgba(0,0,0,0.38) inset,
-    0 3px 0 var(--tile-depth, #1d5338),
-    0 5.5px 0 var(--tile-depth, #1d5338),
-    0 8px 0 var(--tile-depth-dark, #123724),
-    0 10px 14px rgba(0,0,0,0.42);
+.lang-tab:hover .lang-tab-glyph{ transform: translateY(-2px); }
+.lang-tab:active .lang-tab-glyph{ transform: translateY(1px); }
+.lang-tab .track-symbol{
+  width:36px; height:36px;
+  display:flex; align-items:center; justify-content:center;
 }
-.lang-tab .tribe-tile-gloss{
-  top: 2px; left: 5px; right: 5px; height: 21px; border-radius: 11px 11px 16px 16px;
+.lang-tab .track-symbol svg{
+  width:34px; height:34px;
+  stroke: #ffffff;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
 }
-.lang-tab .tribe-tile-ring{
-  inset: 4px; border-radius: 12px;
-}
-.lang-tab .tribe-emblem{
-  width: 32px; height: 32px;
-}
-.lang-tab .tribe-emblem svg{
-  width: 28px; height: 28px; stroke-width: 2.2;
-}
-.lang-tab:hover:not(:disabled) .tribe-tile-plinth{
-  transform: translateY(-3px);
-  box-shadow:
-    0 1.8px 0 rgba(255,255,255,0.68) inset,
-    0 -2.5px 3px rgba(0,0,0,0.28) inset,
-    0 4px 0 var(--tile-depth, #1d5338),
-    0 7px 0 var(--tile-depth, #1d5338),
-    0 10px 0 var(--tile-depth-dark, #123724),
-    0 14px 18px rgba(0,0,0,0.48);
-}
-.lang-tab:active:not(:disabled) .tribe-tile-plinth{
-  transform: translateY(5px);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.35) inset,
-    0 -1.5px 2px rgba(0,0,0,0.45) inset,
-    0 1.5px 0 var(--tile-depth, #1d5338),
-    0 2.5px 0 var(--tile-depth-dark, #123724),
-    0 5px 7px rgba(0,0,0,0.4);
-}
-.lang-tab.active .tribe-tile-plinth{
-  box-shadow:
-    0 0 0 2.5px var(--bg),
-    0 0 0 4.5px var(--gold),
-    0 1.5px 0 rgba(255,255,255,0.6) inset,
-    0 -2.5px 3px rgba(0,0,0,0.38) inset,
-    0 3px 0 var(--tile-depth, #1d5338),
-    0 5.5px 0 var(--tile-depth, #1d5338),
-    0 8px 0 var(--tile-depth-dark, #123724),
-    0 11px 16px rgba(227, 167, 43, 0.4);
-}
-.lang-tab-label{
-  font-family: var(--font-head); font-weight: 600; font-size: 11.5px;
-  color: var(--cream-dim); white-space: nowrap; transition: color 0.15s ease;
-}
-.lang-tab.active .lang-tab-label{ color: var(--gold); font-weight: 700; }
+.lang-tab.igbo .lang-tab-glyph{ background: var(--igbo); }
+.lang-tab.yoruba .lang-tab-glyph{ background: var(--yoruba); }
+.lang-tab.hausa .lang-tab-glyph{ background: var(--hausa); }
+.lang-tab.edo .lang-tab-glyph{ background: var(--edo); }
+.lang-tab.efik .lang-tab-glyph{ background: var(--efik); }
+.lang-tab.urhobo .lang-tab-glyph{ background: var(--urhobo); }
+.lang-tab.tiv .lang-tab-glyph{ background: var(--tiv); }
+.lang-tab.uvwie .lang-tab-glyph{ background: var(--uvwie); }
+.lang-tab.isoko .lang-tab-glyph{ background: var(--isoko); }
+.lang-tab.ijaw .lang-tab-glyph{ background: var(--ijaw); }
+.lang-tab.active .lang-tab-glyph{ border-color: var(--gold); box-shadow: 0 0 0 2px var(--bg); }
+.lang-tab-label{ font-family: var(--font-head); font-weight:600; font-size:12.5px; color: var(--cream-dim); }
+.lang-tab.active .lang-tab-label{ color: var(--cream); }
 
 /* ===== 24-hour inactivity banner ===== */
 .inactivity-banner{

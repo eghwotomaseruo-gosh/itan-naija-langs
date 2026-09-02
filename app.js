@@ -1621,11 +1621,14 @@ function renderHome(){
     }, 120);
   }
 
-  const pillCourseKey = pickContinueCourse();
+  const pillCourseKey = currentCourseKey || pickContinueCourse() || "igbo";
   const pillCourse = COURSES[pillCourseKey];
+  const pillTribe = TRIBE_DETAILS[pillCourseKey] || TRIBE_DETAILS.igbo;
   const pillGlyph = document.getElementById("lang-pill-glyph");
-  pillGlyph.textContent = pillCourse.glyph;
-  pillGlyph.style.background = `var(--${pillCourse.color})`;
+  if(pillGlyph){
+    pillGlyph.innerHTML = pillTribe.svg;
+    pillGlyph.style.background = `var(--${pillCourse.color})`;
+  }
 
   renderContinueCard();
   renderReminderCard();
@@ -1639,29 +1642,24 @@ function renderHome(){
   const trackSelect = document.getElementById("track-select");
   if(trackSelect){
     trackSelect.innerHTML = "";
-    const activeKey = currentCourseKey || pickContinueCourse() || "igbo";
     Object.keys(COURSES).forEach(key => {
       const course = COURSES[key];
-      const t = TRIBE_DETAILS[key] || { greeting: "Ndewo" };
       const done = state.completed[key]?.length || 0;
-      const total = course.lessons.length;
-      const isDone = done >= total;
-      const isActive = (key === activeKey);
+      const isDone = done >= course.lessons.length;
+      const t = TRIBE_DETAILS[key] || TRIBE_DETAILS.igbo;
 
       const card = document.createElement("button");
-      card.className = `track-card ${course.color}` + (isActive ? " active" : "");
+      card.className = `track-card ${course.color}`;
       card.setAttribute("type", "button");
-      card.setAttribute("role", "button");
-      card.setAttribute("aria-label", `Switch to ${course.name} tribe track`);
+      card.setAttribute("aria-label", `Switch to ${course.name} language track`);
       card.dataset.tribe = key;
 
       card.innerHTML = `
-        ${render3DTribeTile(key, { isDone, isActive })}
-        <div class="track-info">
-          <p class="track-name">${course.name}</p>
-          <p class="track-native">${t.greeting}</p>
-          <span class="track-progress-pill ${isDone ? 'done' : ''}">${isDone ? 'Mastered ✓' : `${done}/${total} Lessons`}</span>
+        <div class="track-glyph">
+          <span class="track-symbol">${t.svg}</span>
+          ${isDone ? `<span class="track-done-badge">✓</span>` : ""}
         </div>
+        <p class="track-name">${course.name}</p>
       `;
       card.addEventListener("click", () => {
         playUiSound("tap");
@@ -2862,7 +2860,7 @@ function openPath(key){
   patternEl.style.backgroundImage = `url("${PATTERNS[key]}")`;
   patternEl.style.backgroundSize = "60px";
 
-  // Language Track Switcher Tabs (3D Real Tribe Stepping-Stone Tiles)
+  // Language Track Switcher Tabs (Icon tile style with authentic cultural symbols)
   const tabsEl = document.getElementById("lang-tabs");
   if(tabsEl){
     tabsEl.innerHTML = "";
@@ -2871,6 +2869,7 @@ function openPath(key){
       const done = state.completed[k]?.length || 0;
       const isDone = done >= c.lessons.length;
       const isActive = (k === key);
+      const t = TRIBE_DETAILS[k] || TRIBE_DETAILS.igbo;
 
       const tab = document.createElement("button");
       tab.className = `lang-tab ${c.color}` + (isActive ? " active" : "");
@@ -2880,7 +2879,10 @@ function openPath(key){
       tab.dataset.tribe = k;
 
       tab.innerHTML = `
-        ${render3DTribeTile(k, { isDone, isActive })}
+        <span class="lang-tab-glyph">
+          <span class="track-symbol">${t.svg}</span>
+          ${isDone ? `<span class="track-done-badge">✓</span>` : ""}
+        </span>
         <span class="lang-tab-label">${c.name}</span>
       `;
       tab.addEventListener("click", () => {
@@ -3715,7 +3717,6 @@ function showScreen(name){
 
 document.getElementById("lang-pill-toggle").addEventListener("click", () => {
   playUiSound("tap");
-  const trackSection = document.getElementById("home-track-section") || document.getElementById("track-select");
   const trackSelect = document.getElementById("track-select");
   const pill = document.getElementById("lang-pill-toggle");
   const homeScreen = document.getElementById("screen-home");
@@ -3726,10 +3727,10 @@ document.getElementById("lang-pill-toggle").addEventListener("click", () => {
   }
 
   if(trackSelect){
-    trackSelect.classList.remove("hidden");
-    pill.classList.add("open");
-    if(trackSection){
-      trackSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    trackSelect.classList.toggle("hidden");
+    pill.classList.toggle("open", !trackSelect.classList.contains("hidden"));
+    if(!trackSelect.classList.contains("hidden")){
+      trackSelect.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }
 });

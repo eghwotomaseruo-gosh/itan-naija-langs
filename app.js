@@ -1260,6 +1260,18 @@ function saveState(){
 let state = structuredClone(DEFAULT_STATE);
 let session = null;
 let pendingSurprise = false;
+let streakIncreasedPending = false;
+
+function triggerStreakAnimation(){
+  const streakPill = document.querySelector(".pill-streak");
+  if(!streakPill) return;
+  streakPill.classList.remove("streak-bump");
+  void streakPill.offsetWidth;
+  streakPill.classList.add("streak-bump");
+  setTimeout(() => {
+    streakPill.classList.remove("streak-bump");
+  }, 1300);
+}
 
 function todayStr(){ return new Date().toISOString().slice(0, 10); }
 
@@ -1278,13 +1290,15 @@ function getLevelInfo(xp){
 
 function touchStreak(){
   const today = todayStr();
-  if(state.lastPlayedDate === today) return;
+  const oldStreak = state.streak || 0;
+  if(state.lastPlayedDate === today) return false;
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-  state.streak = (state.lastPlayedDate === yesterday) ? state.streak + 1 : 1;
+  state.streak = (state.lastPlayedDate === yesterday) ? oldStreak + 1 : 1;
   state.lastPlayedDate = today;
   if(state.streak > (state.longestStreak || 0)) state.longestStreak = state.streak;
   if(!state.practiceDates.includes(today)) state.practiceDates.push(today);
   if(state.practiceDates.length > 60) state.practiceDates = state.practiceDates.slice(-60);
+  return state.streak > oldStreak || (oldStreak === 0 && state.streak > 0);
 }
 
 function lessonsCompletedCount(){ return Object.values(state.completed).reduce((a, b) => a + b.length, 0); }
@@ -1318,6 +1332,13 @@ function renderHome(){
   document.getElementById("stat-streak").textContent = state.streak;
   document.getElementById("stat-xp").textContent = state.xp;
   document.getElementById("stat-hearts").textContent = state.hearts;
+
+  if(streakIncreasedPending){
+    streakIncreasedPending = false;
+    setTimeout(() => {
+      triggerStreakAnimation();
+    }, 120);
+  }
 
   const pillCourseKey = pickContinueCourse();
   const pillCourse = COURSES[pillCourseKey];
@@ -1672,7 +1693,9 @@ function finishCulture(){
     state.xp += 15;
     addDailyXp(15);
   }
-  touchStreak();
+  if(touchStreak()){
+    streakIncreasedPending = true;
+  }
   checkBadges();
   saveState();
   renderCultureHub();
@@ -2367,7 +2390,9 @@ function finishLesson(){
   const accuracy = Math.round((session.correctCount / session.questions.length) * 100);
   const xpGain = 10 + (session.mistakes === 0 ? 5 : 0);
 
-  touchStreak();
+  if(touchStreak()){
+    streakIncreasedPending = true;
+  }
   addDailyXp(xpGain);
   state.xp += xpGain;
   if(session.isPractice){

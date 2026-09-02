@@ -495,298 +495,140 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .jump-to-current-btn svg{ width: 22px; height: 22px; stroke-width: 2.5; }
 .jump-to-current-btn:active{ transform: scale(0.92); }
 
-/* ===== Real 3D Stepping Stone Tiles & Lighting Systems ===== */
+/* ===== Lesson Path Tiles ===== */
 
-/* Language-specific 3D Lighting Gradients & Extrusion Depths */
-.lesson-path.igbo, .lesson-tile.igbo, .track-card.igbo, .lang-tab.igbo, .landing-lang-card.igbo{
-  --tile-light: #5cd193; --tile-bg: #3f9d6b; --tile-shade: #2b7350; --tile-depth: #1d5338; --tile-depth-dark: #123724; --tile-glow: rgba(63,157,107,0.45);
-}
-.lesson-path.yoruba, .lesson-tile.yoruba, .track-card.yoruba, .lang-tab.yoruba, .landing-lang-card.yoruba{
-  --tile-light: #df589b; --tile-bg: #b23e78; --tile-shade: #872c5a; --tile-depth: #601e3f; --tile-depth-dark: #40132a; --tile-glow: rgba(178,62,120,0.45);
-}
-.lesson-path.hausa, .lesson-tile.hausa, .track-card.hausa, .lang-tab.hausa, .landing-lang-card.hausa{
-  --tile-light: #f08146; --tile-bg: #d1682f; --tile-shade: #a34f22; --tile-depth: #793815; --tile-depth-dark: #50230b; --tile-glow: rgba(209,104,47,0.45);
-}
-.lesson-path.edo, .lesson-tile.edo, .track-card.edo, .lang-tab.edo, .landing-lang-card.edo{
-  --tile-light: #48b8b1; --tile-bg: #2f8f8a; --tile-shade: #1f6560; --tile-depth: #144945; --tile-depth-dark: #0b312e; --tile-glow: rgba(47,143,138,0.45);
-}
-.lesson-path.efik, .lesson-tile.efik, .track-card.efik, .lang-tab.efik, .landing-lang-card.efik{
-  --tile-light: #5d92ce; --tile-bg: #3f6fa8; --tile-shade: #2c4f79; --tile-depth: #1e3957; --tile-depth-dark: #122438; --tile-glow: rgba(63,111,168,0.45);
-}
-.lesson-path.urhobo, .lesson-tile.urhobo, .track-card.urhobo, .lang-tab.urhobo, .landing-lang-card.urhobo{
-  --tile-light: #9d6ec6; --tile-bg: #7a4fa0; --tile-shade: #54366e; --tile-depth: #3c2550; --tile-depth-dark: #271734; --tile-glow: rgba(122,79,160,0.45);
-}
-.lesson-path.tiv, .lesson-tile.tiv, .track-card.tiv, .lang-tab.tiv, .landing-lang-card.tiv{
-  --tile-light: #e6a746; --tile-bg: #c98a2c; --tile-shade: #8f5e17; --tile-depth: #67420e; --tile-depth-dark: #432906; --tile-glow: rgba(201,138,44,0.45);
-}
-.lesson-path.uvwie, .lesson-tile.uvwie, .track-card.uvwie, .lang-tab.uvwie, .landing-lang-card.uvwie{
-  --tile-light: #f3866f; --tile-bg: #e06d53; --tile-shade: #9e432e; --tile-depth: #732f1e; --tile-depth-dark: #4d1c10; --tile-glow: rgba(224,109,83,0.45);
-}
-.lesson-path.isoko, .lesson-tile.isoko, .track-card.isoko, .lang-tab.isoko, .landing-lang-card.isoko{
-  --tile-light: #3abdb2; --tile-bg: #20948b; --tile-shade: #13605a; --tile-depth: #0e4540; --tile-depth-dark: #072d29; --tile-glow: rgba(32,148,139,0.45);
-}
-.lesson-path.ijaw, .lesson-tile.ijaw, .track-card.ijaw, .lang-tab.ijaw, .landing-lang-card.ijaw{
-  --tile-light: #40a0ca; --tile-bg: #247ba0; --tile-shade: #13465c; --tile-depth: #0c3344; --tile-depth-dark: #06212d; --tile-glow: rgba(36,123,160,0.45);
-}
+/* Language-specific Tile Colors */
+.lesson-path.igbo, .lesson-tile.igbo{ --tile-bg: var(--igbo); --tile-depth: var(--igbo-deep); }
+.lesson-path.yoruba, .lesson-tile.yoruba{ --tile-bg: var(--yoruba); --tile-depth: var(--yoruba-deep); }
+.lesson-path.hausa, .lesson-tile.hausa{ --tile-bg: var(--hausa); --tile-depth: var(--hausa-deep); }
+.lesson-path.edo, .lesson-tile.edo{ --tile-bg: var(--edo); --tile-depth: var(--edo-deep); }
+.lesson-path.efik, .lesson-tile.efik{ --tile-bg: var(--efik); --tile-depth: var(--efik-deep); }
+.lesson-path.urhobo, .lesson-tile.urhobo{ --tile-bg: var(--urhobo); --tile-depth: var(--urhobo-deep); }
+.lesson-path.tiv, .lesson-tile.tiv{ --tile-bg: var(--tiv); --tile-depth: var(--tiv-deep); }
+.lesson-path.uvwie, .lesson-tile.uvwie{ --tile-bg: var(--uvwie); --tile-depth: var(--uvwie-deep); }
+.lesson-path.isoko, .lesson-tile.isoko{ --tile-bg: var(--isoko); --tile-depth: var(--isoko-deep); }
+.lesson-path.ijaw, .lesson-tile.ijaw{ --tile-bg: var(--ijaw); --tile-depth: var(--ijaw-deep); }
 
 /* Base Tile Container */
 .lesson-tile{
   position: relative; display: flex; flex-direction: column; align-items: center;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s ease;
   z-index: 5;
 }
 
-/* Real 3D Ground Contact Shadow (physically connects stone to the terrain) */
-.tile-ground-shadow{
-  position: absolute; bottom: 20px; width: 84px; height: 26px; border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.3) 55%, transparent 75%);
-  filter: blur(2px); pointer-events: none; z-index: 1;
-  transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.16s ease;
-}
-
-/* Master 3D Stepping Stone Button */
+/* Stepping Stone Button */
 .tile-button{
-  position: relative; width: 78px; height: 70px; border-radius: 50%;
+  position: relative; width: 68px; height: 68px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   border: none; outline: none; cursor: pointer; z-index: 2;
   user-select: none;
-  /* Multi-stage 3D cylindrical extrusion & bevel:
-     1. Inset top light bevel (0 1.5px 0)
-     2. Inset bottom rim ambient occlusion (0 -3px 4px)
-     3. 3D side cylinder wall extrusion in --tile-depth (0 4px 0, 0 8px 0)
-     4. Dark under-lip chamfer in --tile-depth-dark (0 11px 0)
-     5. Ground ambient drop shadow (0 15px 20px) */
-  box-shadow: 
-    0 1.5px 0 rgba(255,255,255,0.55) inset,
-    0 -3.5px 4px rgba(0,0,0,0.38) inset,
-    0 4px 0 var(--tile-depth, #1d5338),
-    0 8px 0 var(--tile-depth, #1d5338),
-    0 11px 0 var(--tile-depth-dark, #123724),
-    0 15px 20px rgba(0,0,0,0.48);
-  background: radial-gradient(circle at 46% 26%, var(--tile-light, #5cd193) 0%, var(--tile-bg, #3f9d6b) 58%, var(--tile-shade, #2b7350) 100%);
+  background: var(--tile-bg, var(--surface-raised));
   color: #ffffff;
-  transform: translateY(0);
-  transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.15s cubic-bezier(0.2, 0.9, 0.3, 1), filter 0.15s ease;
+  box-shadow: 0 4px 0 var(--tile-depth, rgba(0,0,0,0.3));
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
 }
 
-/* 3D Hover Levitation */
 .tile-button:hover:not(:disabled){
-  transform: translateY(-4px);
-  filter: brightness(1.09);
-  box-shadow: 
-    0 2px 0 rgba(255,255,255,0.65) inset,
-    0 -3.5px 4px rgba(0,0,0,0.32) inset,
-    0 5px 0 var(--tile-depth, #1d5338),
-    0 10px 0 var(--tile-depth, #1d5338),
-    0 15px 0 var(--tile-depth-dark, #123724),
-    0 21px 26px rgba(0,0,0,0.55);
-}
-.lesson-tile:hover .tile-ground-shadow{
-  transform: scale(1.08);
-  opacity: 0.8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--tile-depth, rgba(0,0,0,0.3));
+  filter: brightness(1.08);
 }
 
-/* 3D Physical Compression (press deep into floor) */
 .tile-button:active:not(:disabled){
-  transform: translateY(8px);
-  filter: brightness(0.96);
-  box-shadow: 
-    0 1px 0 rgba(255,255,255,0.3) inset,
-    0 -2px 3px rgba(0,0,0,0.45) inset,
-    0 2px 0 var(--tile-depth, #1d5338),
-    0 3px 0 var(--tile-depth-dark, #123724),
-    0 6px 9px rgba(0,0,0,0.4);
-}
-.lesson-tile:active .tile-ground-shadow{
-  transform: scale(0.9) translateY(-2px);
-  opacity: 0.95;
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--tile-depth, rgba(0,0,0,0.3));
 }
 
-/* Top Specular Curved Gloss Arc (Gloss Dome) */
-.tile-gloss{
-  position: absolute; top: 4px; left: 11px; right: 11px; height: 25px;
-  border-radius: 50% 50% 44% 44%; pointer-events: none;
-  background: linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.2) 55%, transparent 100%);
-  border-top: 2px solid rgba(255,255,255,0.92);
-  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.12));
-}
-
-/* Inner Minted Medallion Ring (3D Embossed Edge) */
-.tile-inner-ring{
-  position: absolute; inset: 6.5px; border-radius: 50%; pointer-events: none;
-  border: 1.5px solid rgba(255,255,255,0.26);
-  box-shadow: inset 0 2px 3px rgba(0,0,0,0.22), 0 1px 1px rgba(255,255,255,0.3);
-}
-
-/* Bottom Fresnel Rim Light */
-.tile-rim-light{
-  position: absolute; bottom: 5px; left: 16px; right: 16px; height: 7px;
-  border-radius: 50%; pointer-events: none;
-  background: radial-gradient(ellipse at center, rgba(255,255,255,0.35) 0%, transparent 80%);
-}
-
-/* Icon Inside 3D Tile */
+/* Icon Inside Tile */
 .tile-icon{
-  position: relative; z-index: 3; width: 30px; height: 30px;
+  position: relative; z-index: 3; width: 28px; height: 28px;
   display: flex; align-items: center; justify-content: center;
-  filter: drop-shadow(0 2px 0 rgba(0,0,0,0.35)) drop-shadow(0 3px 5px rgba(0,0,0,0.4));
 }
-.tile-icon svg{ width: 26px; height: 26px; stroke-width: 2.3; stroke: #ffffff; }
+.tile-icon svg{ width: 26px; height: 26px; stroke-width: 2.2; stroke: #ffffff; }
 
-/* Number inside 3D Tile */
+/* Number inside Active Tile */
 .tile-number{
   position: relative; z-index: 3; font-family: var(--font-head);
-  font-weight: 900; font-size: 25px; color: #ffffff;
-  text-shadow: 0 2px 0 rgba(0,0,0,0.38), 0 0 14px rgba(255,255,255,0.65);
+  font-weight: 800; font-size: 24px; color: #ffffff;
   letter-spacing: -0.5px;
 }
 
-/* 3D Stars Arching Above Completed Tile */
-.tile-stars{
-  position: absolute; top: -18px; display: flex; gap: 4px; font-size: 14px;
-  color: #facc15; pointer-events: none; z-index: 4;
-  filter: drop-shadow(0 2px 0 #854d0e) drop-shadow(0 4px 6px rgba(0,0,0,0.55));
-}
-.tile-stars span{ display: inline-block; transition: transform .2s ease; }
-.tile-stars span:nth-child(2){ transform: translateY(-4px) scale(1.18); color: #fef08a; }
-
-/* 3D Minted Gold Checkmark Medallion */
+/* Clean Checkmark Badge */
 .tile-check-badge{
-  position: absolute; top: -5px; right: -5px; width: 28px; height: 28px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 28%, #fef9c3 0%, #eab308 55%, #a16207 100%);
-  color: #3b1e02; font-weight: 900; font-size: 14px;
+  position: absolute; top: -4px; right: -4px; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg-deep); font-weight: 800; font-size: 13px;
   display: flex; align-items: center; justify-content: center;
   border: 2px solid var(--bg);
-  box-shadow: 
-    inset 0 1.5px 0 #ffffff,
-    0 3px 0 #713f12,
-    0 6px 12px rgba(0,0,0,0.5);
-  z-index: 4; text-shadow: 0 1px 0 rgba(255,255,255,0.6);
-  animation: badgePopIn .35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-@keyframes badgePopIn{
-  from{ transform: scale(0) rotate(-45deg); opacity: 0; }
-  to{ transform: scale(1) rotate(0deg); opacity: 1; }
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+  z-index: 4;
 }
 
-/* Label below 3D tile */
+/* Label below tile */
 .tile-label{
-  margin-top: 10px; font-family: var(--font-head); font-weight: 700;
+  margin-top: 8px; font-family: var(--font-head); font-weight: 600;
   font-size: 12.5px; color: var(--cream); text-align: center;
   white-space: nowrap; max-width: 150px; overflow: hidden; text-overflow: ellipsis;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.7);
   letter-spacing: 0.2px;
 }
 
-/* Tile States: Locked (Chiseled Slate Cobblestone) */
-.lesson-tile.locked{
-  --tile-light: #38465a; --tile-bg: #242e3d; --tile-shade: #19212c; --tile-depth: #121822; --tile-depth-dark: #0a0e14;
-}
+/* Tile States: Locked */
 .lesson-tile.locked .tile-button{
-  cursor: default; opacity: 0.88;
+  background: #202b3b;
+  box-shadow: 0 4px 0 #131b26;
+  cursor: default;
+  opacity: 0.85;
 }
 .lesson-tile.locked .tile-button:hover{
-  transform: translateY(0); filter: brightness(1);
-  box-shadow: 
-    0 1.5px 0 rgba(255,255,255,0.18) inset,
-    0 -3px 4px rgba(0,0,0,0.4) inset,
-    0 4px 0 #121822,
-    0 8px 0 #121822,
-    0 11px 0 #0a0e14,
-    0 12px 16px rgba(0,0,0,0.38);
+  transform: none;
+  box-shadow: 0 4px 0 #131b26;
+  filter: none;
 }
 .lesson-tile.locked .tile-button:active{
-  transform: translateY(2px);
-  box-shadow: 
-    0 1.5px 0 rgba(255,255,255,0.18) inset,
-    0 -3px 4px rgba(0,0,0,0.4) inset,
-    0 3px 0 #121822,
-    0 6px 0 #121822,
-    0 9px 0 #0a0e14,
-    0 10px 14px rgba(0,0,0,0.35);
+  transform: none;
 }
-.lesson-tile.locked .tile-gloss{ opacity: 0.35; border-top-color: rgba(255,255,255,0.35); }
-.lesson-tile.locked .tile-inner-ring{ border-color: rgba(255,255,255,0.12); }
-.lesson-tile.locked .tile-icon svg{ stroke: rgba(244,239,227,0.45); width: 22px; height: 22px; }
-.lesson-tile.locked .tile-label{ color: var(--cream-dim); opacity: 0.85; }
+.lesson-tile.locked .tile-icon svg{ stroke: var(--cream-dim); width: 22px; height: 22px; }
+.lesson-tile.locked .tile-label{ color: var(--cream-dim); opacity: 0.75; }
 
 /* Active Tile Styling */
-.lesson-tile.active{ z-index: 12; }
-.tile-active-wrap{
-  position: relative; display: flex; align-items: center; justify-content: center;
-}
-.tile-scallop-ring{
-  position: absolute; width: 110px; height: 110px; pointer-events: none;
-  animation: rotateScallop 18s linear infinite; z-index: 1; color: var(--gold);
-  filter: drop-shadow(0 0 10px rgba(227,167,43,0.45));
-}
-@keyframes rotateScallop{
-  from{ transform: rotate(0deg); }
-  to{ transform: rotate(360deg); }
+.lesson-tile.active{ z-index: 10; }
+.lesson-tile.active .tile-button{
+  border: 3.5px solid #ffffff;
+  box-shadow: 0 0 0 3.5px var(--gold), 0 4px 0 var(--tile-depth, rgba(0,0,0,0.3));
 }
 
-/* Pulsing Ambient Beacon Aura Underneath Active Tile */
-.tile-active-aura{
-  position: absolute; inset: -12px; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(circle, var(--tile-glow, rgba(63,157,107,0.5)) 0%, transparent 70%);
-  animation: activeAuraPulse 2.2s ease-in-out infinite alternate; z-index: 0;
-}
-@keyframes activeAuraPulse{
-  0%{ transform: scale(0.92); opacity: 0.35; }
-  100%{ transform: scale(1.18); opacity: 0.85; }
-}
-
-/* Floating Sparkles around active tile */
-.tile-sparkle{
-  position: absolute; pointer-events: none; font-size: 15px;
-  animation: sparkleTwinkle 2s ease-in-out infinite alternate; z-index: 14;
-}
-.tile-sparkle.s1{ top: -10px; left: -12px; animation-delay: 0s; }
-.tile-sparkle.s2{ top: -8px; right: -10px; animation-delay: 0.7s; }
-.tile-sparkle.s3{ bottom: -2px; right: -14px; animation-delay: 1.3s; }
-@keyframes sparkleTwinkle{
-  0%{ transform: scale(0.7) rotate(0deg); opacity: 0.45; }
-  100%{ transform: scale(1.25) rotate(25deg); opacity: 1; filter: drop-shadow(0 0 6px #ffd700); }
-}
-
-/* Floating 3D "START" Speech Bubble Pill */
+/* "START" Tooltip Pill */
 .tile-tooltip{
-  position: absolute; top: -44px; left: 50%; transform: translateX(-50%);
-  background: linear-gradient(180deg, #fef08a 0%, #f59e0b 55%, #d97706 100%);
-  color: #381903; font-family: var(--font-head); font-weight: 900;
-  font-size: 12px; letter-spacing: 0.8px; text-transform: uppercase;
-  padding: 6px 14px; border-radius: 12px; white-space: nowrap;
-  box-shadow: 
-    inset 0 1.5px 0 #ffffff,
-    0 4px 0 #92400e,
-    0 8px 18px rgba(0,0,0,0.45);
-  pointer-events: none; animation: tooltipFloat 1.8s ease-in-out infinite; z-index: 16;
-  border: 1px solid rgba(255,255,255,0.4); border-bottom-color: #b45309;
+  position: absolute; top: -36px; left: 50%; transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--bg-deep); font-family: var(--font-head); font-weight: 800;
+  font-size: 11.5px; letter-spacing: 0.6px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 999px; white-space: nowrap;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  pointer-events: none; animation: tooltipBounce 1.6s ease-in-out infinite; z-index: 15;
 }
 .tile-tooltip::after{
-  content: ""; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%);
-  width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent;
-  border-top: 7px solid #d97706; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+  content: ""; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent;
+  border-top: 5px solid var(--gold);
 }
-@keyframes tooltipFloat{
+@keyframes tooltipBounce{
   0%, 100%{ transform: translateX(-50%) translateY(0); }
-  50%{ transform: translateX(-50%) translateY(-6px); }
+  50%{ transform: translateX(-50%) translateY(-4px); }
 }
 
-/* Connecting 3D Trail Stepping Pebbles between tiles */
+/* Connecting Trail Dots between tiles */
 .path-trail-row{
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  width: 100%; pointer-events: none; margin: -10px 0 -8px; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  width: 100%; pointer-events: none; margin: 4px 0; z-index: 2;
 }
 .path-pebble{
-  display: block; width: 13px; height: 9.5px; border-radius: 50%;
-  background: radial-gradient(circle at 40% 30%, #3d4c62 0%, #222b39 80%);
-  box-shadow: 0 2.5px 0 #121822, 0 4px 6px rgba(0,0,0,0.4);
-  transition: background .3s ease, box-shadow .3s ease;
+  display: block; width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(244, 239, 227, 0.2);
+  transition: background .2s ease;
 }
 .path-trail-row.lit .path-pebble{
-  background: radial-gradient(circle at 40% 30%, #fef08a 0%, #eab308 55%, #92400e 100%);
-  box-shadow: 0 2.5px 0 #78350f, 0 3px 8px rgba(227,167,43,0.4);
+  background: var(--gold);
 }
 
 /* ===== REWARD CHEST (after every 4 games) ===== */
@@ -797,13 +639,6 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 }
 .path-reward-chest:hover{ transform: scale(1.06); }
 .path-reward-chest:active{ transform: scale(0.96); }
-
-/* Real 3D Ground Contact Shadow for Chest */
-.chest-ground-shadow{
-  position: absolute; bottom: 26px; width: 92px; height: 26px; border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 80%);
-  filter: blur(2px); pointer-events: none; z-index: 0;
-}
 
 /* Chest Container */
 .chest-svg-box{

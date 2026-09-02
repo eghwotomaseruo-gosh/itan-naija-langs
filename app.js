@@ -2724,12 +2724,6 @@ const CULTURAL_PROVERBS = {
   ]
 };
 
-/* Rosette scalloped ring SVG (the 16-lobed flower badge from the Duolingo screenshot) */
-const SCALLOPED_ROSETTE_SVG = `<svg class="tile-scallop-ring" viewBox="0 0 100 100" fill="currentColor">
-  <path d="M 50 3 C 54 3 57 8 60 10 C 64 12 68 13 71 16 C 74 19 75 23 77 27 C 80 30 84 33 85 37 C 87 41 87 45 87 50 C 87 55 87 59 85 63 C 84 67 80 70 77 73 C 75 77 74 81 71 84 C 68 87 64 88 60 90 C 57 92 54 97 50 97 C 46 97 43 92 40 90 C 36 88 32 87 29 84 C 26 81 25 77 23 73 C 20 70 16 67 15 63 C 13 59 13 55 13 50 C 13 45 13 41 15 37 C 16 33 20 30 23 27 C 25 23 26 19 29 16 C 32 13 36 12 40 10 C 43 8 46 3 50 3 Z" opacity="0.32"/>
-  <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" opacity="0.75"/>
-</svg>`;
-
 /* Topic-Specific Lesson Tile Icons matching the Nigerian language curriculum */
 function getTopicIconSvg(title, i){
   const t = (title || "").toLowerCase();
@@ -2943,64 +2937,23 @@ function openPath(key){
     tileWrap.className = "lesson-tile " + course.color + (locked ? " locked" : "") + (isDone ? " complete" : "") + (isNext ? " active" : "");
     tileWrap.style.marginLeft = `${currentOffset}px`;
 
-    // Real 3D Ground Contact Shadow anchored to the path terrain
-    const groundShadow = document.createElement("div");
-    groundShadow.className = "tile-ground-shadow";
-    tileWrap.appendChild(groundShadow);
-
-    // 3D tactile button
+    // Lesson Button
     const btn = document.createElement("button");
     btn.className = "tile-button " + course.color + (locked ? " locked" : "");
     btn.setAttribute("aria-label", `${lesson.title} - ${isDone ? "Completed" : isNext ? "Current" : "Locked"}`);
-    btn.style.setProperty("--tile-bg", locked ? "#232c3a" : `var(--${course.color})`);
-    btn.style.setProperty("--tile-depth", locked ? "#121822" : `var(--${course.color}-deep)`);
+    btn.style.setProperty("--tile-bg", locked ? "#202b3b" : `var(--${course.color})`);
+    btn.style.setProperty("--tile-depth", locked ? "#131b26" : `var(--${course.color}-deep)`);
 
-    // 1. Top specular gloss dome shine
-    const gloss = document.createElement("div");
-    gloss.className = "tile-gloss";
-    btn.appendChild(gloss);
-
-    // 2. Minted coin concentric inner bevel ring
-    const innerRing = document.createElement("div");
-    innerRing.className = "tile-inner-ring";
-    btn.appendChild(innerRing);
-
-    // 3. Lower fresnel rim light
-    const rimLight = document.createElement("div");
-    rimLight.className = "tile-rim-light";
-    btn.appendChild(rimLight);
-
-    // If active (current) node, add 16-lobed scalloped rosette ring, ambient aura, sparkles, and 3D "START" tooltip
+    // If active (current) node, add "START" tooltip pill
     if(isNext){
-      const activeWrap = document.createElement("div");
-      activeWrap.className = "tile-active-wrap";
-      activeWrap.innerHTML = SCALLOPED_ROSETTE_SVG;
-
-      // Ambient glowing energy aura behind active stone
-      const aura = document.createElement("div");
-      aura.className = "tile-active-aura";
-      activeWrap.appendChild(aura);
-
-      // Floating sparkles
-      const s1 = document.createElement("span"); s1.className = "tile-sparkle s1"; s1.textContent = "✨";
-      const s2 = document.createElement("span"); s2.className = "tile-sparkle s2"; s2.textContent = "✨";
-      const s3 = document.createElement("span"); s3.className = "tile-sparkle s3"; s3.textContent = "✨";
-      activeWrap.appendChild(s1);
-      activeWrap.appendChild(s2);
-      activeWrap.appendChild(s3);
-
-      // 3D "START" speech bubble pill tooltip
       const tooltip = document.createElement("div");
       tooltip.className = "tile-tooltip";
       tooltip.textContent = "START";
-      activeWrap.appendChild(tooltip);
-
-      activeWrap.appendChild(btn);
-      tileWrap.appendChild(activeWrap);
+      tileWrap.appendChild(tooltip);
       currentNodeEl = tileWrap;
-    }else{
-      tileWrap.appendChild(btn);
     }
+
+    tileWrap.appendChild(btn);
 
     // Inside the button: Icon or Number
     const iconContainer = document.createElement("div");
@@ -3010,7 +2963,7 @@ function openPath(key){
       iconContainer.innerHTML = `<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
       btn.appendChild(iconContainer);
     }else if(isNext){
-      // Show lesson number inside active disc (with high-contrast 3D depth)
+      // Show lesson number inside active disc
       const numSpan = document.createElement("span");
       numSpan.className = "tile-number";
       numSpan.textContent = `${i + 1}`;
@@ -3021,13 +2974,8 @@ function openPath(key){
       btn.appendChild(iconContainer);
     }
 
-    // Completed node badge: 3 golden stars on top and 3D gold checkmark medallion
+    // Completed node badge: clean gold checkmark
     if(isDone){
-      const stars = document.createElement("div");
-      stars.className = "tile-stars";
-      stars.innerHTML = "<span>★</span><span>★</span><span>★</span>";
-      btn.appendChild(stars);
-
       const checkBadge = document.createElement("div");
       checkBadge.className = "tile-check-badge";
       checkBadge.textContent = "✓";
@@ -3086,11 +3034,6 @@ function openPath(key){
       chestNode.className = "path-reward-chest " + (isClaimed ? "claimed" : isReady ? "ready" : "locked");
       // Align chest centered on the path for clean rhythm
       chestNode.style.marginLeft = "0px";
-
-      // Real 3D Ground Contact Shadow for Chest
-      const chestShadow = document.createElement("div");
-      chestShadow.className = "chest-ground-shadow";
-      chestNode.appendChild(chestShadow);
 
       // Chest SVG container
       const svgBox = document.createElement("div");

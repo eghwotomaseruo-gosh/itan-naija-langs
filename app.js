@@ -3280,8 +3280,12 @@ function getTopicIconSvg(title, i){
     return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v7"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.3L2.3 15.8a1.5 1.5 0 0 1 2.2-2L8 16"/></svg>`;
   }
   if(t.includes("number")){
-    // Numbers / counting symbol
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>`;
+    // Numbers / counting digits: clean vector 1 2 3 glyphs (NEVER a hash # sign)
+    return `<svg viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Numbers">
+      <path d="M4 6.5l2.5-2v13.5"/>
+      <path d="M11 7a2.5 2.5 0 0 1 4.5 1.5c0 2-2.5 3.5-4.5 5.5h5"/>
+      <path d="M19.5 7a2.3 2.3 0 0 1 3.5 2c0 1.2-.8 1.9-1.8 1.9 1.1 0 1.9.8 1.9 2a2.3 2.3 0 0 1-4 1.8"/>
+    </svg>`;
   }
   if(t.includes("fam") || t.includes("elder") || t.includes("compound")){
     // Family / community / elders
@@ -3512,13 +3516,22 @@ function openPath(key){
     }else if(isNext){
       // Show lesson number inside active disc
       const numSpan = document.createElement("span");
-      numSpan.className = "tile-number";
+      numSpan.className = "tile-number" + (i + 1 >= 10 ? " double-digit" : "");
       numSpan.textContent = `${i + 1}`;
       btn.appendChild(numSpan);
     }else{
-      // Show topic-specific icon matching lesson curriculum (Greetings, Numbers, Family, Food, etc.)
-      iconContainer.innerHTML = getTopicIconSvg(lesson.title, i);
-      btn.appendChild(iconContainer);
+      // Completed lesson: for numbers topic, display the actual lesson number (1, 2, 3...) instead of #
+      const isNumberTopic = (lesson.title || "").toLowerCase().includes("number");
+      if(isNumberTopic){
+        const numSpan = document.createElement("span");
+        numSpan.className = "tile-number" + (i + 1 >= 10 ? " double-digit" : "");
+        numSpan.textContent = `${i + 1}`;
+        btn.appendChild(numSpan);
+      }else{
+        // Show topic-specific icon matching lesson curriculum (Greetings, Family, Food, etc.)
+        iconContainer.innerHTML = getTopicIconSvg(lesson.title, i);
+        btn.appendChild(iconContainer);
+      }
     }
 
     // Completed node badge: clean gold checkmark

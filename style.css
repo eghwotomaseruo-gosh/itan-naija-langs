@@ -1308,9 +1308,111 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .landing-cta:hover{ background: #eab446; }
 .landing-cta:active{ transform: scale(0.98); }
 
+/* ===== landing language search bar ===== */
+.landing-search-container{
+  max-width: 600px;
+  margin: 0 auto 16px;
+  padding: 0 16px;
+}
+.landing-search-bar{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 0 14px;
+  min-height: 48px;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.landing-search-bar:focus-within{
+  border-color: var(--gold);
+  background: var(--surface-raised);
+  box-shadow: 0 0 0 3px rgba(227, 167, 43, 0.18);
+}
+.landing-search-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream-dim);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+.landing-search-bar:focus-within .landing-search-icon{
+  color: var(--gold);
+}
+.landing-search-input{
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  padding: 10px 0;
+  min-width: 0;
+}
+.landing-search-input::-webkit-search-cancel-button{
+  display: none;
+}
+.landing-search-input::placeholder{
+  color: var(--cream-dim);
+  opacity: 0.75;
+}
+.landing-search-clear{
+  background: rgba(244, 239, 227, 0.08);
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream-dim);
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+.landing-search-clear:hover{
+  background: rgba(244, 239, 227, 0.2);
+  color: var(--cream);
+}
+.landing-search-clear:active{
+  transform: scale(0.92);
+}
+.landing-search-info{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 0 4px;
+  font-size: 12px;
+  color: var(--cream-dim);
+}
+.landing-search-reset-link{
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--gold);
+  font-family: var(--font-head);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.landing-search-reset-link:hover{
+  color: #f5be4f;
+}
+
 .landing-languages{
   max-width: 600px; margin: 0 auto; padding: 0 16px 32px;
   display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+.landing-languages.is-filtered{
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .landing-lang-card{
   flex-shrink: 0; width: 92px;
@@ -1322,6 +1424,68 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .landing-lang-card:hover{
   border-color: var(--gold);
   transform: translateY(-2px);
+}
+.landing-lang-card:focus-visible{
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(227, 167, 43, 0.25);
+}
+.landing-lang-no-match{
+  width: 100%;
+  padding: 24px 16px;
+  text-align: center;
+  background: var(--surface);
+  border: 1.5px dashed var(--line);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 8px auto;
+}
+.no-match-icon{
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(227, 167, 43, 0.12);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+.no-match-title{
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0;
+  color: var(--cream);
+}
+.no-match-sub{
+  font-size: 13px;
+  color: var(--cream-dim);
+  margin: 0 0 8px;
+  max-width: 320px;
+  line-height: 1.4;
+}
+.no-match-reset-btn{
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--gold);
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.no-match-reset-btn:hover{
+  background: rgba(227, 167, 43, 0.15);
+  border-color: var(--gold);
+}
+.no-match-reset-btn:active{
+  transform: scale(0.97);
 }
 .landing-lang-glyph{
   width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;

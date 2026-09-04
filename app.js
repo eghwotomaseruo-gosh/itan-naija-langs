@@ -4654,6 +4654,123 @@ document.querySelectorAll(".landing-lang-card").forEach(card => {
   });
 });
 
+// Landing page search bar to quickly filter the 10 language cards by name or native name
+(function initLandingLanguageSearch(){
+  const searchInput = document.getElementById("landing-lang-search");
+  if(!searchInput) return;
+
+  const clearBtn = document.getElementById("landing-search-clear");
+  const countEl = document.getElementById("landing-search-count");
+  const resetLink = document.getElementById("landing-search-reset-link");
+  const langSection = document.getElementById("landing-languages");
+  const noMatchEl = document.getElementById("landing-lang-no-match");
+  const noMatchQuery = document.getElementById("no-match-query");
+  const noMatchResetBtn = document.getElementById("no-match-reset-btn");
+  const cards = Array.from(document.querySelectorAll(".landing-lang-card"));
+
+  function stripDiacritics(str){
+    return (str || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  function filterCards(rawQuery){
+    const query = (rawQuery || "").trim();
+    const normQuery = stripDiacritics(query);
+    const tokens = normQuery.split(/\s+/).filter(Boolean);
+
+    let matchCount = 0;
+    let firstMatch = null;
+
+    cards.forEach(card => {
+      const name = card.dataset.name || card.querySelector(".landing-lang-name")?.textContent || "";
+      const native = card.dataset.native || card.querySelector(".landing-lang-native")?.textContent || "";
+      const tribe = card.dataset.tribe || "";
+
+      const rawCombined = `${name} ${native} ${tribe}`;
+      const normCombined = stripDiacritics(rawCombined);
+      const cleanCombined = normCombined.replace(/[^a-z0-9]/g, " ");
+
+      const matches = (tokens.length === 0) || tokens.every(tok => {
+        const cleanTok = tok.replace(/[^a-z0-9]/g, "");
+        return normCombined.includes(tok) || (cleanTok && cleanCombined.includes(cleanTok));
+      });
+
+      if(matches){
+        card.classList.remove("hidden");
+        matchCount++;
+        if(!firstMatch) firstMatch = card;
+      }else{
+        card.classList.add("hidden");
+      }
+    });
+
+    // Update clear button & reset link visibility
+    if(clearBtn) clearBtn.classList.toggle("hidden", query.length === 0);
+    if(resetLink) resetLink.classList.toggle("hidden", query.length === 0);
+
+    // Update count feedback
+    if(countEl){
+      if(query.length === 0){
+        countEl.textContent = `${cards.length} languages available`;
+      }else if(matchCount === 1){
+        countEl.textContent = "1 language found";
+      }else if(matchCount > 0){
+        countEl.textContent = `${matchCount} of ${cards.length} languages found`;
+      }else{
+        countEl.textContent = "0 languages found";
+      }
+    }
+
+    // Toggle container flex-wrap for filtered results
+    if(langSection){
+      langSection.classList.toggle("is-filtered", query.length > 0 && matchCount > 0);
+    }
+
+    // Toggle no-match view
+    if(noMatchEl){
+      if(matchCount === 0 && query.length > 0){
+        noMatchEl.classList.remove("hidden");
+        if(noMatchQuery) noMatchQuery.textContent = query;
+      }else{
+        noMatchEl.classList.add("hidden");
+      }
+    }
+
+    return { matchCount, firstMatch };
+  }
+
+  function clearSearch(){
+    searchInput.value = "";
+    searchInput.focus();
+    filterCards("");
+    playUiSound("pop");
+  }
+
+  searchInput.addEventListener("input", (e) => {
+    filterCards(e.target.value);
+  });
+
+  searchInput.addEventListener("keydown", (e) => {
+    if(e.key === "Escape"){
+      e.preventDefault();
+      clearSearch();
+    }else if(e.key === "Enter"){
+      e.preventDefault();
+      const { matchCount, firstMatch } = filterCards(searchInput.value);
+      if(matchCount === 1 && firstMatch){
+        firstMatch.click();
+      }
+    }
+  });
+
+  if(clearBtn) clearBtn.addEventListener("click", clearSearch);
+  if(resetLink) resetLink.addEventListener("click", clearSearch);
+  if(noMatchResetBtn) noMatchResetBtn.addEventListener("click", clearSearch);
+})();
+
 document.getElementById("auth-form").addEventListener("submit", async e => {
   e.preventDefault();
   const username = document.getElementById("auth-username").value.trim();

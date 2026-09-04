@@ -168,21 +168,6 @@
       <button type="button" role="tab" aria-selected="false" class="auth-tab" id="auth-tab-signup">Create Account</button>
     </div>
 
-    <!-- Google OAuth Button -->
-    <button type="button" class="auth-google-btn" id="auth-google-btn">
-      <svg class="auth-google-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-      </svg>
-      <span id="auth-google-text">Sign in with Google</span>
-    </button>
-
-    <div class="auth-divider">
-      <span>or with username</span>
-    </div>
-
     <form id="auth-form" class="auth-form" novalidate>
       <div class="auth-field-group">
         <label for="auth-username" class="auth-label">
@@ -260,59 +245,16 @@
       <div class="auth-modal-content">
         <p><strong>Lingua Naija</strong> stores accounts securely so you can switch devices without losing your streaks, badges, or progress.</p>
         <div class="auth-help-item">
-          <p class="auth-help-q">Google Sign-In</p>
-          <p class="auth-help-a">Use the <strong>Sign in with Google</strong> button for one-click instant sign-in with your Google profile.</p>
-        </div>
-        <div class="auth-help-item">
           <p class="auth-help-q">Standard Username Account</p>
           <p class="auth-help-a">Click <strong>Create Account</strong>, pick any username (at least 3 letters) and password (at least 4 characters).</p>
         </div>
         <div class="auth-help-item">
           <p class="auth-help-q">Switching Devices or Lost Access?</p>
-          <p class="auth-help-a">You can log in with your Google account or username on any browser to continue your learning streak.</p>
+          <p class="auth-help-a">You can log in with your username and password on any browser to continue your learning streak.</p>
         </div>
       </div>
       <div class="auth-modal-actions">
         <button type="button" class="btn-check small" id="auth-modal-ok-btn">Got it</button>
-      </div>
-    </div>
-  </dialog>
-
-  <!-- Google OAuth Quick Setup Guide Modal -->
-  <dialog id="auth-google-guide-modal" class="auth-modal">
-    <div class="auth-modal-box">
-      <div class="auth-modal-head">
-        <h3 class="auth-modal-title">Setting Up Google Sign-In</h3>
-        <button type="button" class="auth-modal-close" id="auth-google-guide-close" aria-label="Close guide">&times;</button>
-      </div>
-      <div class="auth-modal-content">
-        <p>To enable 1-click Google Sign-In on this domain, add your Google OAuth credentials to your server environment:</p>
-        
-        <div class="auth-help-item">
-          <p class="auth-help-q">1. Your Authorized Redirect URI</p>
-          <div class="auth-copy-box">
-            <code id="auth-redirect-uri-display">https://your-domain/auth/google/callback</code>
-            <button type="button" class="btn-copy-uri" id="btn-copy-redirect-uri">Copy</button>
-          </div>
-          <p class="auth-help-a" style="margin-top:6px;">Add this URL to <em>Authorized redirect URIs</em> in your <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">Google Cloud Console Credentials</a>.</p>
-        </div>
-
-        <div class="auth-help-item">
-          <p class="auth-help-q">2. Environment Variables to Set</p>
-          <p class="auth-help-a">In Render Dashboard (or AI Studio Settings), add these 2 environment variables:</p>
-          <ul class="auth-env-list">
-            <li><code>GOOGLE_CLIENT_ID</code></li>
-            <li><code>GOOGLE_CLIENT_SECRET</code></li>
-          </ul>
-        </div>
-
-        <div class="auth-help-item" style="border-color: rgba(32, 148, 139, 0.4);">
-          <p class="auth-help-q" style="color: var(--igbo);">💡 Instant Alternative</p>
-          <p class="auth-help-a">You can also create a free account right now using the <strong>Username &amp; Password</strong> fields below without needing any Google API keys!</p>
-        </div>
-      </div>
-      <div class="auth-modal-actions">
-        <button type="button" class="btn-check small" id="auth-google-guide-ok">Understood</button>
       </div>
     </div>
   </dialog>
@@ -640,48 +582,6 @@
     <div class="match-wrap hidden" id="match-wrap">
       <div class="match-col" id="match-native-col"></div>
       <div class="match-col" id="match-en-col"></div>
-    </div>
-
-    <!-- ===== DUOLINGO-STYLE TRANSLATE SENTENCE WITH CHARACTER & WORD BANK ===== -->
-    <div class="sentence-wrap hidden" id="sentence-wrap">
-      <!-- Mascot + Speech bubble stage -->
-      <div class="sentence-stage" id="sentence-stage">
-        <div class="sentence-mascot" id="sentence-mascot" title="Bayo the Bear">
-          <!-- Scalable SVG character injected by app.js -->
-        </div>
-        <div class="sentence-bubble" id="sentence-bubble">
-          <button class="bubble-speaker-btn" id="bubble-speaker-btn" type="button" aria-label="Listen to sentence">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-            </svg>
-          </button>
-          <div class="bubble-words" id="bubble-words"></div>
-        </div>
-      </div>
-
-      <!-- Notebook guideline answer lines where selected word tiles rest -->
-      <div class="sentence-construction-zone">
-        <div class="sentence-guidelines" aria-hidden="true">
-          <div class="sentence-guideline-line"></div>
-          <div class="sentence-guideline-line"></div>
-          <div class="sentence-guideline-line"></div>
-        </div>
-        <div class="sentence-answer-row" id="sentence-answer-row"></div>
-      </div>
-
-      <!-- Tactile Word Bank with Distractors -->
-      <div class="sentence-bank" id="sentence-bank"></div>
-    </div>
-
-    <!-- Word Hint Tooltip Popover (Duolingo tap-to-translate hint) -->
-    <div class="word-hint-popover hidden" id="word-hint-popover" role="tooltip">
-      <div class="popover-arrow"></div>
-      <div class="popover-body">
-        <span class="popover-term" id="popover-term"></span>
-        <span class="popover-hint" id="popover-hint"></span>
-      </div>
     </div>
   </section>
 

@@ -1734,7 +1734,6 @@ function requeueQuestion(q, course){
   else if(q.type === "type") fresh = makeTypeQuestion(q._vocab, course);
   else if(q.type === "listen") fresh = makeListenQuestion(q._vocab, course);
   else if(q.type === "blank") fresh = makeBlankQuestion(q._vocab, course);
-  else if(q.type === "sentence") fresh = makeSentenceQuestion(q._vocab, course);
   else fresh = makeMatchQuestion(q.pairs);
   fresh.isRetry = true;
   return fresh;
@@ -1764,10 +1763,6 @@ function buildLessonQuestions(course, lessonIndex){
   questions.push(makeTypeQuestion(vocab[typeIdx], course));
   questions.push(makeListenQuestion(vocab[listenIdx], course));
   questions.push(makeMatchQuestion(vocab));
-
-  // Duolingo-style sentence translation question with mascot character & word bank!
-  const targetVocab = vocab[pickIdx()];
-  questions.push(makeSentenceQuestion(targetVocab, course, lessonIndex));
 
   return questions;
 }
@@ -1923,13 +1918,11 @@ function buildPracticeQuestions(courseKey = "all", filterMode = "all"){
     const r = Math.random();
     let q;
 
-    if(v.native.includes(" ") && r < 0.35){
-      q = makeSentenceQuestion(v, course);
-    }else if(m.stats.consecutive >= 2 && r < 0.65){
+    if(m.stats.consecutive >= 2 && r < 0.50){
       q = makeTypeQuestion(v, course);
-    }else if(r < 0.45){
+    }else if(r < 0.40){
       q = makeMcQuestion(v, course);
-    }else if(r < 0.75){
+    }else if(r < 0.70){
       q = makeListenQuestion(v, course);
     }else{
       q = makeBlankQuestion(v, course);
@@ -3891,7 +3884,8 @@ function resetQuestionUI(){
   document.getElementById("options-grid").innerHTML = "";
   document.getElementById("type-wrap").classList.add("hidden");
   document.getElementById("match-wrap").classList.add("hidden");
-  document.getElementById("sentence-wrap").classList.add("hidden");
+  const sentenceWrap = document.getElementById("sentence-wrap");
+  if(sentenceWrap) sentenceWrap.classList.add("hidden");
   document.getElementById("speaker-btn").classList.add("hidden");
   document.getElementById("speaking-row").classList.add("hidden");
   document.getElementById("audio-hint").classList.add("hidden");
@@ -4494,7 +4488,8 @@ function setAuthMode(mode){
   document.getElementById("auth-card-sub").textContent = isLogin ? "Log in to continue your streak and lessons." : "Join thousands of learners mastering Nigerian languages.";
 
   document.getElementById("auth-btn-text").textContent = isLogin ? "Log In" : "Create Free Account";
-  document.getElementById("auth-google-text").textContent = isLogin ? "Sign in with Google" : "Sign up with Google";
+  const googleText = document.getElementById("auth-google-text");
+  if(googleText) googleText.textContent = isLogin ? "Sign in with Google" : "Sign up with Google";
   document.getElementById("landing-nav-switch-btn").textContent = isLogin ? "Create account" : "Log in";
 
   document.getElementById("auth-confirm-group").classList.toggle("hidden", isLogin);
@@ -4547,6 +4542,7 @@ function setupHelpModal(){
 
 function setupGoogleAuth(){
   const googleBtn = document.getElementById("auth-google-btn");
+  if(!googleBtn) return;
   const errEl = document.getElementById("auth-error");
   const guideModal = document.getElementById("auth-google-guide-modal");
   const guideClose = document.getElementById("auth-google-guide-close");

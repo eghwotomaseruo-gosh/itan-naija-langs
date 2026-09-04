@@ -4,9 +4,12 @@
 //   JWT_SECRET    — any long random string, used to sign login sessions
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
+const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
+const { GoogleGenAI } = require("@google/genai");
 
 const app = express();
 app.use(express.json());
@@ -494,6 +497,146 @@ app.get("/api/leaderboard", async (req, res) => {
   }catch(e){
     console.error(e);
     res.status(500).json({ error: "Could not load the leaderboard." });
+  }
+});
+
+/* ---- Text-to-Speech Engine with Audio Cache ---- */
+let geminiAiClient = null;
+function getGeminiAi() {
+  if (!geminiAiClient && process.env.GEMINI_API_KEY) {
+    try {
+      geminiAiClient = new GoogleGenAI({
+        apiKey: process.env.GEMINI_API_KEY,
+        httpOptions: { headers: { "User-Agent": "aistudio-build" } }
+      });
+    } catch (e) {
+      console.warn("Could not initialize GoogleGenAI for TTS:", e.message);
+    }
+  }
+  return geminiAiClient;
+}
+
+const AUDIO_CACHE_DIR = path.join(__dirname, ".audio_cache");
+if (!fs.existsSync(AUDIO_CACHE_DIR)) {
+  try { fs.mkdirSync(AUDIO_CACHE_DIR, { recursive: true }); } catch (e) {}
+}
+
+const audioMemoryCache = new Map();
+
+function pcmToWav(pcmBuffer, sampleRate = 24000, numChannels = 1, bitsPerSample = 16) {
+  const byteRate = (sampleRate * numChannels * bitsPerSample) / 8;
+  const blockAlign = (numChannels * bitsPerSample) / 8;
+  const dataSize = pcmBuffer.length;
+  const header = Buffer.alloc(44);
+
+  header.write("RIFF", 0);
+  header.writeUInt32LE(dataSize + 36, 4);
+  header.write("WAVE", 8);
+  header.write("fmt ", 12);
+  header.writeUInt32LE(16, 16);
+  header.writeUInt16LE(1, 20);
+  header.writeUInt16LE(numChannels, 22);
+  header.writeUInt32LE(sampleRate, 24);
+  header.writeUInt32LE(byteRate, 28);
+  header.writeUInt16LE(blockAlign, 32);
+  header.writeUInt16LE(bitsPerSample, 34);
+  header.write("data", 36);
+  header.writeUInt32LE(dataSize, 40);
+
+  return Buffer.concat([header, pcmBuffer]);
+}
+
+const COURSE_VOICE_MAP = {
+  igbo: { voice: "Kore", label: "Igbo (Eastern Tonal Accent)" },
+  yoruba: { voice: "Fenrir", label: "Yorùbá (Western Tonal Accent)" },
+  hausa: { voice: "Zephyr", label: "Hausa (Northern Sahelian Accent)" },
+  edo: { voice: "Kore", label: "Ẹ̀dó Bini (Midwestern Accent)" },
+  efik: { voice: "Zephyr", label: "Efịk (Cross River Melody)" },
+  urhobo: { voice: "Fenrir", label: "Urhobo (Delta Edoid Accent)" },
+  tiv: { voice: "Charon", label: "Tiv (Benue Valley Bantoid Accent)" },
+  uvwie: { voice: "Kore", label: "Uvwie (Delta Effurun Accent)" },
+  isoko: { voice: "Zephyr", label: "Isoko (Delta Tonal Accent)" },
+  ijaw: { voice: "Kore", label: "Ijaw (Niger Delta Izon Accent)" }
+};
+
+app.get("/api/tts", async (req, res) => {
+  const rawText = (req.query.text || "").trim();
+  if (!rawText) {
+    return res.status(400).json({ error: "Missing text query parameter." });
+  }
+
+  const course = (req.query.course || "").toLowerCase().trim();
+  const requestedVoice = (req.query.voice || "").trim();
+  const voiceToUse = requestedVoice || (COURSE_VOICE_MAP[course] ? COURSE_VOICE_MAP[course].voice : "Kore");
+
+  // Normalized cache key
+  const normalizedKey = `${course}:${voiceToUse}:${rawText.toLowerCase()}`;
+  const cacheKey = crypto.createHash("md5").update(normalizedKey).digest("hex") + ".wav";
+  const diskPath = path.join(AUDIO_CACHE_DIR, cacheKey);
+
+  // 1. In-memory cache hit
+  if (audioMemoryCache.has(cacheKey)) {
+    res.setHeader("Content-Type", "audio/wav");
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    return res.send(audioMemoryCache.get(cacheKey));
+  }
+
+  // 2. Disk cache hit
+  if (fs.existsSync(diskPath)) {
+    try {
+      const diskBuffer = fs.readFileSync(diskPath);
+      audioMemoryCache.set(cacheKey, diskBuffer);
+      res.setHeader("Content-Type", "audio/wav");
+      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      return res.send(diskBuffer);
+    } catch (e) {
+      console.warn("Error reading cached audio disk file:", e.message);
+    }
+  }
+
+  // 3. Synthesize via Gemini 3.1 TTS model
+  const client = getGeminiAi();
+  if (!client) {
+    return res.json({ fallback: true, reason: "No GEMINI_API_KEY available" });
+  }
+
+  try {
+    const ttsResponse = await client.models.generateContent({
+      model: "gemini-3.1-flash-tts-preview",
+      contents: [{ parts: [{ text: rawText }] }],
+      config: {
+        responseModalities: ["AUDIO"],
+        speechConfig: {
+          voiceConfig: {
+            prebuiltVoiceConfig: { voiceName: voiceToUse }
+          }
+        }
+      }
+    });
+
+    const inlineData = ttsResponse.candidates?.[0]?.content?.parts?.[0]?.inlineData;
+    if (!inlineData || !inlineData.data) {
+      return res.json({ fallback: true, reason: "Empty audio payload from TTS" });
+    }
+
+    const rawPcm = Buffer.from(inlineData.data, "base64");
+    const wavBuffer = pcmToWav(rawPcm, 24000, 1, 16);
+
+    // Save to memory cache & disk cache
+    audioMemoryCache.set(cacheKey, wavBuffer);
+    try {
+      fs.writeFileSync(diskPath, wavBuffer);
+    } catch (saveErr) {
+      console.warn("Could not write audio to disk cache:", saveErr.message);
+    }
+
+    res.setHeader("Content-Type", "audio/wav");
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    return res.send(wavBuffer);
+  } catch (err) {
+    const isQuota = err.status === 429 || (err.message && err.message.includes("quota"));
+    console.warn(`TTS generation notice (${isQuota ? "rate quota reached, using client speech fallback" : err.message})`);
+    return res.json({ fallback: true, reason: isQuota ? "quota_exhausted" : "tts_failed" });
   }
 });
 

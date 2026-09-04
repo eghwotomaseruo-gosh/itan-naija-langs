@@ -281,10 +281,13 @@
         <span id="stat-xp">0</span>
       </div>
       <div class="pill pill-hearts" title="Hearts">
-
         <svg viewBox="0 0 24 24" class="pill-icon"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2.2 4.6 6 4.1c2-.3 3.9.7 6 3 2.1-2.3 4-3.3 6-3 3.8.5 5.6 4.1 4 7.6C19.5 16.4 12 21 12 21z"/></svg>
         <span id="stat-hearts">5</span>
       </div>
+      <button class="pill pill-voice" id="voice-settings-btn-home" title="Voice & Pronunciation Settings" type="button" aria-label="Open voice settings">
+        <svg viewBox="0 0 24 24" class="pill-icon"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+        <span id="voice-settings-pill-label">Voice</span>
+      </button>
     </div>
   </header>
 
@@ -485,6 +488,24 @@
     <div class="profile-badges-grid" id="profile-badges-grid"></div>
   </section>
 
+  <h2 class="section-label">Voice &amp; Pronunciation</h2>
+  <div class="profile-voice-card" id="profile-voice-card">
+    <div class="profile-voice-left">
+      <div class="profile-voice-icon-circle">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+      </div>
+      <div class="profile-voice-text">
+        <p class="profile-voice-title" id="profile-voice-title">Studio AI Voice (Active)</p>
+        <p class="profile-voice-desc" id="profile-voice-desc">Authentic regional accents &amp; tonal cadence for all 10 Nigerian languages.</p>
+      </div>
+    </div>
+    <button type="button" class="btn-voice-manage" id="profile-voice-adjust-btn">Tune Voice</button>
+  </div>
+
   <h2 class="section-label">Daily Reminders (24-Hour Inactivity)</h2>
   <div class="profile-reminder-card" id="profile-reminder-card"></div>
 
@@ -556,6 +577,9 @@
       <h2 class="question-prompt" id="question-prompt">Kedu?</h2>
       <button class="speaker-btn hidden" id="speaker-btn" aria-label="Play pronunciation" type="button">
         <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>
+      </button>
+      <button class="speaker-settings-btn hidden" id="speaker-settings-btn" aria-label="Voice settings" type="button" title="Voice & Pronunciation settings">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
     <p class="audio-hint hidden" id="audio-hint">Tap 🔊 to hear it again</p>
@@ -714,6 +738,97 @@
     </div>
 
     <button type="button" class="btn-check" id="badge-modal-action-btn" style="margin-top:16px;">Got It</button>
+  </div>
+</dialog>
+
+<!-- ===== VOICE & PRONUNCIATION SETTINGS MODAL ===== -->
+<dialog id="voice-settings-modal" class="auth-modal voice-modal">
+  <div class="auth-modal-box voice-modal-box">
+    <div class="auth-modal-head">
+      <div class="voice-modal-title-row">
+        <div class="voice-modal-icon-wrap">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="auth-modal-title">Voice &amp; Pronunciation</h3>
+          <p class="voice-modal-sub" id="voice-modal-course-sub">Tuned for authentic Nigerian regional accents</p>
+        </div>
+      </div>
+      <button type="button" class="auth-modal-close" id="voice-settings-close" aria-label="Close voice settings">&times;</button>
+    </div>
+
+    <div class="auth-modal-content">
+      <!-- Active Language Voice Profile Card -->
+      <div class="voice-profile-highlight" id="voice-profile-highlight">
+        <div class="voice-highlight-top">
+          <span class="voice-badge" id="voice-lang-badge">Igbo Voice</span>
+          <span class="voice-accent-tag" id="voice-accent-tag">Eastern Tonal Dialect</span>
+        </div>
+        <p class="voice-persona-name" id="voice-persona-name">Amaka &amp; Chinedu</p>
+        <p class="voice-tuning-note" id="voice-tuning-note">Calibrated for High, Low, and Downstep tone contrasts with clear vowel length.</p>
+        <button type="button" class="btn-voice-test" id="btn-voice-test">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="btn-voice-test-text">Listen to Sample Voice</span>
+        </button>
+      </div>
+
+      <!-- Engine Selector -->
+      <div class="voice-control-group">
+        <label class="voice-group-label">Voice Engine</label>
+        <div class="voice-radio-pills">
+          <button type="button" class="voice-option-btn active" data-engine="ai" id="opt-engine-ai">
+            <span class="voice-opt-title">Studio AI Voice</span>
+            <span class="voice-opt-desc">Authentic African accent, natural tonal pitch &amp; cadence</span>
+          </button>
+          <button type="button" class="voice-option-btn" data-engine="device" id="opt-engine-device">
+            <span class="voice-opt-title">Device Voice</span>
+            <span class="voice-opt-desc">System speech engine with language-tuned phonetics</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Voice Persona / Character -->
+      <div class="voice-control-group">
+        <label class="voice-group-label">Voice Character</label>
+        <div class="voice-persona-tabs" id="voice-persona-tabs">
+          <button type="button" class="voice-tab-btn active" data-persona="auto" id="opt-persona-auto">Language Matched</button>
+          <button type="button" class="voice-tab-btn" data-persona="female" id="opt-persona-female">Female (Warm &amp; Melodic)</button>
+          <button type="button" class="voice-tab-btn" data-persona="male" id="opt-persona-male">Male (Deep &amp; Resonant)</button>
+        </div>
+      </div>
+
+      <!-- Speech Speed -->
+      <div class="voice-control-group">
+        <div class="voice-speed-header">
+          <label class="voice-group-label" style="margin:0;">Pronunciation Pace</label>
+          <span class="voice-speed-val" id="voice-speed-val">0.85x (Standard)</span>
+        </div>
+        <div class="voice-speed-slider-wrap">
+          <input type="range" id="voice-speed-slider" min="0.70" max="1.10" step="0.05" value="0.85" class="voice-speed-range" aria-label="Speech speed slider">
+          <div class="voice-speed-labels">
+            <span>0.70x (Slow)</span>
+            <span>0.85x</span>
+            <span>1.10x (Fast)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- All 10 Languages Voice Accordion -->
+      <details class="voice-all-langs-accordion" id="voice-all-langs-accordion">
+        <summary class="voice-all-langs-summary">View voice tuning for all 10 languages</summary>
+        <div class="voice-all-langs-list" id="voice-all-langs-list">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </details>
+    </div>
+
+    <div class="auth-modal-actions">
+      <button type="button" class="btn-check small" id="voice-settings-done-btn">Save Preferences</button>
+    </div>
   </div>
 </dialog>
 

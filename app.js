@@ -130,6 +130,16 @@ function render3DTribeTile(key, options = {}) {
 const COURSES = {
   igbo: {
     name: "Igbo", native: "Asụsụ Igbo", color: "igbo", glyph: "Ị", speechLang: "ig-NG",
+    voiceProfile: {
+      accent: "Eastern Tonal Dialect (High, Low, Downstep)",
+      persona: "Amaka & Chinedu",
+      speechLang: "ig-NG",
+      geminiVoice: "Kore",
+      preferredTags: ["ig-NG", "ig", "en-NG", "pcm"],
+      pitch: 1.08,
+      rate: 0.84,
+      sampleText: "Ndewo! Asụsụ Igbo na-atọ ụtọ."
+    },
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Ndewo", en: "Hello" }, { native: "Kedu", en: "How are you" },
@@ -208,6 +218,16 @@ const COURSES = {
   },
   yoruba: {
     name: "Yorùbá", native: "Èdè Yorùbá", color: "yoruba", glyph: "Ẹ", speechLang: "yo-NG",
+    voiceProfile: {
+      accent: "Western Tonal Dialect (Do-Re-Mi Tones)",
+      persona: "Folashade & Adebayo",
+      speechLang: "yo-NG",
+      geminiVoice: "Fenrir",
+      preferredTags: ["yo-NG", "yo", "en-NG", "pcm"],
+      pitch: 1.10,
+      rate: 0.83,
+      sampleText: "Bawo ni! Èdè Yorùbá dára púpọ̀."
+    },
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Bawo ni", en: "Hello" }, { native: "E kaaro", en: "Good morning" },
@@ -286,6 +306,16 @@ const COURSES = {
   },
   hausa: {
     name: "Hausa", native: "Harshen Hausa", color: "hausa", glyph: "H", speechLang: "ha-NG",
+    voiceProfile: {
+      accent: "Northern Sahelian Articulation",
+      persona: "Fatima & Aminu",
+      speechLang: "ha-NG",
+      geminiVoice: "Zephyr",
+      preferredTags: ["ha-NG", "ha", "en-NG", "pcm"],
+      pitch: 1.03,
+      rate: 0.85,
+      sampleText: "Sannu! Harshen Hausa yana da daɗi sosai."
+    },
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Sannu", en: "Hello" }, { native: "Ina kwana", en: "Good morning" },
@@ -364,6 +394,16 @@ const COURSES = {
   },
   edo: {
     name: "Edo", native: "Ẹ̀dó (Bini)", color: "edo", glyph: "B", speechLang: "bin",
+    voiceProfile: {
+      accent: "Midwestern Benin Edoid Accent",
+      persona: "Eki & Osagie",
+      speechLang: "bin",
+      geminiVoice: "Kore",
+      preferredTags: ["en-NG", "bin", "pcm", "en-GH"],
+      pitch: 1.06,
+      rate: 0.82,
+      sampleText: "Kọyọ! Ẹ̀dó vbe ẹmwẹ nọ gb'ẹsẹ."
+    },
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Kọyọ", en: "Hello" }, { native: "Ọbowiẹ", en: "Good morning" },
@@ -419,6 +459,16 @@ const COURSES = {
   },
   efik: {
     name: "Efik", native: "Usem Efịk", color: "efik", glyph: "C", speechLang: "efi",
+    voiceProfile: {
+      accent: "Calabar Cross River Tonal Melody",
+      persona: "Arit & Edet",
+      speechLang: "efi",
+      geminiVoice: "Zephyr",
+      preferredTags: ["en-NG", "efi", "pcm", "en-GH"],
+      pitch: 1.08,
+      rate: 0.84,
+      sampleText: "Emedi! Usem Efịk enem eti-eti."
+    },
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Emedi", en: "Welcome" }, { native: "Emesiere", en: "Good morning" },
@@ -466,6 +516,16 @@ const COURSES = {
   },
   urhobo: {
     name: "Urhobo", native: "Ẹdo Urhobo", color: "urhobo", glyph: "U", speechLang: "urh",
+    voiceProfile: {
+      accent: "Delta State Edoid Accent",
+      persona: "Efe & Oghenekevwe",
+      speechLang: "urh",
+      geminiVoice: "Fenrir",
+      preferredTags: ["en-NG", "urh", "pcm", "en-GH"],
+      pitch: 1.06,
+      rate: 0.83,
+      sampleText: "Miguọ! Ẹvwrẹn Urhobo vwerhe mamọ."
+    },
     lessons: [
       { title: "Numbers 1–5", vocab: [
         { native: "Ọvo", en: "One" }, { native: "Ívẹ", en: "Two" }, { native: "Érha", en: "Three" },
@@ -515,6 +575,16 @@ const COURSES = {
   },
   tiv: {
     name: "Tiv", native: "Dzwa Tiv", color: "tiv", glyph: "T", speechLang: "tiv",
+    voiceProfile: {
+      accent: "Benue Valley Bantoid Accent",
+      persona: "Mnguember & Terver",
+      speechLang: "tiv",
+      geminiVoice: "Charon",
+      preferredTags: ["en-NG", "tiv", "pcm", "en-GH"],
+      pitch: 1.04,
+      rate: 0.83,
+      sampleText: "M sugh u! Zwa Tiv doo kpishi."
+    },
     lessons: [
       { title: "Numbers 1–5", vocab: [
         { native: "Mom", en: "One" }, { native: "Uhar", en: "Two" }, { native: "Utar", en: "Three" },
@@ -568,6 +638,16 @@ const COURSES = {
   },
   uvwie: {
     name: "Uvwie", native: "Ẹvwrẹn Uvwie", color: "uvwie", glyph: "U", speechLang: "en-NG",
+    voiceProfile: {
+      accent: "Effurun / Uvwie Delta Cadence",
+      persona: "Onome & Ejiro",
+      speechLang: "en-NG",
+      geminiVoice: "Kore",
+      preferredTags: ["en-NG", "urh", "pcm", "en-GH"],
+      pitch: 1.07,
+      rate: 0.83,
+      sampleText: "Miguọ! Ẹvwrẹn Uvwie vwerhe mamọ."
+    },
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Miguọ", en: "Hello" }, { native: "Ovwiroro", en: "Good morning" },
@@ -614,6 +694,16 @@ const COURSES = {
   },
   isoko: {
     name: "Isoko", native: "Ẹvẹ Isoko", color: "isoko", glyph: "S", speechLang: "en-NG",
+    voiceProfile: {
+      accent: "Isoko Delta Tonal Cadence",
+      persona: "Oghenero & Elohor",
+      speechLang: "en-NG",
+      geminiVoice: "Zephyr",
+      preferredTags: ["en-NG", "pcm", "en-GH"],
+      pitch: 1.06,
+      rate: 0.84,
+      sampleText: "Do! Ẹvẹ Isoko were gaga."
+    },
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Do", en: "Hello" }, { native: "Koyo", en: "Greetings" },
@@ -660,6 +750,16 @@ const COURSES = {
   },
   ijaw: {
     name: "Ijaw", native: "Ịjọ (Izon)", color: "ijaw", glyph: "Ị", speechLang: "en-NG",
+    voiceProfile: {
+      accent: "Niger Delta Izon Tonal Melody",
+      persona: "Ebi & Tari",
+      speechLang: "en-NG",
+      geminiVoice: "Kore",
+      preferredTags: ["en-NG", "pcm", "en-GH"],
+      pitch: 1.05,
+      rate: 0.84,
+      sampleText: "Dọọ! Ịjọ fia ẹnẹmị egberi."
+    },
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Dọọ", en: "Hello" }, { native: "Bọda ba", en: "Good morning" },
@@ -1078,20 +1178,437 @@ function shuffle(arr){ return [...arr].sort(() => Math.random() - 0.5); }
 function normalizeStr(s){
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim().replace(/\s+/g, " ");
 }
-function speak(text, lang){
-  if(!("speechSynthesis" in window)) return;
-  const sBtn = document.getElementById("speaker-btn");
-  try{
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang;
-    u.rate = 0.85;
-    u.onstart = () => sBtn.classList.add("playing");
-    u.onend = () => sBtn.classList.remove("playing");
-    u.onerror = () => sBtn.classList.remove("playing");
-    window.speechSynthesis.speak(u);
-  }catch(e){ /* speech not available — fail silently */ }
+/* ====================== VOICE & AUDIO ENGINE ====================== */
+const clientAudioCache = new Map();
+let currentAudioPlayer = null;
+
+let voiceSettings = {
+  engine: "ai", // "ai" (Studio AI Voice) | "device" (Device Synthesizer)
+  voicePersona: "auto", // "auto" | "female" | "male"
+  speed: 0.85
+};
+
+try {
+  const savedVoiceSettings = localStorage.getItem("lingua_voice_settings");
+  if(savedVoiceSettings) {
+    voiceSettings = { ...voiceSettings, ...JSON.parse(savedVoiceSettings) };
+  }
+} catch(e){}
+
+function saveVoiceSettings(){
+  try {
+    localStorage.setItem("lingua_voice_settings", JSON.stringify(voiceSettings));
+  } catch(e){}
+  updateVoiceUIIndicators();
 }
+
+function updateVoiceUIIndicators(){
+  const pillLabel = document.getElementById("voice-settings-pill-label");
+  if(pillLabel){
+    pillLabel.textContent = voiceSettings.engine === "ai" ? "AI Voice" : "Device";
+  }
+  const profTitle = document.getElementById("profile-voice-title");
+  const profDesc = document.getElementById("profile-voice-desc");
+  if(profTitle){
+    profTitle.textContent = voiceSettings.engine === "ai" 
+      ? `Studio AI Voice (${voiceSettings.speed}x)` 
+      : `Device Synthesizer (${voiceSettings.speed}x)`;
+  }
+  if(profDesc){
+    profDesc.textContent = voiceSettings.engine === "ai"
+      ? "Authentic Nigerian regional accents, tonal cadence & open vowels."
+      : "System speech synthesizer with language-tuned phonetics and cadence.";
+  }
+}
+
+function getBestVoiceForLanguage(lang, courseKey){
+  if(!("speechSynthesis" in window)) return null;
+  const voices = window.speechSynthesis.getVoices() || [];
+  if(!voices.length) return null;
+
+  const profile = (courseKey && COURSES[courseKey]?.voiceProfile) ? COURSES[courseKey].voiceProfile : null;
+  const preferredTags = profile?.preferredTags || [lang, "en-NG", "pcm", "en-GH", "en-ZA"];
+
+  // 1. Exact match from preferredTags
+  for(const tag of preferredTags){
+    const found = voices.find(v => v.lang.toLowerCase() === tag.toLowerCase() || v.lang.toLowerCase().replace("_", "-") === tag.toLowerCase());
+    if(found) return found;
+  }
+
+  // 2. Prefix match (e.g. "yo", "ig", "ha")
+  for(const tag of preferredTags){
+    const prefix = tag.split("-")[0].toLowerCase();
+    const found = voices.find(v => v.lang.toLowerCase().startsWith(prefix));
+    if(found) return found;
+  }
+
+  // 3. Search voice names for Nigeria, Naija, African, Pidgin
+  const nigerianVoice = voices.find(v => {
+    const name = v.name.toLowerCase();
+    return name.includes("nigeria") || name.includes("naija") || name.includes("pidgin");
+  });
+  if(nigerianVoice) return nigerianVoice;
+
+  const africanVoice = voices.find(v => {
+    const name = v.name.toLowerCase();
+    return name.includes("african") || v.lang.toLowerCase().includes("za") || v.lang.toLowerCase().includes("gh");
+  });
+  if(africanVoice) return africanVoice;
+
+  // 4. Default voice
+  return voices.find(v => v.default) || voices[0];
+}
+
+function getPhoneticUtterance(text, courseKey, voice){
+  if(!text) return "";
+  const isAfricanVoice = voice && (
+    voice.lang.toLowerCase().includes("ng") || 
+    voice.lang.toLowerCase().startsWith("yo") || 
+    voice.lang.toLowerCase().startsWith("ig") || 
+    voice.lang.toLowerCase().startsWith("ha") ||
+    voice.name.toLowerCase().includes("nigeria") ||
+    voice.name.toLowerCase().includes("naija")
+  );
+  if(isAfricanVoice) return text;
+
+  // For generic voices that stumble on Nigerian sub-dot tone characters
+  return text
+    .replace(/[ọỌ]/g, "o")
+    .replace(/[ẹẸ]/g, "e")
+    .replace(/[ịỊ]/g, "i")
+    .replace(/[ụỤ]/g, "u")
+    .replace(/[ṅṄ]/g, "n");
+}
+
+async function speak(text, lang, courseKey, triggerBtn){
+  if(!text) return;
+
+  // Resolve courseKey if not provided
+  if(!courseKey){
+    if(typeof session !== "undefined" && session?.courseKey) {
+      courseKey = session.courseKey;
+    } else if(typeof currentCourse !== "undefined" && currentCourse) {
+      courseKey = currentCourse;
+    } else {
+      const match = Object.keys(COURSES).find(k => COURSES[k].speechLang === lang);
+      if(match) courseKey = match;
+    }
+  }
+
+  const course = courseKey ? COURSES[courseKey] : null;
+  const speechLang = lang || course?.speechLang || "en-NG";
+
+  const sBtn = document.getElementById("speaker-btn");
+  const animatedBtns = [sBtn, triggerBtn].filter(Boolean);
+  animatedBtns.forEach(b => b.classList.add("playing"));
+
+  const clearPlaying = () => {
+    animatedBtns.forEach(b => b.classList.remove("playing"));
+  };
+
+  // Stop active audio or speech
+  if(currentAudioPlayer){
+    try { currentAudioPlayer.pause(); currentAudioPlayer.currentTime = 0; } catch(e){}
+    currentAudioPlayer = null;
+  }
+  if("speechSynthesis" in window){
+    try { window.speechSynthesis.cancel(); } catch(e){}
+  }
+
+  // 1. Studio AI Voice (Authentic Regional Accent)
+  if(voiceSettings.engine !== "device"){
+    const voiceName = (voiceSettings.voicePersona === "female") ? "Kore" :
+                      (voiceSettings.voicePersona === "male") ? (courseKey === "yoruba" || courseKey === "urhobo" ? "Fenrir" : "Zephyr") :
+                      (course?.voiceProfile?.geminiVoice || "Kore");
+
+    const cacheKey = `${courseKey || "default"}_${voiceName}_${text.trim().toLowerCase()}`;
+
+    // Check in-memory audio cache
+    if(clientAudioCache.has(cacheKey)){
+      try {
+        const audioUrl = clientAudioCache.get(cacheKey);
+        const player = new Audio(audioUrl);
+        player.playbackRate = voiceSettings.speed || 0.85;
+        currentAudioPlayer = player;
+        player.onended = clearPlaying;
+        player.onerror = () => {
+          clearPlaying();
+          playDeviceSpeech(text, speechLang, courseKey, clearPlaying);
+        };
+        await player.play();
+        return;
+      } catch(err){
+        // Proceed to fetch or device fallback
+      }
+    }
+
+    // Fetch audio from /api/tts
+    try {
+      const url = `/api/tts?text=${encodeURIComponent(text.trim())}&course=${encodeURIComponent(courseKey || "")}&voice=${encodeURIComponent(voiceName)}`;
+      const resp = await fetch(url);
+      const contentType = resp.headers.get("content-type") || "";
+
+      if(resp.ok && contentType.includes("audio")){
+        const blob = await resp.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        clientAudioCache.set(cacheKey, blobUrl);
+
+        const player = new Audio(blobUrl);
+        player.playbackRate = voiceSettings.speed || 0.85;
+        currentAudioPlayer = player;
+        player.onended = clearPlaying;
+        player.onerror = () => {
+          clearPlaying();
+          playDeviceSpeech(text, speechLang, courseKey, clearPlaying);
+        };
+        await player.play();
+        return;
+      }
+    } catch(fetchErr){
+      console.warn("Studio voice fetch error, using device fallback:", fetchErr);
+    }
+  }
+
+  // 2. Tuned Device Synthesizer Fallback
+  playDeviceSpeech(text, speechLang, courseKey, clearPlaying);
+}
+
+function playDeviceSpeech(text, lang, courseKey, onFinish){
+  if(!("speechSynthesis" in window)){
+    if(onFinish) onFinish();
+    return;
+  }
+  try {
+    const course = courseKey ? COURSES[courseKey] : null;
+    const profile = course?.voiceProfile;
+    const voice = getBestVoiceForLanguage(lang, courseKey);
+
+    const spokenText = getPhoneticUtterance(text, courseKey, voice);
+    const u = new SpeechSynthesisUtterance(spokenText);
+    if(voice) u.voice = voice;
+    u.lang = voice?.lang || lang || "en-NG";
+    u.rate = voiceSettings.speed || profile?.rate || 0.84;
+    u.pitch = profile?.pitch || 1.06;
+
+    u.onend = () => { if(onFinish) onFinish(); };
+    u.onerror = () => { if(onFinish) onFinish(); };
+
+    window.speechSynthesis.speak(u);
+  } catch(e){
+    if(onFinish) onFinish();
+  }
+}
+
+function prefetchLessonAudio(courseKey, lessonIndex){
+  if(voiceSettings.engine === "device") return;
+  const course = COURSES[courseKey];
+  if(!course || !course.lessons || !course.lessons[lessonIndex]) return;
+  const vocab = course.lessons[lessonIndex].vocab || [];
+  const voiceName = (voiceSettings.voicePersona === "female") ? "Kore" :
+                    (voiceSettings.voicePersona === "male") ? (courseKey === "yoruba" || courseKey === "urhobo" ? "Fenrir" : "Zephyr") :
+                    (course.voiceProfile?.geminiVoice || "Kore");
+
+  vocab.slice(0, 4).forEach((v, i) => {
+    setTimeout(async () => {
+      const cacheKey = `${courseKey}_${voiceName}_${v.native.trim().toLowerCase()}`;
+      if(!clientAudioCache.has(cacheKey)){
+        try {
+          const resp = await fetch(`/api/tts?text=${encodeURIComponent(v.native.trim())}&course=${encodeURIComponent(courseKey)}&voice=${encodeURIComponent(voiceName)}`);
+          if(resp.ok && (resp.headers.get("content-type") || "").includes("audio")){
+            const blob = await resp.blob();
+            clientAudioCache.set(cacheKey, URL.createObjectURL(blob));
+          }
+        } catch(e){}
+      }
+    }, i * 350);
+  });
+}
+
+let activeVoiceModalCourse = "igbo";
+
+function openVoiceSettingsModal(targetCourseKey){
+  const modal = document.getElementById("voice-settings-modal");
+  if(!modal) return;
+
+  const currentActiveCourse = targetCourseKey || (typeof session !== "undefined" && session?.courseKey) || (typeof currentCourse !== "undefined" && currentCourse) || "igbo";
+  activeVoiceModalCourse = currentActiveCourse;
+
+  const course = COURSES[currentActiveCourse] || COURSES.igbo;
+  const profile = course.voiceProfile || {};
+
+  // Update highlight card
+  const badge = document.getElementById("voice-lang-badge");
+  const tag = document.getElementById("voice-accent-tag");
+  const persona = document.getElementById("voice-persona-name");
+  const note = document.getElementById("voice-tuning-note");
+  const sub = document.getElementById("voice-modal-course-sub");
+
+  if(badge) badge.textContent = `${course.name} Voice`;
+  if(tag) tag.textContent = profile.accent || "Authentic Regional Accent";
+  if(persona) persona.textContent = profile.persona || "Native Voice Cast";
+  if(note) note.textContent = `Tuned for ${course.name} (${course.native}) phonetics, vowel registers and cadence.`;
+  if(sub) sub.textContent = `Currently tuned for ${course.name} lessons`;
+
+  // Set test button
+  const testBtn = document.getElementById("btn-voice-test");
+  if(testBtn){
+    testBtn.onclick = () => {
+      const sampleText = profile.sampleText || course.lessons?.[0]?.vocab?.[0]?.native || "Ndewo";
+      speak(sampleText, course.speechLang, currentActiveCourse, testBtn);
+    };
+  }
+
+  // Engine buttons state
+  const aiBtn = document.getElementById("opt-engine-ai");
+  const devBtn = document.getElementById("opt-engine-device");
+  if(aiBtn && devBtn){
+    aiBtn.classList.toggle("active", voiceSettings.engine !== "device");
+    devBtn.classList.toggle("active", voiceSettings.engine === "device");
+  }
+
+  // Persona buttons state
+  const personaTabs = document.getElementById("voice-persona-tabs");
+  if(personaTabs){
+    personaTabs.querySelectorAll(".voice-tab-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.persona === voiceSettings.voicePersona);
+    });
+  }
+
+  // Speed slider state
+  const speedSlider = document.getElementById("voice-speed-slider");
+  const speedVal = document.getElementById("voice-speed-val");
+  if(speedSlider){
+    speedSlider.value = voiceSettings.speed || 0.85;
+  }
+  if(speedVal){
+    const paceLabel = voiceSettings.speed < 0.80 ? "(Slow)" : voiceSettings.speed > 0.95 ? "(Fast)" : "(Standard)";
+    speedVal.textContent = `${Number(voiceSettings.speed).toFixed(2)}x ${paceLabel}`;
+  }
+
+  // Render all 10 languages list
+  renderAllLanguagesVoiceList();
+
+  if(typeof modal.showModal === "function"){
+    modal.showModal();
+  } else {
+    modal.classList.remove("hidden");
+  }
+}
+
+function renderAllLanguagesVoiceList(){
+  const container = document.getElementById("voice-all-langs-list");
+  if(!container) return;
+  container.innerHTML = "";
+
+  Object.entries(COURSES).forEach(([k, c]) => {
+    const prof = c.voiceProfile || {};
+    const row = document.createElement("div");
+    row.className = "voice-lang-row-item";
+    row.innerHTML = `
+      <div>
+        <div class="voice-lang-row-name">${c.name} <span style="font-size:11px; color:var(--gold); font-weight:normal;">(${c.native})</span></div>
+        <div class="voice-lang-row-detail">${prof.accent || "Authentic Regional Dialect"} • ${prof.persona || "Regional Voice"}</div>
+      </div>
+      <button type="button" class="voice-lang-row-btn" data-lang-key="${k}" title="Play voice sample for ${c.name}">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        <span>Test</span>
+      </button>
+    `;
+
+    const btn = row.querySelector(".voice-lang-row-btn");
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const sample = prof.sampleText || c.lessons?.[0]?.vocab?.[0]?.native || "Hello";
+      speak(sample, c.speechLang, k, btn);
+    };
+
+    container.appendChild(row);
+  });
+}
+
+function initVoiceSettingsModal(){
+  const modal = document.getElementById("voice-settings-modal");
+  if(!modal) return;
+
+  // Home pill trigger
+  const homeBtn = document.getElementById("voice-settings-btn-home");
+  if(homeBtn){
+    homeBtn.onclick = () => openVoiceSettingsModal();
+  }
+
+  // Profile manage button trigger
+  const profBtn = document.getElementById("profile-voice-adjust-btn");
+  if(profBtn){
+    profBtn.onclick = () => openVoiceSettingsModal();
+  }
+
+  // Close & Save buttons
+  const closeBtn = document.getElementById("voice-settings-close");
+  if(closeBtn){
+    closeBtn.onclick = () => {
+      saveVoiceSettings();
+      if(typeof modal.close === "function") modal.close();
+      else modal.classList.add("hidden");
+    };
+  }
+
+  const doneBtn = document.getElementById("voice-settings-done-btn");
+  if(doneBtn){
+    doneBtn.onclick = () => {
+      saveVoiceSettings();
+      if(typeof modal.close === "function") modal.close();
+      else modal.classList.add("hidden");
+      showToast?.("Voice Preferences Saved", "Your authentic speech tuning has been updated.", "success");
+    };
+  }
+
+  // Engine toggles
+  const aiBtn = document.getElementById("opt-engine-ai");
+  const devBtn = document.getElementById("opt-engine-device");
+  if(aiBtn && devBtn){
+    aiBtn.onclick = () => {
+      voiceSettings.engine = "ai";
+      aiBtn.classList.add("active");
+      devBtn.classList.remove("active");
+      saveVoiceSettings();
+    };
+    devBtn.onclick = () => {
+      voiceSettings.engine = "device";
+      devBtn.classList.add("active");
+      aiBtn.classList.remove("active");
+      saveVoiceSettings();
+    };
+  }
+
+  // Persona tabs
+  const personaTabs = document.getElementById("voice-persona-tabs");
+  if(personaTabs){
+    personaTabs.querySelectorAll(".voice-tab-btn").forEach(btn => {
+      btn.onclick = () => {
+        personaTabs.querySelectorAll(".voice-tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        voiceSettings.voicePersona = btn.dataset.persona;
+        saveVoiceSettings();
+      };
+    });
+  }
+
+  // Speed range
+  const speedSlider = document.getElementById("voice-speed-slider");
+  const speedVal = document.getElementById("voice-speed-val");
+  if(speedSlider && speedVal){
+    speedSlider.oninput = () => {
+      const val = parseFloat(speedSlider.value);
+      voiceSettings.speed = val;
+      const paceLabel = val < 0.80 ? "(Slow)" : val > 0.95 ? "(Fast)" : "(Standard)";
+      speedVal.textContent = `${val.toFixed(2)}x ${paceLabel}`;
+      saveVoiceSettings();
+    };
+  }
+
+  updateVoiceUIIndicators();
+}
+
 
 /* ---- record-yourself (self-practice, no automatic scoring) ---- */
 let mediaRecorder = null;
@@ -2700,7 +3217,8 @@ function renderPracticeScreen(filterMode = currentPracticeFilter){
       e.stopPropagation();
       const text = decodeURIComponent(btn.dataset.speak);
       const lang = btn.dataset.lang;
-      speak(text, lang);
+      const courseKey = btn.dataset.course || Object.keys(COURSES).find(k => COURSES[k].speechLang === lang);
+      speak(text, lang, courseKey, btn);
     });
   });
 }
@@ -3775,7 +4293,7 @@ function openGuidebookModal(courseKey, unitNum){
         if(speakBtn){
           speakBtn.onclick = (e) => {
             e.stopPropagation();
-            speakNative(v.native, course.speechLang);
+            speak(v.native, course.speechLang, courseKey, speakBtn);
           };
         }
         vocabList.appendChild(item);
@@ -3835,6 +4353,7 @@ function startLesson(courseKey, lessonIndex){
   state.lastActiveCourse = courseKey;
   recordActivity();
   saveState();
+  prefetchLessonAudio(courseKey, lessonIndex);
   session = {
     courseKey, lessonIndex,
     questions: buildLessonQuestions(COURSES[courseKey], lessonIndex),
@@ -3887,6 +4406,8 @@ function resetQuestionUI(){
   const sentenceWrap = document.getElementById("sentence-wrap");
   if(sentenceWrap) sentenceWrap.classList.add("hidden");
   document.getElementById("speaker-btn").classList.add("hidden");
+  const setBtn = document.getElementById("speaker-settings-btn");
+  if(setBtn) setBtn.classList.add("hidden");
   document.getElementById("speaking-row").classList.add("hidden");
   document.getElementById("audio-hint").classList.add("hidden");
 
@@ -3946,7 +4467,12 @@ function renderQuestion(){
     if(q.speakText){
       const sBtn = document.getElementById("speaker-btn");
       sBtn.classList.remove("hidden");
-      sBtn.onclick = () => speak(q.speakText, course.speechLang);
+      sBtn.onclick = () => speak(q.speakText, course.speechLang, activeCourseKey, sBtn);
+      const setBtn = document.getElementById("speaker-settings-btn");
+      if(setBtn){
+        setBtn.classList.remove("hidden");
+        setBtn.onclick = () => openVoiceSettingsModal(activeCourseKey);
+      }
       setupSpeakingRow();
     }
   }else if(q.type === "blank"){
@@ -3972,9 +4498,14 @@ function renderQuestion(){
     });
     const sBtn = document.getElementById("speaker-btn");
     sBtn.classList.remove("hidden");
-    sBtn.onclick = () => speak(q.speakText, course.speechLang);
+    sBtn.onclick = () => speak(q.speakText, course.speechLang, activeCourseKey, sBtn);
+    const setBtn = document.getElementById("speaker-settings-btn");
+    if(setBtn){
+      setBtn.classList.remove("hidden");
+      setBtn.onclick = () => openVoiceSettingsModal(activeCourseKey);
+    }
     document.getElementById("audio-hint").classList.remove("hidden");
-    setTimeout(() => speak(q.speakText, course.speechLang), 350);
+    setTimeout(() => speak(q.speakText, course.speechLang, activeCourseKey, sBtn), 350);
     setupSpeakingRow();
   }else if(q.type === "type"){
     document.getElementById("options-grid").classList.add("hidden");
@@ -4033,7 +4564,8 @@ function onMatchClick(side, btn, idx, q, course){
   if(side === "native"){
     if(ms.selNativeBtn) ms.selNativeBtn.classList.remove("selected");
     ms.selNativeBtn = btn; ms.selNativeIdx = idx; btn.classList.add("selected");
-    speak(q.pairs[idx].native, course.speechLang);
+    const activeCourseKey = q._courseKey || (session.courseKey !== "all" ? session.courseKey : "igbo");
+    speak(q.pairs[idx].native, course.speechLang, activeCourseKey, btn);
   }else{
     if(ms.selEnBtn) ms.selEnBtn.classList.remove("selected");
     ms.selEnBtn = btn; ms.selEnIdx = idx; btn.classList.add("selected");
@@ -5284,6 +5816,7 @@ function setupUserActivityTracking(){
   initServiceWorker();
   setupInactivityBanner();
   setupUserActivityTracking();
+  initVoiceSettingsModal();
 
   // Check URL query parameters for OAuth redirect
   const params = new URLSearchParams(window.location.search);

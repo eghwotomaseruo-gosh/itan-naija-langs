@@ -1211,15 +1211,520 @@ function makeBlankQuestion(v, course){
   };
 }
 
-function makeSentenceQuestion(v, course){
-  const words = v.native.split(" ");
+/* ==========================================================================
+   DUOLINGO-STYLE TRANSLATE SENTENCE INFRASTRUCTURE (Mascot, Data, Generator)
+   ========================================================================== */
+const DUO_MASCOT_SVG = `<svg class="duo-mascot-svg" viewBox="0 0 130 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ears -->
+  <circle cx="34" cy="34" r="14" fill="#8c5332" stroke="#25160e" stroke-width="2.5"/>
+  <circle cx="34" cy="34" r="7.5" fill="#d99368"/>
+  <circle cx="96" cy="34" r="14" fill="#8c5332" stroke="#25160e" stroke-width="2.5"/>
+  <circle cx="96" cy="34" r="7.5" fill="#d99368"/>
+  
+  <!-- Body / Torso -->
+  <path d="M 28 92 C 22 122 26 148 42 155 C 56 160 74 160 88 155 C 104 148 108 122 102 92 Z" fill="#8c5332" stroke="#25160e" stroke-width="2.5"/>
+  <!-- Belly -->
+  <path d="M 44 112 C 44 140 86 140 86 112 Z" fill="#a46843" opacity="0.4"/>
+  <!-- Paws / Feet -->
+  <ellipse cx="46" cy="155" rx="12" ry="6" fill="#754225" stroke="#25160e" stroke-width="2"/>
+  <ellipse cx="84" cy="155" rx="12" ry="6" fill="#754225" stroke="#25160e" stroke-width="2"/>
+  
+  <!-- Scarf Back Layer (Cyan/Teal like Duolingo) -->
+  <path d="M 27 75 C 38 96 92 96 103 75 C 108 67 102 61 92 65 C 78 70 52 70 38 65 C 28 61 22 67 27 75 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2.2"/>
+  <!-- Scarf dangling tail on left -->
+  <path d="M 30 78 C 22 86 21 104 32 112 C 38 116 41 104 38 92 Z" fill="#0ea5e9" stroke="#0284c7" stroke-width="2"/>
+  
+  <!-- Head Base -->
+  <path d="M 30 52 C 30 25 100 25 100 52 C 104 70 101 83 89 87 C 77 91 53 91 41 87 C 29 83 26 70 30 52 Z" fill="#8c5332" stroke="#25160e" stroke-width="2.5"/>
+  
+  <!-- Folded Arms Across Chest (Determined Duolingo Bear Pose) -->
+  <path d="M 27 92 C 27 118 64 122 78 112 C 84 107 80 98 70 100 C 56 102 42 97 38 90" fill="#754225" stroke="#25160e" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 103 92 C 103 118 66 122 52 112 C 46 107 50 98 60 100 C 74 102 88 97 92 90" fill="#834b2b" stroke="#25160e" stroke-width="2.5" stroke-linecap="round"/>
+  
+  <!-- Snout / Muzzle -->
+  <ellipse cx="65" cy="62" rx="16" ry="13" fill="#dfa27a" stroke="#25160e" stroke-width="2"/>
+  <!-- Nose -->
+  <path d="M 59 55 C 59 52 71 52 71 55 C 71 60 67 63 65 63 C 63 63 59 60 59 55 Z" fill="#25160e"/>
+  <!-- Smile -->
+  <path d="M 61 66 C 63 69 67 69 69 66" stroke="#25160e" stroke-width="2.2" stroke-linecap="round"/>
+  
+  <!-- Eyebrows with determined expression -->
+  <path d="M 43 38 L 56 41" stroke="#25160e" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 74 41 L 87 38" stroke="#25160e" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Eyes with blink animation -->
+  <g class="mascot-eyes">
+    <ellipse cx="50" cy="46" rx="4" ry="5" fill="#ffffff" stroke="#25160e" stroke-width="1.6"/>
+    <circle cx="50" cy="46" r="2.5" fill="#25160e"/>
+    <circle cx="51.2" cy="44.8" r="0.9" fill="#ffffff"/>
+    <ellipse cx="80" cy="46" rx="4" ry="5" fill="#ffffff" stroke="#25160e" stroke-width="1.6"/>
+    <circle cx="80" cy="46" r="2.5" fill="#25160e"/>
+    <circle cx="81.2" cy="44.8" r="0.9" fill="#ffffff"/>
+  </g>
+</svg>`;
+
+const CURATED_SENTENCES = {
+  igbo: [
+    {
+      nativeSentence: "Kpachara anya, akpa m dị arọ nke ukwuu!",
+      speakText: "Kpachara anya, akpa m dị arọ nke ukwuu",
+      tokens: [
+        { text: "Kpachara anya", hint: "Careful / Watch out", isNew: true },
+        { text: ",", isPunct: true },
+        { text: "akpa", hint: "bag / suitcase" },
+        { text: "m", hint: "my" },
+        { text: "dị", hint: "is" },
+        { text: "arọ", hint: "heavy" },
+        { text: "nke ukwuu", hint: "very / very much" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Careful, my suitcase is very heavy!",
+      answerTokens: ["Careful", "my", "suitcase", "is", "very", "heavy"],
+      acceptAnswers: [
+        "Careful my suitcase is very heavy",
+        "Careful my bag is very heavy",
+        "Watch out my bag is very heavy",
+        "Watch out my suitcase is very heavy"
+      ],
+      distractors: ["in", "small", "food", "bag"]
+    },
+    {
+      nativeSentence: "Ndewo, kedu aha gị?",
+      speakText: "Ndewo, kedu aha gị",
+      tokens: [
+        { text: "Ndewo", hint: "Hello / Greetings" },
+        { text: ",", isPunct: true },
+        { text: "kedu", hint: "what / how" },
+        { text: "aha", hint: "name", isNew: true },
+        { text: "gị", hint: "your" },
+        { text: "?", isPunct: true }
+      ],
+      answer: "Hello, what is your name?",
+      answerTokens: ["Hello", "what", "is", "your", "name"],
+      acceptAnswers: ["Hello what is your name", "Hi what is your name"],
+      distractors: ["my", "where", "friend", "is"]
+    },
+    {
+      nativeSentence: "Ụtụtụ ọma, nne m na nna m!",
+      speakText: "Ụtụtụ ọma, nne m na nna m",
+      tokens: [
+        { text: "Ụtụtụ ọma", hint: "Good morning" },
+        { text: ",", isPunct: true },
+        { text: "nne", hint: "mother" },
+        { text: "m", hint: "my" },
+        { text: "na", hint: "and" },
+        { text: "nna", hint: "father", isNew: true },
+        { text: "m", hint: "my" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Good morning, my mother and my father!",
+      answerTokens: ["Good", "morning", "my", "mother", "and", "my", "father"],
+      acceptAnswers: ["Good morning my mother and father", "Good morning my mother and my father"],
+      distractors: ["night", "sister", "friend", "food"]
+    },
+    {
+      nativeSentence: "Biko, wetara m mmiri oyi!",
+      speakText: "Biko, wetara m mmiri oyi",
+      tokens: [
+        { text: "Biko", hint: "Please" },
+        { text: ",", isPunct: true },
+        { text: "wetara", hint: "bring", isNew: true },
+        { text: "m", hint: "me" },
+        { text: "mmiri", hint: "water" },
+        { text: "oyi", hint: "cold" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Please, bring me cold water!",
+      answerTokens: ["Please", "bring", "me", "cold", "water"],
+      acceptAnswers: ["Please bring me cold water"],
+      distractors: ["hot", "drink", "food", "yam"]
+    },
+    {
+      nativeSentence: "Rie nri a, ọ dị ụtọ nke ukwuu!",
+      speakText: "Rie nri a, ọ dị ụtọ nke ukwuu",
+      tokens: [
+        { text: "Rie", hint: "Eat" },
+        { text: "nri", hint: "food" },
+        { text: "a", hint: "this" },
+        { text: ",", isPunct: true },
+        { text: "ọ", hint: "it" },
+        { text: "dị ụtọ", hint: "is delicious / tasty", isNew: true },
+        { text: "nke ukwuu", hint: "very much" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Eat this food, it is very delicious!",
+      answerTokens: ["Eat", "this", "food", "it", "is", "very", "delicious"],
+      acceptAnswers: ["Eat this food it is very delicious", "Eat this food it is very tasty"],
+      distractors: ["water", "cook", "cold", "sweet"]
+    }
+  ],
+  yoruba: [
+    {
+      nativeSentence: "Akiyesi, apo mi wuwo pupo!",
+      speakText: "Akiyesi, apo mi wuwo pupo",
+      tokens: [
+        { text: "Akiyesi", hint: "Careful / Attention", isNew: true },
+        { text: ",", isPunct: true },
+        { text: "apo", hint: "bag / suitcase" },
+        { text: "mi", hint: "my" },
+        { text: "wuwo", hint: "is heavy" },
+        { text: "pupo", hint: "very / a lot" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Careful, my suitcase is very heavy!",
+      answerTokens: ["Careful", "my", "suitcase", "is", "very", "heavy"],
+      acceptAnswers: [
+        "Careful my suitcase is very heavy",
+        "Careful my bag is very heavy",
+        "Attention my bag is very heavy",
+        "Attention my suitcase is very heavy"
+      ],
+      distractors: ["in", "bag", "small", "shirt"]
+    },
+    {
+      nativeSentence: "Bawo ni, e kaaro gbogbo yin!",
+      speakText: "Bawo ni, e kaaro gbogbo yin",
+      tokens: [
+        { text: "Bawo ni", hint: "Hello / How are you" },
+        { text: ",", isPunct: true },
+        { text: "e kaaro", hint: "good morning" },
+        { text: "gbogbo", hint: "all", isNew: true },
+        { text: "yin", hint: "you" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Hello, good morning to you all!",
+      answerTokens: ["Hello", "good", "morning", "to", "you", "all"],
+      acceptAnswers: ["Hello good morning to you all", "Hi good morning to all of you"],
+      distractors: ["night", "we", "tomorrow", "friend"]
+    },
+    {
+      nativeSentence: "E se pupo fun iranlowo re!",
+      speakText: "E se pupo fun iranlowo re",
+      tokens: [
+        { text: "E se", hint: "Thank you" },
+        { text: "pupo", hint: "very much" },
+        { text: "fun", hint: "for" },
+        { text: "iranlowo", hint: "help / assistance", isNew: true },
+        { text: "re", hint: "your" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Thank you very much for your help!",
+      answerTokens: ["Thank", "you", "very", "much", "for", "your", "help"],
+      acceptAnswers: ["Thank you very much for your help", "Thanks a lot for your help"],
+      distractors: ["welcome", "please", "kindness", "friend"]
+    },
+    {
+      nativeSentence: "Iya mi ati baba mi wa nile.",
+      speakText: "Iya mi ati baba mi wa nile",
+      tokens: [
+        { text: "Iya", hint: "Mother" },
+        { text: "mi", hint: "my" },
+        { text: "ati", hint: "and" },
+        { text: "baba", hint: "father" },
+        { text: "mi", hint: "my" },
+        { text: "wa", hint: "are" },
+        { text: "nile", hint: "at home", isNew: true },
+        { text: ".", isPunct: true }
+      ],
+      answer: "My mother and my father are at home.",
+      answerTokens: ["My", "mother", "and", "my", "father", "are", "at", "home"],
+      acceptAnswers: ["My mother and father are at home", "My mother and my father are at home"],
+      distractors: ["market", "going", "sister", "house"]
+    },
+    {
+      nativeSentence: "Je onje re pelu omi tutu!",
+      speakText: "Je onje re pelu omi tutu",
+      tokens: [
+        { text: "Je", hint: "Eat" },
+        { text: "onje", hint: "food" },
+        { text: "re", hint: "your" },
+        { text: "pelu", hint: "with", isNew: true },
+        { text: "omi", hint: "water" },
+        { text: "tutu", hint: "cold" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Eat your food with cold water!",
+      answerTokens: ["Eat", "your", "food", "with", "cold", "water"],
+      acceptAnswers: ["Eat your food with cold water"],
+      distractors: ["hot", "drink", "yam", "tea"]
+    }
+  ],
+  hausa: [
+    {
+      nativeSentence: "Hankali, jaka ta tana da nauyi sosai!",
+      speakText: "Hankali, jaka ta tana da nauyi sosai",
+      tokens: [
+        { text: "Hankali", hint: "Careful / Attention", isNew: true },
+        { text: ",", isPunct: true },
+        { text: "jaka", hint: "bag / suitcase" },
+        { text: "ta", hint: "my" },
+        { text: "tana da", hint: "is / has" },
+        { text: "nauyi", hint: "heavy" },
+        { text: "sosai", hint: "very / a lot" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Careful, my suitcase is very heavy!",
+      answerTokens: ["Careful", "my", "suitcase", "is", "very", "heavy"],
+      acceptAnswers: [
+        "Careful my suitcase is very heavy",
+        "Careful my bag is very heavy",
+        "Attention my bag is very heavy",
+        "Attention my suitcase is very heavy"
+      ],
+      distractors: ["in", "bag", "small", "book"]
+    },
+    {
+      nativeSentence: "Sannu, ina kwana, yaya kake?",
+      speakText: "Sannu, ina kwana, yaya kake",
+      tokens: [
+        { text: "Sannu", hint: "Hello" },
+        { text: ",", isPunct: true },
+        { text: "ina kwana", hint: "good morning" },
+        { text: ",", isPunct: true },
+        { text: "yaya", hint: "how" },
+        { text: "kake", hint: "are you", isNew: true },
+        { text: "?", isPunct: true }
+      ],
+      answer: "Hello, good morning, how are you?",
+      answerTokens: ["Hello", "good", "morning", "how", "are", "you"],
+      acceptAnswers: ["Hello good morning how are you"],
+      distractors: ["fine", "we", "night", "good"]
+    },
+    {
+      nativeSentence: "Na gode kwarai da taimakonka!",
+      speakText: "Na gode kwarai da taimakonka",
+      tokens: [
+        { text: "Na gode", hint: "Thank you" },
+        { text: "kwarai", hint: "very much" },
+        { text: "da", hint: "for / with" },
+        { text: "taimakonka", hint: "your help", isNew: true },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Thank you very much for your help!",
+      answerTokens: ["Thank", "you", "very", "much", "for", "your", "help"],
+      acceptAnswers: ["Thank you very much for your help", "Thanks very much for your help"],
+      distractors: ["please", "friend", "welcome", "happy"]
+    },
+    {
+      nativeSentence: "Uwa ta da uba na suna nan.",
+      speakText: "Uwa ta da uba na suna nan",
+      tokens: [
+        { text: "Uwa", hint: "Mother" },
+        { text: "ta", hint: "my" },
+        { text: "da", hint: "and" },
+        { text: "uba", hint: "father" },
+        { text: "na", hint: "my" },
+        { text: "suna nan", hint: "are here", isNew: true },
+        { text: ".", isPunct: true }
+      ],
+      answer: "My mother and my father are here.",
+      answerTokens: ["My", "mother", "and", "my", "father", "are", "here"],
+      acceptAnswers: ["My mother and father are here", "My mother and my father are here"],
+      distractors: ["house", "there", "sister", "market"]
+    },
+    {
+      nativeSentence: "Ci abinci da ruwan sanyi!",
+      speakText: "Ci abinci da ruwan sanyi",
+      tokens: [
+        { text: "Ci", hint: "Eat" },
+        { text: "abinci", hint: "food" },
+        { text: "da", hint: "with", isNew: true },
+        { text: "ruwan", hint: "water" },
+        { text: "sanyi", hint: "cold" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Eat food with cold water!",
+      answerTokens: ["Eat", "food", "with", "cold", "water"],
+      acceptAnswers: ["Eat food with cold water"],
+      distractors: ["hot", "drink", "meat", "tea"]
+    }
+  ],
+  edo: [
+    {
+      nativeSentence: "Lẹkpa, ẹkpo mwẹ lọgbọ gbe!",
+      speakText: "Lẹkpa, ẹkpo mwẹ lọgbọ gbe",
+      tokens: [
+        { text: "Lẹkpa", hint: "Careful / Watch out", isNew: true },
+        { text: ",", isPunct: true },
+        { text: "ẹkpo", hint: "bag / suitcase" },
+        { text: "mwẹ", hint: "my" },
+        { text: "lọgbọ", hint: "is heavy" },
+        { text: "gbe", hint: "very / a lot" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Careful, my suitcase is very heavy!",
+      answerTokens: ["Careful", "my", "suitcase", "is", "very", "heavy"],
+      acceptAnswers: ["Careful my suitcase is very heavy", "Careful my bag is very heavy"],
+      distractors: ["in", "bag", "small", "food"]
+    },
+    {
+      nativeSentence: "Kɔyo, vbẹẹ o re?",
+      speakText: "Kɔyo, vbẹẹ o re",
+      tokens: [
+        { text: "Kɔyo", hint: "Hello / Greetings" },
+        { text: ",", isPunct: true },
+        { text: "vbẹẹ", hint: "how", isNew: true },
+        { text: "o re", hint: "are things / is it" },
+        { text: "?", isPunct: true }
+      ],
+      answer: "Hello, how are things?",
+      answerTokens: ["Hello", "how", "are", "things"],
+      acceptAnswers: ["Hello how are things", "Hi how are things", "Hello how is it"],
+      distractors: ["you", "fine", "morning", "good"]
+    }
+  ],
+  efik: [
+    {
+      nativeSentence: "Kpeme idem, ekpat mi odobi etieti!",
+      speakText: "Kpeme idem, ekpat mi odobi etieti",
+      tokens: [
+        { text: "Kpeme idem", hint: "Careful / Watch out", isNew: true },
+        { text: ",", isPunct: true },
+        { text: "ekpat", hint: "bag / suitcase" },
+        { text: "mi", hint: "my" },
+        { text: "odobi", hint: "is heavy" },
+        { text: "etieti", hint: "very / very much" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Careful, my suitcase is very heavy!",
+      answerTokens: ["Careful", "my", "suitcase", "is", "very", "heavy"],
+      acceptAnswers: ["Careful my suitcase is very heavy", "Careful my bag is very heavy"],
+      distractors: ["in", "bag", "small", "water"]
+    },
+    {
+      nativeSentence: "Mọkọm, emesiere nte afo etiede?",
+      speakText: "Mọkọm, emesiere nte afo etiede",
+      tokens: [
+        { text: "Mọkọm", hint: "Hello / Greetings" },
+        { text: ",", isPunct: true },
+        { text: "emesiere", hint: "good morning" },
+        { text: "nte", hint: "how", isNew: true },
+        { text: "afo", hint: "you" },
+        { text: "etiede", hint: "are doing" },
+        { text: "?", isPunct: true }
+      ],
+      answer: "Hello, good morning, how are you doing?",
+      answerTokens: ["Hello", "good", "morning", "how", "are", "you", "doing"],
+      acceptAnswers: ["Hello good morning how are you doing", "Hello good morning how are you"],
+      distractors: ["fine", "we", "night", "good"]
+    }
+  ],
+  urhobo: [
+    {
+      nativeSentence: "Jomaotọ, ekpeta mẹ ghanrẹ nọ gbe!",
+      speakText: "Jomaotọ, ekpeta mẹ ghanrẹ nọ gbe",
+      tokens: [
+        { text: "Jomaotọ", hint: "Careful / Be watchful", isNew: true },
+        { text: ",", isPunct: true },
+        { text: "ekpeta", hint: "bag / suitcase" },
+        { text: "mẹ", hint: "my" },
+        { text: "ghanrẹ nọ", hint: "is heavy" },
+        { text: "gbe", hint: "very" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Careful, my suitcase is very heavy!",
+      answerTokens: ["Careful", "my", "suitcase", "is", "very", "heavy"],
+      acceptAnswers: ["Careful my suitcase is very heavy", "Careful my bag is very heavy"],
+      distractors: ["in", "bag", "small", "food"]
+    }
+  ],
+  tiv: [
+    {
+      nativeSentence: "Wanger, ikpa wam ka a zelu kpen kpen!",
+      speakText: "Wanger, ikpa wam ka a zelu kpen kpen",
+      tokens: [
+        { text: "Wanger", hint: "Careful / Pay attention", isNew: true },
+        { text: ",", isPunct: true },
+        { text: "ikpa", hint: "bag / suitcase" },
+        { text: "wam", hint: "my" },
+        { text: "ka a zelu", hint: "is heavy" },
+        { text: "kpen kpen", hint: "very much" },
+        { text: "!", isPunct: true }
+      ],
+      answer: "Careful, my suitcase is very heavy!",
+      answerTokens: ["Careful", "my", "suitcase", "is", "very", "heavy"],
+      acceptAnswers: ["Careful my suitcase is very heavy", "Careful my bag is very heavy"],
+      distractors: ["in", "bag", "small", "water"]
+    }
+  ]
+};
+
+function generateDynamicSentence(v, course){
+  const cleanNative = (v.native || "").replace(/[.,!?;:]/g, "").trim();
+  const cleanEn = (v.en || "").replace(/[.,!?;:]/g, "").trim();
+  const isMultiWord = cleanNative.includes(" ");
+
+  if(isMultiWord){
+    const words = cleanNative.split(/\s+/);
+    const enTokens = cleanEn.split(/\s+/);
+    const pool = ["in", "very", "my", "good", "the", "and", "small"];
+    const distractors = pool.filter(d => !enTokens.map(t => t.toLowerCase()).includes(d)).slice(0, 3);
+    const bank = shuffle([...enTokens, ...distractors]);
+    return {
+      type: "sentence",
+      prompt: "Translate this sentence",
+      isNewWord: true,
+      nativeSentence: v.native,
+      speakText: v.native,
+      tokens: words.map((w, idx) => ({
+        text: w,
+        hint: idx === 0 ? cleanEn : "phrase word",
+        isNew: idx === 0
+      })),
+      answer: cleanEn,
+      answerTokens: enTokens,
+      acceptAnswers: [cleanEn],
+      bank: bank,
+      _vocab: v,
+      _courseKey: course ? course.key : "igbo"
+    };
+  }
+
+  const enTokens = cleanEn.split(/\s+/);
+  const pool = ["my", "very", "small", "is", "the", "in", "good"];
+  const distractors = pool.filter(d => !enTokens.map(t => t.toLowerCase()).includes(d)).slice(0, 4);
+  const bank = shuffle([...enTokens, ...distractors]);
   return {
     type: "sentence",
-    prompt: `Build the phrase for "${v.en}"`,
-    shuffled: shuffle(words.map((w, i) => ({ w, i }))),
-    answer: words.join(" "),
-    _vocab: v
+    prompt: "Translate this sentence",
+    isNewWord: true,
+    nativeSentence: v.native,
+    speakText: v.native,
+    tokens: [
+      { text: v.native, hint: cleanEn, isNew: true }
+    ],
+    answer: cleanEn,
+    answerTokens: enTokens,
+    acceptAnswers: [cleanEn],
+    bank: bank,
+    _vocab: v,
+    _courseKey: course ? course.key : "igbo"
   };
+}
+
+function makeSentenceQuestion(v, course, lessonIndex){
+  const courseKey = (course && course.key) ? course.key : (session && session.courseKey !== "all" ? session.courseKey : "igbo");
+  const list = CURATED_SENTENCES[courseKey] || CURATED_SENTENCES.igbo;
+  if(list && list.length){
+    const idx = (typeof lessonIndex === "number" ? lessonIndex : Math.floor(Math.random() * list.length)) % list.length;
+    const item = list[idx];
+    const bank = shuffle([...item.answerTokens, ...item.distractors]);
+    return {
+      type: "sentence",
+      prompt: "Translate this sentence",
+      isNewWord: true,
+      nativeSentence: item.nativeSentence,
+      speakText: item.speakText,
+      tokens: item.tokens,
+      answer: item.answer,
+      answerTokens: item.answerTokens,
+      acceptAnswers: item.acceptAnswers || [item.answer],
+      bank: bank,
+      _vocab: v,
+      _courseKey: courseKey
+    };
+  }
+  return generateDynamicSentence(v, course);
 }
 
 /* Rebuilds a fresh version of a missed question (new distractor shuffle) for the retry queue. */
@@ -1260,12 +1765,10 @@ function buildLessonQuestions(course, lessonIndex){
   questions.push(makeListenQuestion(vocab[listenIdx], course));
   questions.push(makeMatchQuestion(vocab));
 
-  const sentenceCandidates = vocab.filter(v => v.native.includes(" "));
-  if(sentenceCandidates.length){
-    questions.push(makeSentenceQuestion(sentenceCandidates[Math.floor(Math.random() * sentenceCandidates.length)], course));
-  }else{
-    questions.push(makeMcQuestion(vocab[pickIdx()], course));
-  }
+  // Duolingo-style sentence translation question with mascot character & word bank!
+  const targetVocab = vocab[pickIdx()];
+  questions.push(makeSentenceQuestion(targetVocab, course, lessonIndex));
+
   return questions;
 }
 
@@ -2649,6 +3152,50 @@ function playUiSound(type){
       gain.connect(uiAudioCtx.destination);
       osc.start(now);
       osc.stop(now + 0.08);
+    }else if(type === "pop"){
+      const osc = uiAudioCtx.createOscillator();
+      const gain = uiAudioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(650, now);
+      osc.frequency.exponentialRampToValueAtTime(1100, now + 0.05);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      osc.connect(gain);
+      gain.connect(uiAudioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.05);
+    }else if(type === "correct"){
+      const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 major triad chime
+      notes.forEach((freq, idx) => {
+        const osc = uiAudioCtx.createOscillator();
+        const gain = uiAudioCtx.createGain();
+        osc.type = "triangle";
+        const startT = now + idx * 0.07;
+        osc.frequency.setValueAtTime(freq, startT);
+        gain.gain.setValueAtTime(0.001, startT);
+        gain.gain.linearRampToValueAtTime(0.24, startT + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001, startT + 0.32);
+        osc.connect(gain);
+        gain.connect(uiAudioCtx.destination);
+        osc.start(startT);
+        osc.stop(startT + 0.32);
+      });
+    }else if(type === "incorrect"){
+      const notes = [220, 160]; // gentle low downward chime
+      notes.forEach((freq, idx) => {
+        const osc = uiAudioCtx.createOscillator();
+        const gain = uiAudioCtx.createGain();
+        osc.type = "sawtooth";
+        const startT = now + idx * 0.11;
+        osc.frequency.setValueAtTime(freq, startT);
+        gain.gain.setValueAtTime(0.001, startT);
+        gain.gain.linearRampToValueAtTime(0.14, startT + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001, startT + 0.22);
+        osc.connect(gain);
+        gain.connect(uiAudioCtx.destination);
+        osc.start(startT);
+        osc.stop(startT + 0.22);
+      });
     }else if(type === "chest_unlock"){
       const notes = [523.25, 659.25, 783.99, 1046.5];
       notes.forEach((freq, idx) => {
@@ -3335,8 +3882,27 @@ function resetQuestionUI(){
   document.getElementById("speaker-btn").classList.add("hidden");
   document.getElementById("speaking-row").classList.add("hidden");
   document.getElementById("audio-hint").classList.add("hidden");
+
+  const newWordPill = document.getElementById("new-word-pill");
+  if(newWordPill) newWordPill.classList.add("hidden");
+  const pop = document.getElementById("word-hint-popover");
+  if(pop) pop.classList.add("hidden");
+  const stdPrompt = document.getElementById("standard-prompt-row");
+  if(stdPrompt) stdPrompt.classList.remove("hidden");
+  const mascot = document.getElementById("sentence-mascot");
+  if(mascot) mascot.className = "sentence-mascot";
+  const answerEl = document.getElementById("sentence-answer-row");
+  if(answerEl) answerEl.className = "sentence-answer-row";
+
   const feedback = document.getElementById("feedback");
   feedback.classList.add("hidden");
+  const fbTitle = document.getElementById("feedback-title");
+  if(fbTitle) fbTitle.textContent = "";
+  const fbText = document.getElementById("feedback-text");
+  if(fbText) fbText.textContent = "";
+  const fbIcon = document.getElementById("feedback-icon-box");
+  if(fbIcon) fbIcon.textContent = "";
+
   const checkBtn = document.getElementById("check-btn");
   checkBtn.disabled = true;
   checkBtn.textContent = "Check";
@@ -3419,7 +3985,7 @@ function renderQuestion(){
   }else if(q.type === "sentence"){
     document.getElementById("options-grid").classList.add("hidden");
     document.getElementById("sentence-wrap").classList.remove("hidden");
-    renderSentence(q);
+    renderSentence(q, course);
   }
 }
 
@@ -3505,33 +4071,170 @@ function onMatchClick(side, btn, idx, q, course){
   }
 }
 
-/* ---- sentence-building question ---- */
-function renderSentence(q){
+/* ---- Duolingo-style sentence translation with Bear Mascot & Interactive Word Bank ---- */
+function showWordHintPopover(targetEl, term, hint){
+  const pop = document.getElementById("word-hint-popover");
+  if(!pop) return;
+  if(!hint){
+    pop.classList.add("hidden");
+    return;
+  }
+  const termEl = document.getElementById("popover-term");
+  const hintEl = document.getElementById("popover-hint");
+  if(termEl) termEl.textContent = term;
+  if(hintEl) hintEl.textContent = hint;
+
+  const rect = targetEl.getBoundingClientRect();
+  const wrap = document.querySelector(".question-wrap");
+  const wrapRect = wrap ? wrap.getBoundingClientRect() : { left: 0, top: 0 };
+
+  const left = rect.left - wrapRect.left + (rect.width / 2);
+  const top = rect.top - wrapRect.top - 8;
+
+  pop.style.left = `${Math.max(12, left)}px`;
+  pop.style.top = `${top}px`;
+  pop.classList.remove("hidden");
+}
+
+function renderSentence(q, course){
+  // 1. New word indicator badge
+  const newWordPill = document.getElementById("new-word-pill");
+  if(newWordPill){
+    newWordPill.classList.toggle("hidden", !q.isNewWord);
+  }
+
+  // 2. Prompt headers
+  const kicker = document.getElementById("question-kicker");
+  if(kicker) kicker.textContent = q.isRetry ? "Retry \u00b7 Translate" : "Translate";
+  const promptEl = document.getElementById("question-prompt");
+  if(promptEl) promptEl.textContent = q.prompt || "Translate this sentence";
+
+  // 3. Duolingo Bear Mascot
+  const mascotEl = document.getElementById("sentence-mascot");
+  if(mascotEl){
+    mascotEl.innerHTML = DUO_MASCOT_SVG;
+    mascotEl.className = "sentence-mascot";
+    mascotEl.onclick = () => {
+      mascotEl.classList.remove("celebrate");
+      void mascotEl.offsetWidth;
+      mascotEl.classList.add("celebrate");
+      playUiSound("tap");
+    };
+  }
+
+  // 4. Speech Bubble Words with Interactive Hints
+  const bubbleWordsEl = document.getElementById("bubble-words");
+  bubbleWordsEl.innerHTML = "";
+  (q.tokens || []).forEach(token => {
+    if(token.isPunct){
+      const punct = document.createElement("span");
+      punct.className = "bubble-punct";
+      punct.textContent = token.text;
+      bubbleWordsEl.appendChild(punct);
+    }else{
+      const wordSpan = document.createElement("span");
+      wordSpan.className = "bubble-word" + (token.isNew ? " is-new" : "");
+      wordSpan.textContent = token.text;
+      wordSpan.setAttribute("role", "button");
+      wordSpan.setAttribute("tabindex", "0");
+      wordSpan.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showWordHintPopover(wordSpan, token.text, token.hint || token.meaning);
+        playUiSound("tap");
+      });
+      bubbleWordsEl.appendChild(wordSpan);
+    }
+  });
+
+  // 5. Audio playback button in speech bubble
+  const bubbleSpeaker = document.getElementById("bubble-speaker-btn");
+  if(bubbleSpeaker){
+    bubbleSpeaker.onclick = (e) => {
+      e.stopPropagation();
+      bubbleSpeaker.classList.add("playing");
+      const speechLang = (course && course.speechLang) ? course.speechLang : "en";
+      speak(q.speakText || q.nativeSentence, speechLang);
+      setTimeout(() => bubbleSpeaker.classList.remove("playing"), 1200);
+    };
+
+    // Auto-play sentence pronunciation once on load
+    setTimeout(() => {
+      if(!session.answered && session.questions[session.qi] === q){
+        bubbleSpeaker.classList.add("playing");
+        const speechLang = (course && course.speechLang) ? course.speechLang : "en";
+        speak(q.speakText || q.nativeSentence, speechLang);
+        setTimeout(() => bubbleSpeaker.classList.remove("playing"), 1200);
+      }
+    }, 380);
+  }
+
+  // 6. Sentence construction notebook lines and word bank
   const bankEl = document.getElementById("sentence-bank");
   const answerEl = document.getElementById("sentence-answer-row");
   bankEl.innerHTML = "";
   answerEl.innerHTML = "";
-  answerEl.classList.remove("correct", "incorrect");
-  q.shuffled.forEach((item, idx) => {
-    const chip = document.createElement("button");
-    chip.className = "sentence-tile";
-    chip.textContent = item.w;
-    chip.dataset.idx = idx;
-    chip.addEventListener("click", e => onSentenceTileTap(e));
-    bankEl.appendChild(chip);
+  answerEl.className = "sentence-answer-row";
+
+  const checkBtn = document.getElementById("check-btn");
+  checkBtn.disabled = true;
+  checkBtn.textContent = "CHECK";
+
+  // Build Word Bank tiles
+  const bankTokens = q.bank || (q.shuffled ? q.shuffled.map(s => s.w) : []);
+  bankTokens.forEach((wordText, bankIdx) => {
+    const tile = document.createElement("button");
+    tile.className = "sentence-tile";
+    tile.textContent = wordText;
+    tile.dataset.bankIdx = bankIdx;
+    tile.dataset.text = wordText;
+    tile.type = "button";
+
+    tile.addEventListener("click", () => {
+      if(session.answered) return;
+      playUiSound("tap");
+
+      // Hide bank tile and insert a ghost placeholder to keep alignment
+      tile.classList.add("is-placed");
+      const ghost = document.createElement("div");
+      ghost.className = "sentence-ghost-placeholder";
+      ghost.dataset.bankIdx = bankIdx;
+      ghost.textContent = wordText;
+      tile.parentElement.insertBefore(ghost, tile);
+
+      // Create placed tile on the guidelines
+      const placed = document.createElement("button");
+      placed.className = "sentence-placed-tile";
+      placed.textContent = wordText;
+      placed.dataset.bankIdx = bankIdx;
+      placed.dataset.text = wordText;
+      placed.type = "button";
+
+      // Clicking placed tile sends it back to the bank
+      placed.addEventListener("click", () => {
+        if(session.answered) return;
+        playUiSound("pop");
+        placed.remove();
+        tile.classList.remove("is-placed");
+        const gh = bankEl.querySelector(`.sentence-ghost-placeholder[data-bank-idx="${bankIdx}"]`);
+        if(gh) gh.remove();
+        checkBtn.disabled = answerEl.children.length === 0;
+      });
+
+      answerEl.appendChild(placed);
+      checkBtn.disabled = false;
+    });
+
+    bankEl.appendChild(tile);
   });
-  document.getElementById("check-btn").disabled = true;
 }
 
-function onSentenceTileTap(e){
-  if(session.answered) return;
-  const chip = e.currentTarget;
-  const inBank = chip.parentElement.id === "sentence-bank";
-  const target = document.getElementById(inBank ? "sentence-answer-row" : "sentence-bank");
-  target.appendChild(chip);
-  chip.classList.toggle("placed", inBank);
-  document.getElementById("check-btn").disabled = document.getElementById("sentence-bank").children.length > 0;
-}
+// Global click dismisses word hint popover
+document.addEventListener("click", (e) => {
+  if(!e.target.closest(".bubble-word") && !e.target.closest("#word-hint-popover")){
+    const pop = document.getElementById("word-hint-popover");
+    if(pop) pop.classList.add("hidden");
+  }
+});
 
 /* ---- grading / advance ---- */
 function checkAnswer(){
@@ -3549,34 +4252,62 @@ function checkAnswer(){
         else if(b.classList.contains("selected") && !correct) b.classList.add("incorrect");
         b.disabled = true;
       });
+      playUiSound(correct ? "correct" : "incorrect");
     }else if(q.type === "type"){
       const input = document.getElementById("type-input");
       correct = q.accept.includes(normalizeStr(input.value));
       input.classList.add(correct ? "correct" : "incorrect");
       input.disabled = true;
+      playUiSound(correct ? "correct" : "incorrect");
     }else if(q.type === "match"){
       return; // graded via taps; check-btn only reachable once answered
     }else if(q.type === "sentence"){
       const answerEl = document.getElementById("sentence-answer-row");
-      const attempt = [...answerEl.children].map(c => c.textContent).join(" ");
-      correct = attempt === q.answer;
-      answerEl.classList.add(correct ? "correct" : "incorrect");
+      const attemptTokens = [...answerEl.children].map(c => (c.dataset.text || c.textContent).trim());
+      const attemptStr = attemptTokens.join(" ");
+
+      const clean = (s) => (s || "").replace(/[.,!?;:'"״]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+      const normAttempt = clean(attemptStr);
+      const normAnswer = clean(q.answer);
+
+      correct = (attemptStr === q.answer) ||
+                (normAttempt === normAnswer) ||
+                (q.acceptAnswers && q.acceptAnswers.some(a => normAttempt === clean(a)));
+
+      if(correct){
+        playUiSound("correct");
+        answerEl.classList.add("correct");
+        const mascot = document.getElementById("sentence-mascot");
+        if(mascot) mascot.classList.add("celebrate");
+      }else{
+        playUiSound("incorrect");
+        answerEl.classList.add("incorrect");
+        const mascot = document.getElementById("sentence-mascot");
+        if(mascot) mascot.classList.add("retry");
+      }
       [...answerEl.children, ...document.getElementById("sentence-bank").children].forEach(c => { c.disabled = true; });
     }
 
     session.answered = true;
     const fb = document.getElementById("feedback");
+    const fbTitle = document.getElementById("feedback-title");
     const fbText = document.getElementById("feedback-text");
+    const fbIcon = document.getElementById("feedback-icon-box");
     fb.classList.remove("hidden");
+
     if(correct){
       fb.className = "feedback ok";
-      fbText.textContent = "Correct!";
+      if(fbIcon) fbIcon.textContent = "✓";
+      if(fbTitle) fbTitle.textContent = "Nicely done!";
+      if(fbText) fbText.textContent = "You got it right.";
       session.correctCount++;
       if(session.isPractice && q._vocab) recordPracticeSuccess(activeCourseKey, q._vocab);
     }else{
       fb.className = "feedback bad";
+      if(fbIcon) fbIcon.textContent = "✕";
+      if(fbTitle) fbTitle.textContent = "Correct solution:";
       const answerText = q.type === "type" ? q.answerDisplay : q.answer;
-      fbText.textContent = `Not quite — the answer is "${answerText}". It'll come back around later in the lesson.`;
+      if(fbText) fbText.textContent = answerText;
       session.mistakes++;
       state.hearts = Math.max(0, state.hearts - 1);
       document.getElementById("lesson-hearts").textContent = state.hearts;
@@ -3584,7 +4315,7 @@ function checkAnswer(){
       saveState();
       session.questions.push(requeueQuestion(q, COURSES[activeCourseKey]));
     }
-    document.getElementById("check-btn").textContent = (session.qi === session.questions.length - 1) ? "Finish" : "Continue";
+    document.getElementById("check-btn").textContent = (session.qi === session.questions.length - 1) ? "FINISH" : "CONTINUE";
     return;
   }
 

@@ -802,13 +802,42 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 }
 
 /* ===== lesson question screen ===== */
-.lesson-topbar{ display:flex; align-items:center; gap:14px; padding: 8px 0 30px; }
-.progress-track{ flex:1; height:12px; border-radius:8px; background: var(--surface); overflow:hidden; }
-.progress-fill{ height:100%; background: var(--gold); border-radius:8px; width:0%; transition: width .3s ease; }
+.lesson-topbar{ display:flex; align-items:center; gap:14px; padding: 10px 0 24px; }
+.progress-track{
+  flex:1; height:14px; border-radius:999px; background: #1e293b;
+  overflow:hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.35); position: relative;
+}
+.progress-fill{
+  height:100%; background: linear-gradient(180deg, #6ee7b7 0%, #22c55e 100%);
+  border-radius:999px; width:0%; transition: width .35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative; box-shadow: 0 0 10px rgba(34,197,94,0.35);
+}
+.progress-fill::after{
+  content: ""; position: absolute; top: 2px; left: 4px; right: 4px; height: 3px;
+  background: rgba(255,255,255,0.45); border-radius: 999px; pointer-events: none;
+}
+.energy-bolt{ width:16px; height:16px; fill:#ec4899; color:#ec4899; filter: drop-shadow(0 0 4px rgba(236,72,153,0.4)); }
 
-.question-kicker{ font-family: var(--font-head); text-transform:uppercase; letter-spacing:1.2px; font-size:12px; color: var(--cream-dim); margin:0 0 10px; }
+/* Duolingo-style "NEW WORD" Pill Badge */
+.new-word-pill{
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 13px; border-radius: 999px;
+  background: rgba(168, 85, 247, 0.16); border: 1.5px solid rgba(168, 85, 247, 0.45);
+  color: #c084fc; font-family: var(--font-head); font-size: 11px; font-weight: 800;
+  letter-spacing: 0.9px; text-transform: uppercase; margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.18);
+  animation: pillEntrance .28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes pillEntrance{
+  0%{ transform: translateY(-6px) scale(0.92); opacity: 0; }
+  100%{ transform: translateY(0) scale(1); opacity: 1; }
+}
+.new-word-sparkle{ width: 14px; height: 14px; color: #d8b4fe; animation: sparkleSpin 4s linear infinite; }
+@keyframes sparkleSpin{ 0%, 100%{ transform: rotate(0deg) scale(1); } 50%{ transform: rotate(18deg) scale(1.15); } }
+
+.question-kicker{ font-family: var(--font-head); text-transform:uppercase; letter-spacing:1.2px; font-size:12px; color: var(--cream-dim); margin:0 0 6px; }
 .prompt-row{ display:flex; align-items:center; gap:12px; margin: 0 0 14px; }
-.question-prompt{ font-family: var(--font-display); font-size: 30px; font-weight:600; margin: 0; line-height:1.25; flex:1; }
+.question-prompt{ font-family: var(--font-display); font-size: 27px; font-weight:700; margin: 0; line-height:1.25; flex:1; color: var(--cream); }
 .speaker-btn{
   flex-shrink:0; width:46px; height:46px; border-radius:50%; border:1px solid var(--line);
   background: var(--surface); color: var(--gold); display:flex; align-items:center; justify-content:center;
@@ -826,7 +855,7 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 
 .audio-hint{ font-size:12px; color: var(--cream-dim); margin: -8px 0 18px; }
 
-/* record-yourself controls — deliberately low visual weight so it reads as optional, not a required step */
+/* record-yourself controls */
 .speaking-row{
   display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; margin: 0 0 22px;
   padding: 10px 12px; border:1px dashed var(--line); border-radius:12px; background: rgba(244,239,227,0.02);
@@ -877,16 +906,301 @@ svg{ fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; strok
 .option-btn.correct{ border-color: var(--igbo); background: rgba(63,157,107,0.18); }
 .option-btn.incorrect{ border-color: var(--danger); background: rgba(209,104,47,0.18); }
 
-.lesson-footer{ position:sticky; bottom:0; padding-top: 24px; }
-.feedback{ padding: 12px 16px; border-radius:12px; margin-bottom:12px; font-family: var(--font-head); font-weight:600; font-size:14px; }
-.feedback.ok{ background: rgba(63,157,107,0.18); color:#8fd6ac; }
-.feedback.bad{ background: rgba(209,104,47,0.18); color:#f0b088; }
-.btn-check{
-  width:100%; padding: 15px; border:none; border-radius:14px;
-  background: var(--gold); color: var(--bg-deep); font-family: var(--font-head); font-weight:700; font-size:15px;
-  letter-spacing:.3px;
+/* ==========================================================================
+   DUOLINGO-STYLE TRANSLATE SENTENCE (Mascot, Speech Bubble, Guidelines, Bank)
+   ========================================================================== */
+.sentence-wrap{
+  display: flex; flex-direction: column; width: 100%; margin-top: 4px; position: relative;
 }
-.btn-check:disabled{ background: var(--surface-raised); color: var(--cream-dim); cursor:default; }
+
+/* Character & Speech Bubble Stage */
+.sentence-stage{
+  display: flex; align-items: flex-end; gap: 14px; margin-bottom: 20px; position: relative;
+}
+
+/* Mascot Container & SVG */
+.sentence-mascot{
+  width: 108px; height: 138px; flex-shrink: 0; position: relative;
+  cursor: pointer; user-select: none;
+  animation: mascotBreathe 3.4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+@keyframes mascotBreathe{
+  0%, 100%{ transform: translateY(0) scale(1); }
+  50%{ transform: translateY(-3px) scale(1.015); }
+}
+.sentence-mascot:active{
+  transform: scale(0.95);
+}
+.sentence-mascot.celebrate{
+  animation: mascotCelebrate 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes mascotCelebrate{
+  0%{ transform: translateY(0) scale(1); }
+  30%{ transform: translateY(-16px) scale(1.08) rotate(-4deg); }
+  60%{ transform: translateY(-6px) scale(1.04) rotate(3deg); }
+  100%{ transform: translateY(0) scale(1); }
+}
+.sentence-mascot.retry{
+  animation: mascotRetry 0.6s ease-in-out;
+}
+@keyframes mascotRetry{
+  0%, 100%{ transform: rotate(0deg); }
+  25%{ transform: rotate(-5deg); }
+  75%{ transform: rotate(5deg); }
+}
+
+.duo-mascot-svg{ width: 100%; height: 100%; display: block; overflow: visible; }
+.mascot-eyes{
+  animation: mascotBlink 4.2s ease-in-out infinite;
+  transform-origin: 70px 52px;
+}
+@keyframes mascotBlink{
+  0%, 94%, 98%, 100%{ transform: scaleY(1); }
+  96%{ transform: scaleY(0.08); }
+}
+
+/* Speech Bubble pointing to Mascot */
+.sentence-bubble{
+  flex: 1; min-height: 86px; border-radius: 18px;
+  background: #182230; border: 2px solid #2d3b4e;
+  padding: 14px 18px; position: relative;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 8px 24px -6px rgba(0,0,0,0.45);
+}
+/* Triangular beak pointing left toward bear's mouth */
+.sentence-bubble::before{
+  content: ""; position: absolute; left: -12px; top: 40px; width: 0; height: 0;
+  border-top: 9px solid transparent; border-bottom: 9px solid transparent;
+  border-right: 12px solid #2d3b4e; pointer-events: none;
+}
+.sentence-bubble::after{
+  content: ""; position: absolute; left: -9px; top: 41px; width: 0; height: 0;
+  border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+  border-right: 10px solid #182230; pointer-events: none;
+}
+
+/* Speaker button inside bubble */
+.bubble-speaker-btn{
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(56, 189, 248, 0.12); border: 1.5px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.bubble-speaker-btn svg{ width: 22px; height: 22px; }
+.bubble-speaker-btn:hover{
+  background: rgba(56, 189, 248, 0.22); border-color: #38bdf8; transform: scale(1.05);
+}
+.bubble-speaker-btn:active{ transform: scale(0.94); }
+.bubble-speaker-btn.playing{
+  background: #38bdf8; color: #0f172a; border-color: #38bdf8;
+  animation: bubbleSpeakerRipple 0.9s ease-in-out infinite;
+}
+@keyframes bubbleSpeakerRipple{
+  0%, 100%{ box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.5); }
+  50%{ box-shadow: 0 0 0 9px rgba(56, 189, 248, 0); }
+}
+
+/* Sentence Text inside Speech Bubble */
+.bubble-words{
+  font-family: var(--font-head); font-size: 20px; font-weight: 700;
+  line-height: 1.5; color: #f8fafc; display: flex; flex-wrap: wrap;
+  align-items: baseline; gap: 3px 6px;
+}
+.bubble-word{
+  position: relative; display: inline-block; cursor: pointer;
+  padding: 1px 2px; border-bottom: 2px dashed rgba(244,239,227,0.38);
+  transition: color 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+}
+.bubble-word:hover{
+  color: #38bdf8; border-bottom-color: #38bdf8;
+}
+/* Target "NEW WORD" Highlighted in Purple with Dashed Underline (like in screenshot) */
+.bubble-word.is-new{
+  color: #c084fc; border-bottom: 2.5px dashed #a855f7; font-weight: 800;
+}
+.bubble-word.is-new:hover{
+  color: #e9d5ff; border-bottom-color: #c084fc;
+}
+.bubble-punct{
+  display: inline-block; margin-right: 2px; color: #cbd5e1; user-select: none;
+}
+
+/* Interactive Hint Tooltip Popover (Duolingo style) */
+.word-hint-popover{
+  position: absolute; z-index: 99; transform: translate(-50%, -100%);
+  margin-top: -8px; background: #0f172a; border: 1.5px solid #38bdf8;
+  border-radius: 12px; padding: 7px 13px;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.65), 0 0 12px rgba(56, 189, 248, 0.25);
+  animation: popoverDrop 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: auto; white-space: nowrap;
+}
+@keyframes popoverDrop{
+  0%{ transform: translate(-50%, -85%) scale(0.9); opacity: 0; }
+  100%{ transform: translate(-50%, -100%) scale(1); opacity: 1; }
+}
+.popover-arrow{
+  position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 7px solid transparent; border-right: 7px solid transparent;
+  border-top: 7px solid #38bdf8;
+}
+.popover-body{
+  display: flex; flex-direction: column; gap: 2px; text-align: center;
+}
+.popover-term{
+  font-family: var(--font-head); font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8;
+}
+.popover-hint{
+  font-family: var(--font-head); font-size: 14.5px; font-weight: 700; color: #38bdf8;
+}
+
+/* 3 Notebook Guideline Lines for Sentence Construction */
+.sentence-construction-zone{
+  position: relative; min-height: 142px; margin: 10px 0 24px;
+  display: flex; flex-direction: column; justify-content: flex-start;
+}
+.sentence-guidelines{
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  justify-content: space-between; pointer-events: none; padding: 42px 0 6px;
+}
+.sentence-guideline-line{
+  width: 100%; height: 2px; background: #263345; border-radius: 1px;
+}
+
+/* Answer Row (Placed word chips rest on the lines) */
+.sentence-answer-row{
+  position: relative; z-index: 2; display: flex; flex-wrap: wrap;
+  align-items: flex-start; gap: 10px; min-height: 136px; padding: 2px 0;
+}
+.sentence-answer-row.correct .sentence-placed-tile{
+  border-color: #22c55e; background: rgba(34, 197, 94, 0.16); color: #86efac;
+}
+.sentence-answer-row.incorrect .sentence-placed-tile{
+  border-color: #ef4444; background: rgba(239, 68, 68, 0.16); color: #fca5a5;
+}
+
+/* Placed Tile on the Lines */
+.sentence-placed-tile{
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 18px; border-radius: 14px;
+  font-family: var(--font-head); font-size: 16px; font-weight: 600;
+  background: #1e293b; color: #f8fafc; border: 2px solid #475569;
+  box-shadow: 0 3px 0 #0f172a; cursor: pointer; user-select: none;
+  transition: transform 0.1s ease, border-color 0.12s ease;
+  animation: placedTileIn 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes placedTileIn{
+  0%{ transform: translateY(6px) scale(0.92); opacity: 0; }
+  100%{ transform: translateY(0) scale(1); opacity: 1; }
+}
+.sentence-placed-tile:hover{
+  border-color: #94a3b8; transform: translateY(-1px);
+}
+.sentence-placed-tile:active{
+  transform: translateY(2px); box-shadow: 0 1px 0 #0f172a;
+}
+
+/* Word Bank below the guidelines */
+.sentence-bank{
+  display: flex; flex-wrap: wrap; justify-content: center;
+  align-items: center; gap: 11px; padding: 8px 0 18px;
+}
+/* Tactile Word Tile button */
+.sentence-tile{
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 11px 19px; border-radius: 14px;
+  font-family: var(--font-head); font-size: 16px; font-weight: 600;
+  background: #1e293b; color: #f8fafc; border: 2px solid #334155;
+  box-shadow: 0 3px 0 #0f172a; cursor: pointer; user-select: none;
+  transition: transform 0.09s ease, box-shadow 0.09s ease, background 0.12s ease;
+}
+.sentence-tile:hover{
+  background: #273549; border-color: #475569;
+}
+.sentence-tile:active{
+  transform: translateY(2px); box-shadow: 0 1px 0 #0f172a;
+}
+.sentence-tile.is-placed{
+  display: none !important;
+}
+/* Ghost Placeholder in bank when tile is active on the answer line */
+.sentence-ghost-placeholder{
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 11px 19px; border-radius: 14px;
+  background: rgba(30, 41, 59, 0.25); border: 2px dashed #283749;
+  color: transparent; pointer-events: none; user-select: none;
+}
+
+/* Modern Sticky Bottom Footer & Feedback Drawer */
+.lesson-footer{
+  position: sticky; bottom: 0; padding-top: 14px; padding-bottom: 12px;
+  background: linear-gradient(180deg, rgba(17,24,39,0) 0%, rgba(17,24,39,0.95) 40%, #111827 100%);
+  z-index: 10;
+}
+
+/* Duolingo Slide-Up Feedback Drawer */
+.feedback{
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px; border-radius: 18px; margin-bottom: 14px;
+  animation: feedbackSlideUp 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes feedbackSlideUp{
+  0%{ transform: translateY(14px); opacity: 0; }
+  100%{ transform: translateY(0); opacity: 1; }
+}
+.feedback-icon-box{
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800;
+}
+.feedback-content{ display: flex; flex-direction: column; gap: 2px; }
+.feedback-title{
+  font-family: var(--font-head); font-size: 16px; font-weight: 800; margin: 0;
+}
+.feedback-text{
+  font-family: var(--font-body); font-size: 14px; font-weight: 500; margin: 0; line-height: 1.4;
+}
+
+.feedback.ok{
+  background: #132d20; border: 2px solid #22c55e;
+}
+.feedback.ok .feedback-icon-box{
+  background: #22c55e; color: #052e16;
+}
+.feedback.ok .feedback-title{ color: #4ade80; }
+.feedback.ok .feedback-text{ color: #86efac; }
+
+.feedback.bad{
+  background: #371717; border: 2px solid #ef4444;
+}
+.feedback.bad .feedback-icon-box{
+  background: #ef4444; color: #450a0a;
+}
+.feedback.bad .feedback-title{ color: #f87171; }
+.feedback.bad .feedback-text{ color: #fca5a5; }
+
+/* Large Tactile Check / Continue Button */
+.btn-check{
+  width: 100%; padding: 16px; border: none; border-radius: 16px;
+  font-family: var(--font-head); font-weight: 800; font-size: 16px;
+  letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer;
+  background: #22c55e; color: #ffffff;
+  box-shadow: 0 4px 0 #15803d;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease;
+}
+.btn-check:hover:not(:disabled){
+  background: #16a34a; box-shadow: 0 4px 0 #15803d;
+}
+.btn-check:active:not(:disabled){
+  transform: translateY(3px); box-shadow: 0 1px 0 #15803d;
+}
+.btn-check:disabled{
+  background: #253243; color: #64748b; cursor: default;
+  box-shadow: none; transform: none;
+}
 
 /* ===== complete screen ===== */
 .complete-wrap{ display:flex; flex-direction:column; align-items:center; text-align:center; padding-top: 15vh; gap:6px; }

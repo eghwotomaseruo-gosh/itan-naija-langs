@@ -2648,6 +2648,7 @@ function renderHome(){
   renderWeekCal();
   renderDailyGoal();
   renderPracticeEntry();
+  renderAiTutorEntry();
   renderCultureEntry();
 
   check24HourInactivityReminder();
@@ -4424,6 +4425,8 @@ function resetQuestionUI(){
 
   const feedback = document.getElementById("feedback");
   feedback.classList.add("hidden");
+  const aiBtn = document.getElementById("btn-ai-explain");
+  if(aiBtn) aiBtn.classList.add("hidden");
   const fbTitle = document.getElementById("feedback-title");
   if(fbTitle) fbTitle.textContent = "";
   const fbText = document.getElementById("feedback-text");
@@ -4833,6 +4836,16 @@ function checkAnswer(){
     const fbText = document.getElementById("feedback-text");
     const fbIcon = document.getElementById("feedback-icon-box");
     fb.classList.remove("hidden");
+
+    const aiBtn = document.getElementById("btn-ai-explain");
+    if(aiBtn){
+      aiBtn.classList.remove("hidden");
+      aiBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openAiExplainModal(q, correct);
+      };
+    }
 
     if(correct){
       fb.className = "feedback ok";
@@ -5808,6 +5821,747 @@ function setupUserActivityTracking(){
   }, 10 * 60 * 1000);
 }
 
+/* ==========================================================================
+   AI LANGUAGE TUTOR & IN-LESSON EXPLAINER (GEMINI 3.8 FLASH)
+   ========================================================================== */
+
+const AI_SUGGESTED_PROMPTS = {
+  igbo: {
+    roleplay: [
+      "Bargaining for yams at Onitsha Main Market",
+      "Greeting an elder in the morning (Ekele)",
+      "Ordering Ofe Nsala and cold malt at a bukka",
+      "Introducing your family and village of origin"
+    ],
+    tutor: [
+      "Explain the High, Low, and Downstep tones in Igbo",
+      "Why does Igbo use sub-dots (akara-okpuru) on ọ, ụ, ị, ṅ?",
+      "Teach me 3 classic Igbo proverbs (Ilu) with meanings",
+      "Explain the cultural etiquette of presenting Kolanut (Ọjị)"
+    ],
+    practice: [
+      "Give me 3 practical beginner sentences with tone marks",
+      "Generate a short dialogue between two friends greeting",
+      "Test my comprehension of numbers and prices in Igbo",
+      "Create 3 daily routine phrases in Igbo with English breakdown"
+    ]
+  },
+  yoruba: {
+    roleplay: [
+      "Bargaining for cloth at Balogun market in Lagos",
+      "Prostrating & greeting an elder (Ẹ ǹlẹ́ o / Ẹ kú àárọ̀)",
+      "Ordering hot Amala, Ewédú and Gbegiri at an Amala joint",
+      "Introducing yourself respectfully at a family wedding"
+    ],
+    tutor: [
+      "Explain the 3 Yoruba tones: Do, Re, Mi (\\, -, /)",
+      "Why are sub-dots (àmì ìsàlẹ̀) used on ẹ, ọ, and ṣ?",
+      "Teach me 3 deep Yoruba proverbs (Òwe) and their contexts",
+      "What is the cultural significance of the Omoluabi philosophy?"
+    ],
+    practice: [
+      "Give me 3 essential conversational sentences with accents",
+      "Generate a dialogue between a driver and a passenger",
+      "Test my understanding of respect pronouns (Ẹ vs O)",
+      "Create 3 Yoruba phrases for traveling and navigation"
+    ]
+  },
+  hausa: {
+    roleplay: [
+      "Bargaining with a trader at Kurmi Market in Kano",
+      "Polite morning Hausa greetings (Ina kwana / Lafiya lau)",
+      "Ordering Suya, Masa and Fura da Nono",
+      "Asking for directions politely in Kaduna or Kano"
+    ],
+    tutor: [
+      "Explain gender in Hausa nouns (masculine vs feminine)",
+      "Explain the glottal hooked letters: ɓ, ɗ, ƙ, and 'y",
+      "Teach me 3 wise Hausa proverbs (Karin Magana)",
+      "Explain traditional Hausa hospitality and greeting etiquette"
+    ],
+    practice: [
+      "Give me 3 practical daily sentences in Hausa with translations",
+      "Generate a dialogue between a buyer and seller in a market",
+      "Test my knowledge of Hausa numbers and days of the week",
+      "Create 3 friendly welcoming phrases in Hausa"
+    ]
+  },
+  edo: {
+    roleplay: [
+      "Greeting an elder in Benin with Kọ́yọ́ and Ọb'ókhian",
+      "Visiting the historic Igun Street bronze quarter",
+      "Ordering traditional Edo cuisine (Owo soup and starch)",
+      "Talking with family about the Igue festival"
+    ],
+    tutor: [
+      "Explain Edo vowels with sub-dots (ẹ, ọ) and tone accents",
+      "Teach me 3 Edo proverbs (Itan) and ancestral wisdom",
+      "Explain the royal greeting protocols in the Benin Kingdom",
+      "How do singular and plural nouns work in Edo?"
+    ],
+    practice: [
+      "Give me 3 beginner sentences in Edo with phonetic guidance",
+      "Generate a greeting dialogue between two Edo speakers",
+      "Test my vocabulary for family and relatives in Edo",
+      "Create 3 common expressions used in daily Benin life"
+    ]
+  },
+  efik: {
+    roleplay: [
+      "Greeting an elder in Calabar with Mọkọm and Sọsọñgọ",
+      "Ordering Edikang Ikong and Afang soup in a local kitchen",
+      "Conversation at the Calabar cultural carnival",
+      "Introducing yourself and welcoming guests to your home"
+    ],
+    tutor: [
+      "Explain Efik tone marks and the special ñ letter",
+      "Teach me 3 classic Efik proverbs (Nke) and their philosophy",
+      "Explain Ekpe cultural heritage and traditional etiquette",
+      "How do compound sentences and verbs work in Efik?"
+    ],
+    practice: [
+      "Give me 3 natural conversational sentences in Efik",
+      "Generate a dialogue between neighbors in Calabar",
+      "Test my knowledge of Efik numbers and food names",
+      "Create 3 warm phrases for welcoming guests in Efik"
+    ]
+  },
+  urhobo: {
+    roleplay: [
+      "Greeting an elder with Miguọ (I kneel) and hearing Vrendo (Rise)",
+      "Attending an Urhobo traditional wedding ceremony",
+      "Ordering Banga soup and yellow Starch at a Warri restaurant",
+      "Meeting fellow youth at an Urhobo community gathering"
+    ],
+    tutor: [
+      "Explain Urhobo vowels (ẹ, ọ, ẹvwrẹn) and tonal rhythm",
+      "Teach me 3 Urhobo proverbs (Isia) and their meanings",
+      "Explain the sacred cultural custom of Miguọ / Vrendo",
+      "How do descriptive words and pronouns work in Urhobo?"
+    ],
+    practice: [
+      "Give me 3 essential Urhobo phrases for everyday conversation",
+      "Generate a dialogue between an elder and youth in Urhobo",
+      "Test my vocabulary for Urhobo foods and greetings",
+      "Create 3 expressions for celebration and goodwill"
+    ]
+  },
+  tiv: {
+    roleplay: [
+      "Greeting an elder with M sugh u and M sugh ne",
+      "Talking about Benue yam harvest and farming life",
+      "Welcoming guests to a Tiv home (M wanger / Za sugh)",
+      "Ordering traditional Tiv dishes (Pounded yam and Pocho)"
+    ],
+    tutor: [
+      "Explain Tiv tone patterns and noun classes",
+      "Teach me 3 wise Tiv proverbs (Anzaakaa) and lessons",
+      "Explain the significance of the A'nger black-and-white fabric",
+      "How do polite requests and respect terms work in Tiv?"
+    ],
+    practice: [
+      "Give me 3 common conversational sentences in Tiv",
+      "Generate a friendly village market exchange in Tiv",
+      "Test my knowledge of Tiv numbers and family words",
+      "Create 3 daily greetings for morning, noon, and night"
+    ]
+  },
+  uvwie: {
+    roleplay: [
+      "Traditional Uvwie greeting to elders and family members",
+      "Attending an Uvwie festival and cultural dance",
+      "Sharing traditional delicacies in Effurun",
+      "Everyday greetings with neighbors and merchants"
+    ],
+    tutor: [
+      "Explain Uvwie tonal inflections and unique vowel sounds",
+      "Teach me 3 Uvwie cultural sayings and expressions of wisdom",
+      "Explain respectful social customs and elder veneration in Uvwie",
+      "How do verbs and daily action words work in Uvwie?"
+    ],
+    practice: [
+      "Give me 3 practical beginner sentences in Uvwie",
+      "Generate a conversation between friends in Effurun",
+      "Test my recall of Uvwie greetings and numbers",
+      "Create 3 warm phrases for welcoming visitors"
+    ]
+  },
+  isoko: {
+    roleplay: [
+      "Greeting an elder with Do and Miguo in Oleh or Ozoro",
+      "Attending an Isoko traditional celebration and feast",
+      "Ordering delicious Owo and Banga soup in an Isoko restaurant",
+      "Introducing yourself to elders at a town gathering"
+    ],
+    tutor: [
+      "Explain Isoko vowels (ẹ, ọ) and tonal inflections",
+      "Teach me 3 Isoko proverbs (Ilue) and moral values",
+      "Explain Isoko hospitality and greeting protocols",
+      "How are family relationships expressed in Isoko?"
+    ],
+    practice: [
+      "Give me 3 natural daily sentences in Isoko with English breakdown",
+      "Generate a dialogue between two Isoko community members",
+      "Test my knowledge of common Isoko greetings and expressions",
+      "Create 3 phrases for market shopping in Isoko"
+    ]
+  },
+  ijaw: {
+    roleplay: [
+      "Greeting along the river creek (Tua / Kẹrẹ kẹrẹ) in Yenagoa",
+      "Trading fresh fish and plantains at a waterside market",
+      "Introducing your ancestral Izon clan and community",
+      "Welcoming guests to a delta festival ceremony"
+    ],
+    tutor: [
+      "Explain Ijaw (Izon) vowel harmony and tone structure",
+      "Teach me 3 Izon proverbs and delta maritime wisdom",
+      "Explain the cultural role of river traditions and masquerades",
+      "How do greetings reflect time of day and respect in Ijaw?"
+    ],
+    practice: [
+      "Give me 3 essential conversational phrases in Ijaw (Izon)",
+      "Generate a market dialogue between fisherman and buyer",
+      "Test my knowledge of Izon numbers and greetings",
+      "Create 3 phrases used in canoeing and travel across the delta"
+    ]
+  }
+};
+
+const aiTutorState = {
+  courseKey: "igbo",
+  mode: "roleplay", // "roleplay" | "tutor" | "practice"
+  messages: [], // Array of { role: 'user' | 'assistant', content: string }
+  isLoading: false,
+  previousScreen: "home"
+};
+
+function renderAiTutorEntry(){
+  const el = document.getElementById("ai-tutor-entry");
+  if(!el) return;
+  const activeKey = currentCourseKey || pickContinueCourse() || "igbo";
+  const course = COURSES[activeKey] || COURSES.igbo;
+  const persona = course.voiceProfile?.persona || "Amina & Chidi";
+
+  el.innerHTML = `
+    <div class="ai-entry-card">
+      <div class="ai-entry-header">
+        <div class="ai-entry-glyph">✨</div>
+        <div class="ai-entry-title-wrap">
+          <span class="ai-entry-tag">Gemini AI Tutor</span>
+          <h3 class="ai-entry-title">Practice ${course.name} Conversation</h3>
+          <p class="ai-entry-sub">Interactive roleplay, tone breakdown &amp; real-time audio with ${persona}.</p>
+        </div>
+      </div>
+      <button class="ai-entry-action-btn" id="ai-entry-start-btn" type="button">
+        <span>Chat with AI Tutor</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  `;
+
+  document.getElementById("ai-entry-start-btn")?.addEventListener("click", () => {
+    openAiTutorScreen(activeKey);
+  });
+}
+
+function openAiTutorScreen(courseKey){
+  if(courseKey && COURSES[courseKey]) {
+    aiTutorState.courseKey = courseKey;
+  } else if(!aiTutorState.courseKey) {
+    aiTutorState.courseKey = currentCourseKey || pickContinueCourse() || "igbo";
+  }
+  aiTutorState.previousScreen = "home";
+
+  const langSelect = document.getElementById("ai-tutor-lang-select");
+  if(langSelect) langSelect.value = aiTutorState.courseKey;
+
+  updateAiTutorHeader();
+  renderAiSuggestedPrompts();
+
+  if(aiTutorState.messages.length === 0){
+    resetAiTutorGreeting();
+  } else {
+    renderAiChatMessages();
+  }
+
+  showScreen("ai-tutor");
+}
+
+function updateAiTutorHeader(){
+  const course = COURSES[aiTutorState.courseKey] || COURSES.igbo;
+  const subEl = document.getElementById("ai-tutor-lang-subtitle");
+  if(subEl) {
+    subEl.textContent = `${course.name} · ${course.native}`;
+  }
+  const inputEl = document.getElementById("ai-chat-input");
+  if(inputEl){
+    if(aiTutorState.mode === "roleplay"){
+      inputEl.placeholder = `Reply to your tutor in ${course.name} or English...`;
+    } else if(aiTutorState.mode === "tutor"){
+      inputEl.placeholder = `Ask a question about ${course.name} grammar, tones or proverbs...`;
+    } else {
+      inputEl.placeholder = `Request a drill sentence or vocabulary practice in ${course.name}...`;
+    }
+  }
+}
+
+function renderAiSuggestedPrompts(){
+  const strip = document.getElementById("ai-prompts-strip");
+  if(!strip) return;
+  const langPrompts = AI_SUGGESTED_PROMPTS[aiTutorState.courseKey] || AI_SUGGESTED_PROMPTS.igbo;
+  const list = langPrompts[aiTutorState.mode] || langPrompts.roleplay;
+
+  strip.innerHTML = "";
+  list.forEach(promptText => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "ai-prompt-chip";
+    chip.innerHTML = `<span>💬</span> <span>${promptText}</span>`;
+    chip.addEventListener("click", () => {
+      sendAiChatMessage(promptText);
+    });
+    strip.appendChild(chip);
+  });
+}
+
+function resetAiTutorGreeting(){
+  const course = COURSES[aiTutorState.courseKey] || COURSES.igbo;
+  const persona = course.voiceProfile?.persona || "Amina & Chidi";
+
+  let greetingText = "";
+  if(aiTutorState.mode === "roleplay"){
+    greetingText = `**${course.lessons[0]?.vocab[0]?.native || "Hello"}!** I am ${persona}, your AI conversation partner in **${course.name}**.\n\nLet's practice a real-life situation! Choose one of the suggested scenarios above or greet me in ${course.name} to begin.`;
+  } else if(aiTutorState.mode === "tutor"){
+    greetingText = `**Welcome to your ${course.name} Linguistics Coach!**\n\nI can explain high/low tones, vowel sub-dots (akara okpuru / àmì ìsàlẹ̀), verb conjugations, and traditional proverbs. What would you like to discover today?`;
+  } else {
+    greetingText = `**Smart Practice Generator ready!**\n\nI can build authentic ${course.name} sentences for your level, complete with pronunciation audio, word breakdowns, and cultural context. Tap a prompt above to get started!`;
+  }
+
+  aiTutorState.messages = [{ role: "assistant", content: greetingText }];
+  renderAiChatMessages();
+}
+
+function formatAiMarkdown(text){
+  if(!text) return "";
+  let html = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Bold **text**
+  html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  // Italic *text*
+  html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+  // Code `code`
+  html = html.replace(/`(.*?)`/g, "<code>$1</code>");
+
+  // Format bullet lines
+  const lines = html.split("\n");
+  let inList = false;
+  const processed = [];
+
+  for(let line of lines){
+    const trimmed = line.trim();
+    if(trimmed.startsWith("- ") || trimmed.startsWith("* ")){
+      if(!inList){
+        processed.push("<ul style='margin:6px 0; padding-left:18px;'>");
+        inList = true;
+      }
+      processed.push(`<li>${trimmed.substring(2)}</li>`);
+    } else {
+      if(inList){
+        processed.push("</ul>");
+        inList = false;
+      }
+      if(trimmed === ""){
+        processed.push("<div style='height:8px;'></div>");
+      } else {
+        processed.push(`<p style='margin:4px 0;'>${line}</p>`);
+      }
+    }
+  }
+  if(inList) processed.push("</ul>");
+  return processed.join("");
+}
+
+function extractNativePhrases(content){
+  // Look for potential native speech snippets in quotes or headers
+  const match = content.match(/"([^"]{3,60})"/);
+  return match ? match[1] : null;
+}
+
+function renderAiChatMessages(){
+  const container = document.getElementById("ai-chat-messages");
+  if(!container) return;
+  const course = COURSES[aiTutorState.courseKey] || COURSES.igbo;
+  const persona = course.voiceProfile?.persona || "Amina & Chidi";
+
+  container.innerHTML = "";
+
+  aiTutorState.messages.forEach(msg => {
+    const wrap = document.createElement("div");
+    wrap.className = `ai-msg ${msg.role === "user" ? "user" : "assistant"}`;
+
+    if(msg.role === "user"){
+      wrap.innerHTML = `<div class="ai-msg-bubble">${formatAiMarkdown(msg.content)}</div>`;
+    } else {
+      const bubble = document.createElement("div");
+      bubble.className = "ai-msg-bubble";
+
+      const header = document.createElement("div");
+      header.className = "ai-assistant-header";
+      header.innerHTML = `
+        <span class="ai-tutor-name">✨ ${persona}</span>
+        <button type="button" class="ai-listen-action-btn" title="Listen to pronunciation">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <span>Listen</span>
+        </button>
+      `;
+
+      // Extract spoken native snippet
+      const nativeSnippet = extractNativePhrases(msg.content);
+      const listenBtn = header.querySelector(".ai-listen-action-btn");
+      if(listenBtn){
+        listenBtn.addEventListener("click", () => {
+          const speakText = nativeSnippet || msg.content.replace(/[*#`]/g, "").slice(0, 100);
+          speak(speakText, course.speechLang, aiTutorState.courseKey, listenBtn);
+        });
+      }
+
+      const body = document.createElement("div");
+      body.className = "ai-assistant-body";
+      body.innerHTML = formatAiMarkdown(msg.content);
+
+      bubble.appendChild(header);
+      bubble.appendChild(body);
+
+      // Check for quick replies suggestions: look for "Try Replying With" or bullet items
+      const replyMatches = [...msg.content.matchAll(/["“]([^"”]{3,40})["”]/g)].map(m => m[1]);
+      if(replyMatches.length >= 2){
+        const quickRepliesWrap = document.createElement("div");
+        quickRepliesWrap.className = "ai-quick-replies-wrap";
+        replyMatches.slice(0, 3).forEach(replyText => {
+          const pill = document.createElement("button");
+          pill.type = "button";
+          pill.className = "ai-quick-reply-pill";
+          pill.textContent = replyText;
+          pill.addEventListener("click", () => {
+            sendAiChatMessage(replyText);
+          });
+          quickRepliesWrap.appendChild(pill);
+        });
+        bubble.appendChild(quickRepliesWrap);
+      }
+
+      wrap.appendChild(bubble);
+    }
+    container.appendChild(wrap);
+  });
+
+  if(aiTutorState.isLoading){
+    const loadingWrap = document.createElement("div");
+    loadingWrap.className = "ai-msg assistant";
+    loadingWrap.innerHTML = `
+      <div class="ai-msg-bubble">
+        <div class="ai-typing-indicator">
+          <span class="ai-typing-dot"></span>
+          <span class="ai-typing-dot"></span>
+          <span class="ai-typing-dot"></span>
+        </div>
+      </div>
+    `;
+    container.appendChild(loadingWrap);
+  }
+
+  // Auto scroll to bottom
+  const scrollBody = document.getElementById("ai-chat-body");
+  if(scrollBody){
+    scrollBody.scrollTop = scrollBody.scrollHeight;
+  }
+}
+
+async function sendAiChatMessage(userText){
+  if(!userText || !userText.trim() || aiTutorState.isLoading) return;
+  const cleanText = userText.trim();
+
+  // Clear input
+  const input = document.getElementById("ai-chat-input");
+  if(input) input.value = "";
+
+  // Append user message
+  aiTutorState.messages.push({ role: "user", content: cleanText });
+  aiTutorState.isLoading = true;
+  renderAiChatMessages();
+
+  try {
+    const res = await apiFetch("/api/ai/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        messages: aiTutorState.messages.map(m => ({
+          role: m.role,
+          content: m.content
+        })),
+        language: aiTutorState.courseKey,
+        mode: aiTutorState.mode
+      })
+    });
+
+    const data = await res.json();
+    if(res.ok && data.reply){
+      aiTutorState.messages.push({ role: "assistant", content: data.reply });
+    } else {
+      const errMsg = data.error || "Could not reach Gemini AI tutor. Please check your network and retry.";
+      aiTutorState.messages.push({
+        role: "assistant",
+        content: `⚠️ **Notice**: ${errMsg}`
+      });
+    }
+  } catch(err) {
+    console.error("AI Chat fetch error:", err);
+    aiTutorState.messages.push({
+      role: "assistant",
+      content: `⚠️ **Connection issue**: Could not reach Gemini AI. Please check your internet connection.`
+    });
+  } finally {
+    aiTutorState.isLoading = false;
+    renderAiChatMessages();
+  }
+}
+
+function setupAiTutorListeners(){
+  // Home Topbar pill
+  const pillBtn = document.getElementById("ai-tutor-pill-home");
+  if(pillBtn){
+    pillBtn.addEventListener("click", () => {
+      openAiTutorScreen(currentCourseKey || "igbo");
+    });
+  }
+
+  // Back button
+  const backBtn = document.getElementById("ai-tutor-back");
+  if(backBtn){
+    backBtn.addEventListener("click", () => {
+      renderHome();
+      showScreen("home");
+    });
+  }
+
+  // Language selector
+  const langSelect = document.getElementById("ai-tutor-lang-select");
+  if(langSelect){
+    langSelect.addEventListener("change", (e) => {
+      aiTutorState.courseKey = e.target.value;
+      updateAiTutorHeader();
+      renderAiSuggestedPrompts();
+      resetAiTutorGreeting();
+    });
+  }
+
+  // Mode bar tabs
+  const modeBtns = document.querySelectorAll(".ai-mode-btn");
+  modeBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      modeBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      aiTutorState.mode = btn.dataset.mode || "roleplay";
+      updateAiTutorHeader();
+      renderAiSuggestedPrompts();
+      resetAiTutorGreeting();
+    });
+  });
+
+  // Send button & Input Enter
+  const sendBtn = document.getElementById("ai-chat-send-btn");
+  const input = document.getElementById("ai-chat-input");
+  if(sendBtn && input){
+    sendBtn.addEventListener("click", () => {
+      sendAiChatMessage(input.value);
+    });
+    input.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" && !e.shiftKey){
+        e.preventDefault();
+        sendAiChatMessage(input.value);
+      }
+    });
+  }
+
+  // Clear chat button
+  const clearBtn = document.getElementById("ai-clear-btn");
+  if(clearBtn){
+    clearBtn.addEventListener("click", () => {
+      if(confirm("Clear current AI conversation history?")){
+        resetAiTutorGreeting();
+      }
+    });
+  }
+
+  // Practice Screen AI Drills Button
+  const aiDrillBtn = document.getElementById("practice-ai-drill-btn");
+  if(aiDrillBtn){
+    aiDrillBtn.addEventListener("click", async () => {
+      const activeKey = currentCourseKey || pickContinueCourse() || "igbo";
+      const missed = state.missedWords.filter(m => m.courseKey === activeKey).map(m => m.native);
+      openAiTutorScreen(activeKey);
+      // Switch to practice mode
+      const practiceTab = document.getElementById("ai-mode-practice");
+      if(practiceTab) practiceTab.click();
+
+      const promptText = missed.length > 0
+        ? `Generate 3 targeted practice sentences in ${COURSES[activeKey].name} using these words I recently missed: ${missed.slice(0, 5).join(", ")}. Provide literal translations, tone guidance, and pronunciation audio.`
+        : `Generate 3 essential conversational sentences in ${COURSES[activeKey].name} with pronunciation audio and cultural etiquette tips.`;
+      
+      sendAiChatMessage(promptText);
+    });
+  }
+}
+
+/* ====================== IN-LESSON AI EXPLAINER ====================== */
+let currentAiExplainContext = null;
+
+async function openAiExplainModal(q, isCorrect){
+  const modal = document.getElementById("ai-explain-modal");
+  if(!modal) return;
+
+  const course = COURSES[activeCourseKey] || COURSES.igbo;
+  const langSub = document.getElementById("ai-explain-target-lang");
+  if(langSub) langSub.textContent = `${course.name} · ${course.native} (Powered by Gemini 3.8 Flash)`;
+
+  // Determine question and answer text
+  let nativePhrase = "";
+  let englishTranslation = "";
+  let questionPrompt = q.prompt || "";
+  let expectedAnswer = q.answer || "";
+  let userAttempt = "";
+
+  if(q.type === "vocab"){
+    nativePhrase = q.vocab.native;
+    englishTranslation = q.vocab.en;
+  } else if(q.type === "sentence"){
+    nativePhrase = q.answer;
+    englishTranslation = q.prompt;
+  } else if(q.type === "type"){
+    nativePhrase = q.answerDisplay || q.answer;
+    englishTranslation = q.prompt;
+  } else {
+    nativePhrase = q.answer;
+    englishTranslation = q.prompt;
+  }
+
+  currentAiExplainContext = {
+    courseKey: activeCourseKey,
+    questionText: questionPrompt,
+    expectedAnswer: expectedAnswer,
+    userAnswer: userAttempt,
+    nativePhrase: nativePhrase,
+    englishTranslation: englishTranslation,
+    questionType: q.type || "translation"
+  };
+
+  // Populate immediate UI card
+  document.getElementById("ai-explain-phrase").textContent = nativePhrase || "—";
+  document.getElementById("ai-explain-translation").textContent = englishTranslation || "—";
+  document.getElementById("ai-explain-pill-label").textContent = isCorrect ? "Mastered Expression" : "Key Expression";
+
+  // Configure modal audio button
+  const audioBtn = document.getElementById("ai-explain-audio-btn");
+  if(audioBtn){
+    audioBtn.onclick = () => {
+      speak(nativePhrase, course.speechLang, activeCourseKey, audioBtn);
+    };
+  }
+
+  // Open modal
+  if(typeof modal.showModal === "function"){
+    modal.showModal();
+  } else {
+    modal.setAttribute("open", "true");
+  }
+
+  await loadAiExplanation();
+}
+
+async function loadAiExplanation(){
+  if(!currentAiExplainContext) return;
+  const loadingEl = document.getElementById("ai-explain-loading");
+  const errorEl = document.getElementById("ai-explain-error");
+  const resultEl = document.getElementById("ai-explain-result");
+
+  loadingEl?.classList.remove("hidden");
+  errorEl?.classList.add("hidden");
+  resultEl?.classList.add("hidden");
+
+  try {
+    const res = await apiFetch("/api/ai/explain", {
+      method: "POST",
+      body: JSON.stringify({
+        questionText: currentAiExplainContext.questionText,
+        expectedAnswer: currentAiExplainContext.expectedAnswer,
+        userAnswer: currentAiExplainContext.userAnswer,
+        language: currentAiExplainContext.courseKey,
+        questionType: currentAiExplainContext.questionType
+      })
+    });
+
+    const data = await res.json();
+    if(!res.ok || data.error){
+      throw new Error(data.error || "Could not retrieve linguistic breakdown.");
+    }
+
+    // Populate data
+    document.getElementById("ai-explain-breakdown").textContent = data.breakdown || "A fundamental grammatical construction in this dialect.";
+    document.getElementById("ai-explain-tones").textContent = data.toneAndPhonetics || "Pay careful attention to tonal height (high/mid/low) and vowel clarity.";
+    document.getElementById("ai-explain-culture").textContent = data.culturalContext || "Used in everyday respectful conversations across Nigerian communities.";
+    document.getElementById("ai-explain-mnemonic").textContent = data.mnemonic || "Associate the rhythm and cadence with familiar phrases to lock it into memory.";
+
+    const proverbCard = document.getElementById("ai-explain-proverb-card");
+    const proverbText = document.getElementById("ai-explain-proverb");
+    if(data.relatedProverbOrPhrase){
+      proverbCard?.classList.remove("hidden");
+      if(proverbText) proverbText.textContent = data.relatedProverbOrPhrase;
+    } else {
+      proverbCard?.classList.add("hidden");
+    }
+
+    loadingEl?.classList.add("hidden");
+    resultEl?.classList.remove("hidden");
+  } catch(err) {
+    console.error("AI Explainer Error:", err);
+    loadingEl?.classList.add("hidden");
+    const errText = document.getElementById("ai-explain-error-msg");
+    if(errText) errText.textContent = err.message || "Could not generate explanation. Please check your network and retry.";
+    errorEl?.classList.remove("hidden");
+  }
+}
+
+function setupAiExplainerListeners(){
+  const closeBtn = document.getElementById("ai-explain-close");
+  const doneBtn = document.getElementById("ai-explain-done-btn");
+  const modal = document.getElementById("ai-explain-modal");
+  const retryBtn = document.getElementById("ai-explain-retry-btn");
+
+  const closeModal = () => {
+    if(modal){
+      if(typeof modal.close === "function") modal.close();
+      else modal.removeAttribute("open");
+    }
+  };
+
+  closeBtn?.addEventListener("click", closeModal);
+  doneBtn?.addEventListener("click", closeModal);
+  retryBtn?.addEventListener("click", loadAiExplanation);
+
+  // Close when clicking modal backdrop
+  modal?.addEventListener("click", (e) => {
+    if(e.target === modal) closeModal();
+  });
+}
+
+function initAiFeatures(){
+  setupAiTutorListeners();
+  setupAiExplainerListeners();
+}
+
 /* ====================== INIT ====================== */
 (async function init(){
   setupPasswordToggles();
@@ -5817,6 +6571,7 @@ function setupUserActivityTracking(){
   setupInactivityBanner();
   setupUserActivityTracking();
   initVoiceSettingsModal();
+  initAiFeatures();
 
   // Check URL query parameters for OAuth redirect
   const params = new URLSearchParams(window.location.search);

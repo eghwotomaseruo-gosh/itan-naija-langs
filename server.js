@@ -640,6 +640,217 @@ app.get("/api/tts", async (req, res) => {
   }
 });
 
+/* ====================== AI TUTOR & LINGUISTIC ASSISTANT ====================== */
+
+async function generateWithGeminiFallback(client, options) {
+  // Use gemini-2.5-flash or gemini-3.8-flash with automatic resilience
+  const candidateModels = ["gemini-2.5-flash", "gemini-3.8-flash"];
+  let lastErr = null;
+  for (const model of candidateModels) {
+    try {
+      const response = await client.models.generateContent({
+        ...options,
+        model
+      });
+      return response;
+    } catch (err) {
+      lastErr = err;
+      console.warn(`Gemini model ${model} temporarily unavailable, trying fallback...`, err.message);
+    }
+  }
+  throw lastErr;
+}
+
+// 1. Interactive AI Language Tutor & Roleplay Chat
+app.post("/api/ai/chat", async (req, res) => {
+  const { messages, language = "igbo", mode = "tutor" } = req.body || {};
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: "Missing or invalid messages array." });
+  }
+
+  const client = getGeminiAi();
+  if (!client) {
+    return res.status(503).json({
+      error: "Gemini AI is not available. Please ensure GEMINI_API_KEY is configured in Settings."
+    });
+  }
+
+  const langNames = {
+    igbo: "Igbo (Asụsụ Igbo)",
+    yoruba: "Yorùbá (Èdè Yorùbá)",
+    hausa: "Hausa (Harshen Hausa)",
+    edo: "Edo / Bini (Ẹ̀dó)",
+    efik: "Efịk (Usem Efịk)",
+    urhobo: "Urhobo (Ẹvwrẹn Urhobo)",
+    tiv: "Tiv (Dzwa Tiv)",
+    uvwie: "Uvwie (Ẹvwrẹn Uvwie)",
+    isoko: "Isoko (Ẹvẹ Isoko)",
+    ijaw: "Ijaw / Izon (Ịjọ)"
+  };
+  const targetLang = langNames[language.toLowerCase()] || "Nigerian Languages";
+
+  const systemInstruction = `You are "Amina & Chidi", the premier AI Language Tutor and cultural guide for Lingua Naija, specialized in 10 Nigerian languages: Igbo, Yorùbá, Hausa, Edo, Efịk, Urhobo, Tiv, Uvwie, Isoko, and Ijaw.
+The learner's current target language is: ${targetLang}.
+Active mode: ${mode === "roleplay" ? "Conversational Roleplay & Speaking Practice" : "Grammar, Tones, Culture & Vocabulary Tutor"}.
+
+Guidelines:
+1. Orthography & Tone Accuracy: Always use precise diacritics and tone markings (e.g., Yorùbá á/à/a, ẹ, ọ; Igbo ị, ụ, ọ, ṅ; Edo ẹ, ọ; Ijaw ị, ụ).
+2. Authenticity & Cultural Warmth: Incorporate authentic Nigerian cultural warmth, respectful addressing (such as elder honorifics like 'E don sir/ma', 'Ọmọba', 'Nna/Nne', 'Malam/Hajiya', 'Oga', 'Anty'), proverbs, and everyday life contexts (markets, family, food, weddings, travel).
+3. Structure your response clearly:
+   - When speaking in the target language (especially in roleplay):
+     * Put the native speech at the top with proper diacritics.
+     * Provide the accurate English translation right below.
+     * Include a "Cultural & Tone Note" explaining why this phrasing is used, tone guidance (Do-Re-Mi or High/Low), or etiquette tips.
+     * Provide 2 to 3 "Try Replying With" options (in native language + English) so the learner can continue the conversation effortlessly.
+   - When answering grammar, vocabulary, or cultural questions:
+     * Explain clearly, warmly, and concisely without academic jargon.
+     * Give practical examples with pronunciation cues.
+     * Include a memorable mnemonic or cultural fact.
+4. Keep answers encouraging, friendly, and appropriately sized for mobile screens (clean markdown with bolding and bullet points).`;
+
+  try {
+    // Format message history for Gemini SDK
+    const contents = messages.slice(-10).map(m => ({
+      role: m.role === "user" ? "user" : "model",
+      parts: [{ text: m.content }]
+    }));
+
+    const response = await generateWithGeminiFallback(client, {
+      contents,
+      config: {
+        systemInstruction
+      }
+    });
+
+    const reply = response.text || "I am listening! How can I help you practice today?";
+    res.json({ reply });
+  } catch (err) {
+    console.error("Gemini AI Chat Error:", err);
+    res.status(500).json({
+      error: "Could not generate AI response. Please try again in a moment.",
+      details: err.message
+    });
+  }
+});
+
+// 2. In-Lesson AI Question Explainer ("Explain with AI")
+app.post("/api/ai/explain", async (req, res) => {
+  const { questionText, expectedAnswer, userAnswer, language = "igbo", questionType = "translate" } = req.body || {};
+
+  const client = getGeminiAi();
+  if (!client) {
+    return res.status(503).json({
+      error: "Gemini AI is not available. Please ensure GEMINI_API_KEY is configured."
+    });
+  }
+
+  const langNames = {
+    igbo: "Igbo (Asụsụ Igbo)",
+    yoruba: "Yorùbá (Èdè Yorùbá)",
+    hausa: "Hausa (Harshen Hausa)",
+    edo: "Edo / Bini (Ẹ̀dó)",
+    efik: "Efịk (Usem Efịk)",
+    urhobo: "Urhobo (Ẹvwrẹn Urhobo)",
+    tiv: "Tiv (Dzwa Tiv)",
+    uvwie: "Uvwie (Ẹvwrẹn Uvwie)",
+    isoko: "Isoko (Ẹvẹ Isoko)",
+    ijaw: "Ijaw / Izon (Ịjọ)"
+  };
+  const targetLang = langNames[language.toLowerCase()] || "Nigerian Language";
+
+  const prompt = `You are the expert Nigerian linguist and pedagogical coach for Lingua Naija.
+A learner encountered this exercise in ${targetLang}:
+- Question/Prompt: "${questionText}"
+- Correct Answer: "${expectedAnswer}"
+${userAnswer ? `- Learner's Answer: "${userAnswer}"` : ""}
+- Question Format: ${questionType}
+
+Provide a crisp, illuminating explanation formatted as JSON with the following keys:
+{
+  "breakdown": "A concise word-by-word or root-morpheme breakdown explaining why this is the correct phrasing.",
+  "toneAndPhonetics": "Tone guidance (e.g. High/Mid/Low, glides, vowel sub-dots) and pronunciation tip.",
+  "culturalContext": "When and how this expression is used in everyday Nigerian life, etiquette, or cultural significance.",
+  "mnemonic": "A short, memorable trick or association to remember this easily.",
+  "relatedProverbOrPhrase": "A short related popular phrase or proverb in ${targetLang} with its English meaning."
+}
+
+Only return valid JSON without markdown wrapping if possible, or standard JSON.`;
+
+  try {
+    const response = await generateWithGeminiFallback(client, {
+      contents: [{ parts: [{ text: prompt }] }],
+      config: {
+        responseMimeType: "application/json"
+      }
+    });
+
+    let data;
+    try {
+      data = JSON.parse(response.text);
+    } catch (parseErr) {
+      // Clean possible backticks
+      const clean = response.text.replace(/```json/g, "").replace(/```/g, "").trim();
+      data = JSON.parse(clean);
+    }
+    res.json(data);
+  } catch (err) {
+    console.error("Gemini Explain Error:", err);
+    res.status(500).json({
+      error: "Could not generate AI explanation.",
+      details: err.message
+    });
+  }
+});
+
+// 3. AI Smart Practice Generator (Sentence & Dialogue creator for Spaced Repetition)
+app.post("/api/ai/practice-generator", async (req, res) => {
+  const { language = "igbo", words = [], topic = "daily life" } = req.body || {};
+
+  const client = getGeminiAi();
+  if (!client) {
+    return res.status(503).json({
+      error: "Gemini AI is not available. Please ensure GEMINI_API_KEY is configured."
+    });
+  }
+
+  const wordListStr = words.length > 0 ? words.join(", ") : "greetings, food, family";
+
+  const prompt = `Create 3 authentic, everyday conversational sentences in ${language} incorporating these vocabulary items: [${wordListStr}] around the theme "${topic}".
+Return a JSON array of objects:
+[
+  {
+    "native": "Sentence in ${language} with proper diacritics and tone marks",
+    "english": "Natural English translation",
+    "literal": "Literal word-by-word translation",
+    "context": "Short note on when to use it (e.g. greeting an elder, buying at market, morning routine)"
+  }
+]`;
+
+  try {
+    const response = await generateWithGeminiFallback(client, {
+      contents: [{ parts: [{ text: prompt }] }],
+      config: {
+        responseMimeType: "application/json"
+      }
+    });
+
+    let items;
+    try {
+      items = JSON.parse(response.text);
+    } catch (pErr) {
+      const clean = response.text.replace(/```json/g, "").replace(/```/g, "").trim();
+      items = JSON.parse(clean);
+    }
+    res.json({ sentences: items });
+  } catch (err) {
+    console.error("Gemini Practice Generator Error:", err);
+    res.status(500).json({
+      error: "Could not generate practice sentences.",
+      details: err.message
+    });
+  }
+});
+
 /* ---- static frontend ---- */
 app.use(express.static(__dirname));
 app.get(/^(?!\/api\/).*/, (req, res) => {

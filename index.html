@@ -288,6 +288,10 @@
         <svg viewBox="0 0 24 24" class="pill-icon"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
         <span id="voice-settings-pill-label">Voice</span>
       </button>
+      <button class="pill pill-ai" id="ai-tutor-pill-home" title="AI Language Tutor & Roleplay" type="button" aria-label="Open AI Tutor">
+        <svg viewBox="0 0 24 24" class="pill-icon" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+        <span>AI Tutor ✨</span>
+      </button>
     </div>
   </header>
 
@@ -340,6 +344,10 @@
 
   <section class="practice-entry" id="practice-entry">
     <!-- populated by JS: missed-word count + link to Practice screen -->
+  </section>
+
+  <section class="ai-tutor-entry" id="ai-tutor-entry">
+    <!-- populated by JS: banner to launch AI conversation partner & tutor -->
   </section>
 
   <section class="culture-entry" id="culture-entry">
@@ -405,6 +413,9 @@
       <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       <span>Smart Review</span>
     </button>
+    <button class="practice-smart-all-btn" id="practice-ai-drill-btn" style="background:rgba(227,167,43,0.18); border-color:var(--gold); color:var(--gold);" title="Generate tailored AI practice drills with Gemini 3.8">
+      <span>✨ AI Drills</span>
+    </button>
   </div>
 
   <div id="practice-list" class="practice-list"></div>
@@ -436,6 +447,80 @@
   <footer class="lesson-footer">
     <button id="culture-continue-btn" class="btn-check">Continue</button>
   </footer>
+</main>
+
+<!-- ===== AI LANGUAGE TUTOR & CONVERSATION PARTNER ===== -->
+<main id="screen-ai-tutor" class="screen hidden">
+  <header class="path-topbar">
+    <button class="icon-btn" id="ai-tutor-back" aria-label="Back to home">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="path-title">
+      <span style="display:flex; align-items:center; gap:6px;">
+        <span>AI Language Tutor</span>
+        <span class="ai-sparkle-tag">✨ Gemini 3.8</span>
+      </span>
+      <span class="path-lang-native" id="ai-tutor-lang-subtitle">Igbo · Asụsụ Igbo</span>
+    </div>
+    <div class="ai-lang-select-wrap">
+      <select id="ai-tutor-lang-select" class="ai-lang-select" aria-label="Target language">
+        <option value="igbo">Igbo (Asụsụ Igbo)</option>
+        <option value="yoruba">Yorùbá (Èdè Yorùbá)</option>
+        <option value="hausa">Hausa (Harshen Hausa)</option>
+        <option value="edo">Edo / Bini (Ẹ̀dó)</option>
+        <option value="efik">Efịk (Usem Efịk)</option>
+        <option value="urhobo">Urhobo (Ẹvwrẹn Urhobo)</option>
+        <option value="tiv">Tiv (Dzwa Tiv)</option>
+        <option value="uvwie">Uvwie (Ẹvwrẹn Uvwie)</option>
+        <option value="isoko">Isoko (Ẹvẹ Isoko)</option>
+        <option value="ijaw">Ijaw / Izon (Ịjọ)</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Mode Switcher -->
+  <div class="ai-mode-bar" id="ai-mode-bar">
+    <button type="button" class="ai-mode-btn active" data-mode="roleplay" id="ai-mode-roleplay">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Roleplay Practice</span>
+    </button>
+    <button type="button" class="ai-mode-btn" data-mode="tutor" id="ai-mode-tutor">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span>Grammar &amp; Culture</span>
+    </button>
+    <button type="button" class="ai-mode-btn" data-mode="practice" id="ai-mode-practice">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>Smart Sentences</span>
+    </button>
+  </div>
+
+  <!-- Quick Topic & Scenario Prompt Chips -->
+  <div class="ai-prompts-wrapper">
+    <span class="ai-prompts-label" id="ai-prompts-label">Suggested Scenarios &amp; Questions:</span>
+    <div class="ai-prompts-strip" id="ai-prompts-strip">
+      <!-- Injected dynamically based on language and mode -->
+    </div>
+  </div>
+
+  <!-- Chat Messages Stream -->
+  <div class="ai-chat-body" id="ai-chat-body">
+    <div class="ai-chat-messages" id="ai-chat-messages">
+      <!-- Conversation history injected by app.js -->
+    </div>
+  </div>
+
+  <!-- Chat Input Bar -->
+  <div class="ai-chat-input-bar">
+    <button type="button" class="ai-clear-btn" id="ai-clear-btn" title="Clear chat history" aria-label="Clear chat">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    </button>
+    <div class="ai-input-container">
+      <input type="text" id="ai-chat-input" class="ai-chat-input" placeholder="Type a message or question in English or native language..." autocomplete="off">
+    </div>
+    <button type="button" id="ai-chat-send-btn" class="ai-send-btn" aria-label="Send message" title="Send message">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
 </main>
 
 <!-- ===== PROFILE ===== -->
@@ -616,6 +701,10 @@
         <p class="feedback-title" id="feedback-title"></p>
         <p class="feedback-text" id="feedback-text"></p>
       </div>
+      <button type="button" class="btn-ai-explain hidden" id="btn-ai-explain" title="Get linguistic breakdown & tones from Gemini AI">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+        <span>Explain with AI</span>
+      </button>
     </div>
     <button id="check-btn" class="btn-check" disabled>Check</button>
   </footer>
@@ -828,6 +917,105 @@
 
     <div class="auth-modal-actions">
       <button type="button" class="btn-check small" id="voice-settings-done-btn">Save Preferences</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ===== AI EXPLAINER MODAL ===== -->
+<dialog id="ai-explain-modal" class="auth-modal ai-modal">
+  <div class="auth-modal-box ai-explain-modal-box">
+    <div class="auth-modal-head">
+      <div class="ai-explain-title-row">
+        <div class="ai-modal-icon-wrap">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="auth-modal-title">AI Linguistic Breakdown</h3>
+          <p class="ai-modal-sub" id="ai-explain-target-lang">Powered by Gemini 3.8 Flash</p>
+        </div>
+      </div>
+      <button type="button" class="auth-modal-close" id="ai-explain-close" aria-label="Close AI explainer">&times;</button>
+    </div>
+
+    <div class="auth-modal-content ai-modal-scroll-body">
+      <!-- Loading State -->
+      <div class="ai-loading-state hidden" id="ai-explain-loading">
+        <div class="ai-spinner"></div>
+        <p class="ai-loading-msg">Consulting Nigerian linguistic knowledge base...</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="ai-error-state hidden" id="ai-explain-error">
+        <p id="ai-explain-error-msg">Could not generate explanation. Please check your network and retry.</p>
+        <button type="button" class="btn-check small" id="ai-explain-retry-btn">Retry</button>
+      </div>
+
+      <!-- Result Content -->
+      <div class="ai-explain-result" id="ai-explain-result">
+        <!-- Question / Answer Summary Card -->
+        <div class="ai-card ai-summary-card">
+          <div class="ai-summary-head">
+            <span class="ai-pill-label" id="ai-explain-pill-label">Expression</span>
+            <button type="button" class="ai-audio-btn" id="ai-explain-audio-btn" title="Listen to pronunciation">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              <span>Listen</span>
+            </button>
+          </div>
+          <p class="ai-summary-phrase" id="ai-explain-phrase">—</p>
+          <p class="ai-summary-translation" id="ai-explain-translation">—</p>
+        </div>
+
+        <!-- 1. Morphological & Word Breakdown -->
+        <div class="ai-card ai-detail-card">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">🧩</span>
+            <h4 class="ai-card-title">Morpheme &amp; Word Breakdown</h4>
+          </div>
+          <p class="ai-card-text" id="ai-explain-breakdown">—</p>
+        </div>
+
+        <!-- 2. Tone & Phonetics -->
+        <div class="ai-card ai-detail-card">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">🎵</span>
+            <h4 class="ai-card-title">Tonal &amp; Phonetic Cadence</h4>
+          </div>
+          <p class="ai-card-text" id="ai-explain-tones">—</p>
+        </div>
+
+        <!-- 3. Cultural Etiquette & Real-Life Usage -->
+        <div class="ai-card ai-detail-card">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">🏛️</span>
+            <h4 class="ai-card-title">Cultural Context &amp; Etiquette</h4>
+          </div>
+          <p class="ai-card-text" id="ai-explain-culture">—</p>
+        </div>
+
+        <!-- 4. Memory Trick (Mnemonic) -->
+        <div class="ai-card ai-mnemonic-card">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">💡</span>
+            <h4 class="ai-card-title">Memory Trick</h4>
+          </div>
+          <p class="ai-card-text" id="ai-explain-mnemonic">—</p>
+        </div>
+
+        <!-- 5. Related Proverb or Cultural Expression -->
+        <div class="ai-card ai-proverb-card" id="ai-explain-proverb-card">
+          <div class="ai-card-header">
+            <span class="ai-card-icon">📜</span>
+            <h4 class="ai-card-title">Related Proverb / Wisdom</h4>
+          </div>
+          <p class="ai-card-text" id="ai-explain-proverb">—</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-modal-actions">
+      <button type="button" class="btn-check small" id="ai-explain-done-btn">Back to Lesson</button>
     </div>
   </div>
 </dialog>

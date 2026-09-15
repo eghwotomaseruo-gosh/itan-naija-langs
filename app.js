@@ -6511,7 +6511,7 @@ async function openAiExplainModal(q, isCorrect){
 
   const course = COURSES[activeCourseKey] || COURSES.igbo;
   const langSub = document.getElementById("ai-explain-target-lang");
-  if(langSub) langSub.textContent = `${course.name} · ${course.native} (Powered by Gemini 3.8 Flash)`;
+  if(langSub) langSub.textContent = `${course.name} · ${course.native} (Powered by Gemini AI)`;
 
   // Determine question and answer text
   let nativePhrase = "";

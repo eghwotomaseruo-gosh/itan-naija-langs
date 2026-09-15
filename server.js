@@ -643,8 +643,8 @@ app.get("/api/tts", async (req, res) => {
 /* ====================== AI TUTOR & LINGUISTIC ASSISTANT ====================== */
 
 async function generateWithGeminiFallback(client, options) {
-  // Use gemini-2.5-flash or gemini-3.8-flash with automatic resilience
-  const candidateModels = ["gemini-2.5-flash", "gemini-3.8-flash"];
+  // Use high-availability Gemini models with automatic resilience
+  const candidateModels = ["gemini-3.6-flash", "gemini-3.1-flash-lite", "gemini-3.8-flash"];
   let lastErr = null;
   for (const model of candidateModels) {
     try {

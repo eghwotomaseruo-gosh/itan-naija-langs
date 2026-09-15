@@ -1261,23 +1261,100 @@ function getBestVoiceForLanguage(lang, courseKey){
 
 function getPhoneticUtterance(text, courseKey, voice){
   if(!text) return "";
-  const isAfricanVoice = voice && (
-    voice.lang.toLowerCase().includes("ng") || 
-    voice.lang.toLowerCase().startsWith("yo") || 
-    voice.lang.toLowerCase().startsWith("ig") || 
-    voice.lang.toLowerCase().startsWith("ha") ||
-    voice.name.toLowerCase().includes("nigeria") ||
-    voice.name.toLowerCase().includes("naija")
-  );
-  if(isAfricanVoice) return text;
+  const key = (courseKey || "").toLowerCase();
+  let result = text;
 
-  // For generic voices that stumble on Nigerian sub-dot tone characters
-  return text
-    .replace(/[ọỌ]/g, "o")
-    .replace(/[ẹẸ]/g, "e")
-    .replace(/[ịỊ]/g, "i")
-    .replace(/[ụỤ]/g, "u")
-    .replace(/[ṅṄ]/g, "n");
+  // 1. Language-Specific Phonetic Mapping for Nigerian Languages
+  if(key === "yoruba"){
+    // Yorùbá open vowels, tone markers, and consonant clusters
+    result = result
+      .replace(/[ṣṢ]/g, "sh")
+      .replace(/[ẹ́Ẹ́]/g, "éh")
+      .replace(/[ẹ̀Ẹ̀]/g, "èh")
+      .replace(/[ẹẸ]/g, "eh")
+      .replace(/[ọ́Ọ́]/g, "áw")
+      .replace(/[ọ̀Ọ̀]/g, "àw")
+      .replace(/[ọỌ]/g, "aw")
+      .replace(/\bp\b/gi, "kp")
+      .replace(/(\w)an\b/gi, "$1ahn")
+      .replace(/(\w)ẹn\b/gi, "$1ehn")
+      .replace(/(\w)ọn\b/gi, "$1awn")
+      .replace(/(\w)in\b/gi, "$1een")
+      .replace(/(\w)un\b/gi, "$1oon");
+  } else if(key === "igbo"){
+    // Igbo vowel harmony (sub-dots) and labiovelar clusters
+    result = result
+      .replace(/[ọ́Ọ́]/g, "áw")
+      .replace(/[ọ̀Ọ̀]/g, "àw")
+      .replace(/[ọỌ]/g, "aw")
+      .replace(/[ụ́Ụ́]/g, "óo")
+      .replace(/[ụ̀Ụ̀]/g, "òo")
+      .replace(/[ụỤ]/g, "oo")
+      .replace(/[ị́Ị́]/g, "ée")
+      .replace(/[ị̀Ị̀]/g, "èe")
+      .replace(/[ịỊ]/g, "ee")
+      .replace(/[ṅṄ]/g, "ng")
+      .replace(/\b([Nn])([bcdgkpstvz])/g, "$1-$2");
+  } else if(key === "hausa"){
+    // Hausa glottalized and implosive hooked letters
+    result = result
+      .replace(/[ɓƁ]/g, "b")
+      .replace(/[ɗƊ]/g, "d")
+      .replace(/[ƙƘ]/g, "k")
+      .replace(/'y/gi, "y")
+      .replace(/ts/gi, "ts");
+  } else if(key === "edo" || key === "urhobo" || key === "uvwie" || key === "isoko"){
+    // Edoid family sub-dots, rh, and vwr clusters
+    result = result
+      .replace(/[ẹ́Ẹ́]/g, "éh")
+      .replace(/[ẹ̀Ẹ̀]/g, "èh")
+      .replace(/[ẹẸ]/g, "eh")
+      .replace(/[ọ́Ọ́]/g, "áw")
+      .replace(/[ọ̀Ọ̀]/g, "àw")
+      .replace(/[ọỌ]/g, "aw")
+      .replace(/vwr/gi, "vr")
+      .replace(/vb/gi, "v")
+      .replace(/rh/gi, "rh")
+      .replace(/Miguọ/gi, "Mee-gwaw")
+      .replace(/Miguo/gi, "Mee-gwaw")
+      .replace(/Kọ́yọ́/gi, "Kaw-yaw")
+      .replace(/Ọb'ókhian/gi, "Aw-boh-kee-ahn");
+  } else if(key === "efik"){
+    // Efịk velar nasal ñ and open vowels
+    result = result
+      .replace(/[ñÑ]/g, "ng")
+      .replace(/[ọ́Ọ́]/g, "áw")
+      .replace(/[ọ̀Ọ̀]/g, "àw")
+      .replace(/[ọỌ]/g, "aw")
+      .replace(/[ẹ́Ẹ́]/g, "éh")
+      .replace(/[ẹẸ]/g, "eh")
+      .replace(/Sọsọñgọ/gi, "Saw-saw-ngaw")
+      .replace(/Mọkọm/gi, "Maw-kawm");
+  } else if(key === "tiv"){
+    // Tiv bantoid sounds
+    result = result
+      .replace(/gh/gi, "gh")
+      .replace(/M sugh u/gi, "M soogh oo")
+      .replace(/Za sugh/gi, "Zah soogh");
+  } else if(key === "ijaw"){
+    // Ijaw / Izon vowel sounds
+    result = result
+      .replace(/[ị́Ị́]/g, "ée")
+      .replace(/[ịỊ]/g, "ee")
+      .replace(/[ụ́Ụ́]/g, "óo")
+      .replace(/[ụỤ]/g, "oo")
+      .replace(/[ọ́Ọ́]/g, "áw")
+      .replace(/[ọỌ]/g, "aw")
+      .replace(/[ẹẸ]/g, "eh");
+  }
+
+  // Generic fallback cleaning for any remaining diacritics
+  return result
+    .replace(/[ọỌ]/g, "aw")
+    .replace(/[ẹẸ]/g, "eh")
+    .replace(/[ịỊ]/g, "ee")
+    .replace(/[ụỤ]/g, "oo")
+    .replace(/[ṅṄ]/g, "ng");
 }
 
 async function speak(text, lang, courseKey, triggerBtn){
@@ -1388,7 +1465,16 @@ function playDeviceSpeech(text, lang, courseKey, onFinish){
     if(voice) u.voice = voice;
     u.lang = voice?.lang || lang || "en-NG";
     u.rate = voiceSettings.speed || profile?.rate || 0.84;
-    u.pitch = profile?.pitch || 1.06;
+
+    let pitch = profile?.pitch || 1.06;
+    const hasHighTone = /[áéíóúÁÉÍÓÚ]/g.test(text);
+    const hasLowTone = /[àèìòùÀÈÌÒÙ]/g.test(text);
+    if(hasHighTone && !hasLowTone) {
+      pitch = Math.min(1.25, pitch * 1.08);
+    } else if(hasLowTone && !hasHighTone) {
+      pitch = Math.max(0.85, pitch * 0.94);
+    }
+    u.pitch = pitch;
 
     u.onend = () => { if(onFinish) onFinish(); };
     u.onerror = () => { if(onFinish) onFinish(); };

@@ -29,7 +29,7 @@ const TRIBE_DETAILS = {
   yoruba: {
     name: "Yorùbá",
     native: "Èdè Yorùbá",
-    greeting: "Bawo ni",
+    greeting: "Báwo ni",
     region: "Southwest",
     symbolTitle: "Adé Beaded Crown & Okin Bird",
     svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M10 24 L12 11 L18 16 L24 11 L26 24 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.18)" stroke-linejoin="round"/><circle cx="18" cy="9" r="3" stroke="white" stroke-width="2" fill="white"/><path d="M18 6 L18 4" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M9 24 L27 24 L25 29 L11 29 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.25)"/><line x1="12" y1="29" x2="12" y2="33" stroke="white" stroke-width="1.8" stroke-linecap="round"/><line x1="18" y1="29" x2="18" y2="34" stroke="white" stroke-width="1.8" stroke-linecap="round"/><line x1="24" y1="29" x2="24" y2="33" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>`
@@ -45,7 +45,7 @@ const TRIBE_DETAILS = {
   edo: {
     name: "Edo",
     native: "Ẹ̀dó",
-    greeting: "Kóyo",
+    greeting: "Kọ́yọ́",
     region: "Midwest",
     symbolTitle: "Queen Idia Bronze Mask",
     svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M11 11 Q18 7 25 11 C26 18 24 25 18 29 C12 25 10 18 11 11 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.18)" stroke-linejoin="round"/><path d="M9 9 Q18 4 27 9" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="14" y1="15" x2="16" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="20" y1="15" x2="22" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="16" x2="18" y2="21" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M16 23 Q18 24.5 20 23" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="18" cy="32" r="1.5" fill="white"/><circle cx="13" cy="31" r="1.2" fill="white"/><circle cx="23" cy="31" r="1.2" fill="white"/></svg>`
@@ -53,7 +53,7 @@ const TRIBE_DETAILS = {
   efik: {
     name: "Efịk",
     native: "Usem Efịk",
-    greeting: "Mọ́kọ́m",
+    greeting: "Mọkọm",
     region: "Cross River",
     symbolTitle: "Ekpe Leopard Society & Nsibidi",
     svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><circle cx="18" cy="18" r="12" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><path d="M12 14 Q18 8 24 14 Q18 20 12 14 Z" stroke="white" stroke-width="1.8" fill="white" opacity="0.35"/><circle cx="18" cy="14" r="2" fill="white"/><path d="M18 19 L18 27" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 24 L22 24" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="10" cy="9" r="2" fill="white" opacity="0.85"/><circle cx="26" cy="9" r="2" fill="white" opacity="0.85"/></svg>`
@@ -61,7 +61,7 @@ const TRIBE_DETAILS = {
   urhobo: {
     name: "Urhobo",
     native: "Ẹvwrẹn Urhobo",
-    greeting: "Migwo",
+    greeting: "Miguọ",
     region: "Niger Delta",
     symbolTitle: "Royal Ivie Beads & Ogbọrọ Fan",
     svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M18 6 C13 6 9 11 9 17 C9 24 14 28 18 29 C22 28 27 24 27 17 C27 11 23 6 18 6 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.15)"/><circle cx="18" cy="14" r="3" stroke="white" stroke-width="1.8" fill="white"/><circle cx="13" cy="19" r="2" fill="white"/><circle cx="23" cy="19" r="2" fill="white"/><circle cx="18" cy="24" r="2.2" fill="white"/><line x1="18" y1="29" x2="18" y2="34" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>`
@@ -77,7 +77,7 @@ const TRIBE_DETAILS = {
   uvwie: {
     name: "Uvwie",
     native: "Ẹvwrẹn Uvwie",
-    greeting: "Migwo",
+    greeting: "Miguọ",
     region: "Effurun Delta",
     symbolTitle: "Royal Agogo Bell & Staff",
     svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M18 5 L12 25 L24 25 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.2)" stroke-linejoin="round"/><ellipse cx="18" cy="25" rx="6" ry="2.5" stroke="white" stroke-width="1.8" fill="white"/><line x1="18" y1="27" x2="18" y2="31" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="32" r="2" fill="white"/><circle cx="18" cy="5" r="2.5" stroke="white" stroke-width="1.8" fill="white"/></svg>`
@@ -93,7 +93,7 @@ const TRIBE_DETAILS = {
   ijaw: {
     name: "Ijaw",
     native: "Ịjọ (Izon)",
-    greeting: "Tebidaba",
+    greeting: "Dọọ",
     region: "Maritime Delta",
     symbolTitle: "War Canoe & Sacred Paddle",
     svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M5 22 Q18 27 31 22 C27 20 9 20 5 22 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.22)" stroke-linejoin="round"/><line x1="18" y1="6" x2="18" y2="28" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 10 L18 6 L22 10 Z" stroke="white" stroke-width="1.8" fill="white"/><path d="M7 29 Q18 33 29 29" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>`
@@ -142,9 +142,9 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Ndewo", en: "Hello" }, { native: "Kedu", en: "How are you" },
-        { native: "Daalu", en: "Thank you" }, { native: "Ee", en: "Yes" },
-        { native: "Mba", en: "No" }, { native: "Ọzọ", en: "See you again" }
+        { native: "Ndewo", en: "Hello" }, { native: "Kedụ", en: "How are you" },
+        { native: "Daalụ", en: "Thank you" }, { native: "Ee", en: "Yes" },
+        { native: "Mba", en: "No" }, { native: "Ka ọ dị", en: "See you again" }
       ]},
       { title: "Numbers 1–5", vocab: [
         { native: "Otu", en: "One" }, { native: "Abụọ", en: "Two" }, { native: "Atọ", en: "Three" },
@@ -168,11 +168,11 @@ const COURSES = {
       ]},
       { title: "Common Phrases", vocab: [
         { native: "Biko", en: "Please" }, { native: "Ndo", en: "Sorry" }, { native: "Nnọọ", en: "Welcome" },
-        { native: "Kedu aha gị", en: "What is your name" }, { native: "Daalu nke ukwuu", en: "Thank you very much" }
+        { native: "Kedụ aha gị", en: "What is your name" }, { native: "Daalụ nke ukwuu", en: "Thank you very much" }
       ]},
       { title: "Food", vocab: [
         { native: "Nri", en: "Food" }, { native: "Mmiri", en: "Water" }, { native: "Ji", en: "Yam" },
-        { native: "Ọka", en: "Corn" }, { native: "Anụ", en: "Meat" }, { native: "Akpu", en: "Cassava" }
+        { native: "Ọka", en: "Corn" }, { native: "Anụ", en: "Meat" }, { native: "Akpụ", en: "Cassava" }
       ]},
       { title: "Body Parts", vocab: [
         { native: "Isi", en: "Head" }, { native: "Aka", en: "Hand" }, { native: "Ụkwụ", en: "Leg" },
@@ -180,7 +180,7 @@ const COURSES = {
       ]},
       { title: "Animals", vocab: [
         { native: "Nkịta", en: "Dog" }, { native: "Nwamba", en: "Cat" }, { native: "Ehi", en: "Cow" },
-        { native: "Ọkụkọ", en: "Chicken" }, { native: "Aturu", en: "Sheep" }, { native: "Enyi", en: "Elephant" }
+        { native: "Ọkụkọ", en: "Chicken" }, { native: "Atụrụ", en: "Sheep" }, { native: "Enyi", en: "Elephant" }
       ]},
       { title: "Market & Shopping", vocab: [
         { native: "Ahịa", en: "Market" }, { native: "Ego", en: "Money" }, { native: "Ọnụego", en: "Price" },
@@ -195,7 +195,7 @@ const COURSES = {
         { native: "Osimiri", en: "River" }, { native: "Ugwu", en: "Mountain" }, { native: "Ọhịa", en: "Forest" }
       ]},
       { title: "Feelings & Emotions", vocab: [
-        { native: "Ọñụ", en: "Joy" }, { native: "Iwe", en: "Anger" }, { native: "Egwu", en: "Fear" },
+        { native: "Ọṅụ", en: "Joy" }, { native: "Iwe", en: "Anger" }, { native: "Egwu", en: "Fear" },
         { native: "Udo", en: "Peace" }, { native: "Ike ọgwụgwụ", en: "Tiredness" }, { native: "Ịhụnanya", en: "Love" }
       ]},
       { title: "Home & Living", vocab: [
@@ -203,8 +203,8 @@ const COURSES = {
         { native: "Efere", en: "Plate" }, { native: "Iko", en: "Cup" }, { native: "Ọkụ", en: "Light" }
       ]},
       { title: "Daily Verbs", vocab: [
-        { native: "Rie", en: "Eat" }, { native: "Ñụọ", en: "Drink" }, { native: "Gaa", en: "Go" },
-        { native: "Bia", en: "Come" }, { native: "Hụ", en: "See" }, { native: "Mee", en: "Do" }
+        { native: "Rie", en: "Eat" }, { native: "Ṅụọ", en: "Drink" }, { native: "Gaa", en: "Go" },
+        { native: "Bịa", en: "Come" }, { native: "Hụ", en: "See" }, { native: "Mee", en: "Do" }
       ]},
       { title: "Calendar & Seasons", vocab: [
         { native: "Ụtụtụ ọma", en: "Good morning" }, { native: "Ehihie", en: "Afternoon" }, { native: "Mgbede", en: "Evening" },
@@ -226,49 +226,49 @@ const COURSES = {
       preferredTags: ["yo-NG", "yo", "en-NG", "pcm"],
       pitch: 1.10,
       rate: 0.83,
-      sampleText: "Bawo ni! Èdè Yorùbá dára púpọ̀."
+      sampleText: "Báwo ni! Èdè Yorùbá dára púpọ̀."
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Bawo ni", en: "Hello" }, { native: "E kaaro", en: "Good morning" },
-        { native: "E se", en: "Thank you" }, { native: "Beeni", en: "Yes" },
-        { native: "Rara", en: "No" }, { native: "O daabo", en: "Goodbye" }
+        { native: "Báwo ni", en: "Hello" }, { native: "Ẹ káàárọ̀", en: "Good morning" },
+        { native: "Ẹ ṣe", en: "Thank you" }, { native: "Bẹ́ẹ̀ni", en: "Yes" },
+        { native: "Rárá", en: "No" }, { native: "Ó dábọ̀", en: "Goodbye" }
       ]},
       { title: "Numbers 1–5", vocab: [
-        { native: "Ọkan", en: "One" }, { native: "Meji", en: "Two" }, { native: "Mẹta", en: "Three" },
-        { native: "Mẹrin", en: "Four" }, { native: "Marun", en: "Five" }
+        { native: "Ọ̀kan", en: "One" }, { native: "Méjì", en: "Two" }, { native: "Mẹ́ta", en: "Three" },
+        { native: "Mẹ́rin", en: "Four" }, { native: "Márùn", en: "Five" }
       ]},
       { title: "Numbers 6–10", vocab: [
-        { native: "Mẹfa", en: "Six" }, { native: "Meje", en: "Seven" }, { native: "Mẹjọ", en: "Eight" },
-        { native: "Mẹsan", en: "Nine" }, { native: "Mẹwa", en: "Ten" }
+        { native: "Mẹ́fà", en: "Six" }, { native: "Méje", en: "Seven" }, { native: "Mẹ́jọ", en: "Eight" },
+        { native: "Mẹ́sàn", en: "Nine" }, { native: "Mẹ́wàá", en: "Ten" }
       ]},
       { title: "Family", vocab: [
-        { native: "Iya", en: "Mother" }, { native: "Baba", en: "Father" }, { native: "Ọmọ", en: "Child" },
-        { native: "Arakunrin", en: "Brother" }, { native: "Arabinrin", en: "Sister" }, { native: "Ẹbi", en: "Family" }
+        { native: "Ìyá", en: "Mother" }, { native: "Bàbá", en: "Father" }, { native: "Ọmọ", en: "Child" },
+        { native: "Arákùnrin", en: "Brother" }, { native: "Arábìnrin", en: "Sister" }, { native: "Ẹbí", en: "Family" }
       ]},
       { title: "Colors", vocab: [
-        { native: "Funfun", en: "White" }, { native: "Dudu", en: "Black" }, { native: "Pupa", en: "Red" },
-        { native: "Ofeefee", en: "Yellow" }, { native: "Alawọ ewe", en: "Green" }
+        { native: "Fúnfun", en: "White" }, { native: "Dúdú", en: "Black" }, { native: "Pupa", en: "Red" },
+        { native: "Òfèèfèé", en: "Yellow" }, { native: "Aláwọ̀ ewé", en: "Green" }
       ]},
       { title: "Time words", vocab: [
-        { native: "Oni", en: "Today" }, { native: "Ọla", en: "Tomorrow" }, { native: "Ana", en: "Yesterday" },
-        { native: "Owuro", en: "Morning" }, { native: "Alẹ", en: "Night" }
+        { native: "Òní", en: "Today" }, { native: "Ọ̀la", en: "Tomorrow" }, { native: "Àná", en: "Yesterday" },
+        { native: "Òwúrọ̀", en: "Morning" }, { native: "Alẹ́", en: "Night" }
       ]},
       { title: "Common Phrases", vocab: [
-        { native: "Jọwọ", en: "Please" }, { native: "Ma binu", en: "Sorry" }, { native: "Ẹ kaabọ", en: "Welcome" },
-        { native: "Kini oruko re", en: "What is your name" }, { native: "O se pupo", en: "Thank you very much" }
+        { native: "Ẹ jọ̀wọ́", en: "Please" }, { native: "Ẹ má bínú", en: "Sorry" }, { native: "Ẹ káàbọ̀", en: "Welcome" },
+        { native: "Kí ni orúkọ rẹ", en: "What is your name" }, { native: "Ẹ ṣe púpọ̀", en: "Thank you very much" }
       ]},
       { title: "Food", vocab: [
-        { native: "Ounje", en: "Food" }, { native: "Omi", en: "Water" }, { native: "Iṣu", en: "Yam" },
-        { native: "Agbado", en: "Corn" }, { native: "Ẹran", en: "Meat" }, { native: "Ẹja", en: "Fish" }
+        { native: "Oúnjẹ", en: "Food" }, { native: "Omi", en: "Water" }, { native: "Iṣu", en: "Yam" },
+        { native: "Àgbàdo", en: "Corn" }, { native: "Ẹran", en: "Meat" }, { native: "Ẹja", en: "Fish" }
       ]},
       { title: "Body Parts", vocab: [
-        { native: "Ori", en: "Head" }, { native: "Ọwọ", en: "Hand" }, { native: "Ẹsẹ", en: "Leg" },
-        { native: "Oju", en: "Eye" }, { native: "Ẹnu", en: "Mouth" }, { native: "Etí", en: "Ear" }
+        { native: "Orí", en: "Head" }, { native: "Ọwọ́", en: "Hand" }, { native: "Ẹsẹ̀", en: "Leg" },
+        { native: "Ojú", en: "Eye" }, { native: "Ẹnu", en: "Mouth" }, { native: "Etí", en: "Ear" }
       ]},
       { title: "Animals", vocab: [
-        { native: "Aja", en: "Dog" }, { native: "Ologbo", en: "Cat" }, { native: "Malu", en: "Cow" },
-        { native: "Adiye", en: "Chicken" }, { native: "Agutan", en: "Sheep" }, { native: "Erin", en: "Elephant" }
+        { native: "Ajá", en: "Dog" }, { native: "Ológbò", en: "Cat" }, { native: "Màlúù", en: "Cow" },
+        { native: "Adìyẹ", en: "Chicken" }, { native: "Àgùntàn", en: "Sheep" }, { native: "Erin", en: "Elephant" }
       ]},
       { title: "Market & Shopping", vocab: [
         { native: "Ọjà", en: "Market" }, { native: "Owó", en: "Money" }, { native: "Èlò ni", en: "How much" },
@@ -323,19 +323,19 @@ const COURSES = {
         { native: "A'a", en: "No" }, { native: "Sai anjima", en: "Goodbye" }
       ]},
       { title: "Numbers 1–5", vocab: [
-        { native: "Daya", en: "One" }, { native: "Biyu", en: "Two" }, { native: "Uku", en: "Three" },
-        { native: "Hudu", en: "Four" }, { native: "Biyar", en: "Five" }
+        { native: "Ɗaya", en: "One" }, { native: "Biyu", en: "Two" }, { native: "Uku", en: "Three" },
+        { native: "Huɗu", en: "Four" }, { native: "Biyar", en: "Five" }
       ]},
       { title: "Numbers 6–10", vocab: [
         { native: "Shida", en: "Six" }, { native: "Bakwai", en: "Seven" }, { native: "Takwas", en: "Eight" },
         { native: "Tara", en: "Nine" }, { native: "Goma", en: "Ten" }
       ]},
       { title: "Family", vocab: [
-        { native: "Uwa", en: "Mother" }, { native: "Uba", en: "Father" }, { native: "Da", en: "Son" },
-        { native: "Diya", en: "Daughter" }, { native: "Yaya", en: "Sibling" }, { native: "Iyali", en: "Family" }
+        { native: "Uwa", en: "Mother" }, { native: "Uba", en: "Father" }, { native: "Ɗa", en: "Son" },
+        { native: "Ɗiya", en: "Daughter" }, { native: "Yaya", en: "Sibling" }, { native: "Iyali", en: "Family" }
       ]},
       { title: "Colors", vocab: [
-        { native: "Fari", en: "White" }, { native: "Baki", en: "Black" }, { native: "Ja", en: "Red" },
+        { native: "Fari", en: "White" }, { native: "Baƙi", en: "Black" }, { native: "Ja", en: "Red" },
         { native: "Rawaya", en: "Yellow" }, { native: "Kore", en: "Green" }
       ]},
       { title: "Time words", vocab: [
@@ -343,7 +343,7 @@ const COURSES = {
         { native: "Safe", en: "Morning" }, { native: "Dare", en: "Night" }
       ]},
       { title: "Common Phrases", vocab: [
-        { native: "Don Allah", en: "Please" }, { native: "Yi hakuri", en: "Sorry" }, { native: "Barka da zuwa", en: "Welcome" },
+        { native: "Don Allah", en: "Please" }, { native: "Yi haƙuri", en: "Sorry" }, { native: "Barka da zuwa", en: "Welcome" },
         { native: "Menene sunanka", en: "What is your name" }, { native: "Na gode sosai", en: "Thank you very much" }
       ]},
       { title: "Food", vocab: [
@@ -351,7 +351,7 @@ const COURSES = {
         { native: "Masara", en: "Corn" }, { native: "Nama", en: "Meat" }, { native: "Kifi", en: "Fish" }
       ]},
       { title: "Body Parts", vocab: [
-        { native: "Kai", en: "Head" }, { native: "Hannu", en: "Hand" }, { native: "Kafa", en: "Leg" },
+        { native: "Kai", en: "Head" }, { native: "Hannu", en: "Hand" }, { native: "Ƙafa", en: "Leg" },
         { native: "Ido", en: "Eye" }, { native: "Baki", en: "Mouth" }, { native: "Kunne", en: "Ear" }
       ]},
       { title: "Animals", vocab: [
@@ -359,8 +359,8 @@ const COURSES = {
         { native: "Kaza", en: "Chicken" }, { native: "Tunkiya", en: "Sheep" }, { native: "Giwa", en: "Elephant" }
       ]},
       { title: "Market & Commerce", vocab: [
-        { native: "Kasuwa", en: "Market" }, { native: "Kudi", en: "Money" }, { native: "Nawa ne", en: "How much" },
-        { native: "Saya", en: "Buy" }, { native: "Sayar", en: "Sell" }, { native: "Sauki", en: "Cheap" }, { native: "Tsada", en: "Expensive" }
+        { native: "Kasuwa", en: "Market" }, { native: "Kuɗi", en: "Money" }, { native: "Nawa ne", en: "How much" },
+        { native: "Saya", en: "Buy" }, { native: "Sayar", en: "Sell" }, { native: "Sauƙi", en: "Cheap" }, { native: "Tsada", en: "Expensive" }
       ]},
       { title: "Travel & Places", vocab: [
         { native: "Gida", en: "House" }, { native: "Hanya", en: "Road" }, { native: "Birni", en: "City" },
@@ -371,12 +371,12 @@ const COURSES = {
         { native: "Kogi", en: "River" }, { native: "Dutse", en: "Mountain" }, { native: "Daji", en: "Forest" }
       ]},
       { title: "Feelings & Wellbeing", vocab: [
-        { native: "Farin ciki", en: "Happiness" }, { native: "Bakin ciki", en: "Sadness" }, { native: "Tsoro", en: "Fear" },
+        { native: "Farin ciki", en: "Happiness" }, { native: "Baƙin ciki", en: "Sadness" }, { native: "Tsoro", en: "Fear" },
         { native: "Lafiya", en: "Health" }, { native: "Soyayya", en: "Love" }, { native: "Gajiya", en: "Tiredness" }
       ]},
       { title: "Home & Living", vocab: [
         { native: "Kujera", en: "Chair" }, { native: "Tebur", en: "Table" }, { native: "Gado", en: "Bed" },
-        { native: "Kwano", en: "Plate" }, { native: "Kofin", en: "Cup" }, { native: "Fitila", en: "Lamp" }
+        { native: "Kwano", en: "Plate" }, { native: "Kofi", en: "Cup" }, { native: "Fitila", en: "Lamp" }
       ]},
       { title: "Essential Verbs", vocab: [
         { native: "Ci", en: "Eat" }, { native: "Sha", en: "Drink" }, { native: "Je", en: "Go" },
@@ -402,13 +402,13 @@ const COURSES = {
       preferredTags: ["en-NG", "bin", "pcm", "en-GH"],
       pitch: 1.06,
       rate: 0.82,
-      sampleText: "Kọyọ! Ẹ̀dó vbe ẹmwẹ nọ gb'ẹsẹ."
+      sampleText: "Kọ́yọ́! Ẹ̀dó vbe ẹmwẹ nọ gb'ẹsẹ."
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Kọyọ", en: "Hello" }, { native: "Ọbowiẹ", en: "Good morning" },
-        { native: "Ọbavan", en: "Good afternoon" }, { native: "Ọbota", en: "Good evening" },
-        { native: "Obiluu", en: "Thank you" }
+        { native: "Kọ́yọ́", en: "Hello" }, { native: "Ọ̀b'ówie", en: "Good morning" },
+        { native: "Ọ̀b'ávàn", en: "Good afternoon" }, { native: "Ọ̀b'ótà", en: "Good evening" },
+        { native: "U rú ẹsẹ́", en: "Thank you" }
       ]},
       { title: "Numbers 1–5", vocab: [
         { native: "Ọkpa", en: "One" }, { native: "Eva", en: "Two" }, { native: "Eha", en: "Three" },
@@ -419,32 +419,32 @@ const COURSES = {
         { native: "Ihinrin", en: "Nine" }, { native: "Igbe", en: "Ten" }
       ]},
       { title: "Family", vocab: [
-        { native: "Érhá", en: "Father" }, { native: "Iye", en: "Mother" }, { native: "Ovbi", en: "Child" },
-        { native: "Erha nokhua", en: "Grandfather" }, { native: "Iye nokhua", en: "Grandmother" }
+        { native: "Ẹ́rhá", en: "Father" }, { native: "Iye", en: "Mother" }, { native: "Ọmọ", en: "Child" },
+        { native: "Ẹrha nọkhua", en: "Grandfather" }, { native: "Iye nọkhua", en: "Grandmother" }
       ]},
       { title: "Common Phrases", vocab: [
-        { native: "Vbèè óye hé", en: "How are you" }, { native: "Obo kia", en: "Welcome" },
-        { native: "Uzébu", en: "Great" }, { native: "Òkhíen òwie", en: "Good night" },
-        { native: "Ìsélógbé", en: "Season's greetings" }
+        { native: "Vbè ó yé hẹ́", en: "How are you" }, { native: "Ọb'ókhian", en: "Welcome" },
+        { native: "Ọ́ má", en: "Great" }, { native: "Ọ̀khiẹ́n òwie", en: "Good night" },
+        { native: "Ìsẹ́lọ́gbẹ̀", en: "Season's greetings" }
       ]},
       { title: "Colors", vocab: [
-        { native: "Ọfasẹ", en: "White" }, { native: "Nekhui", en: "Black" }, { native: "Ọlilẹ", en: "Red" },
-        { native: "Ọmebe", en: "Green" }, { native: "Ọdane", en: "Blue" }, { native: "Ọnivọ", en: "Yellow" }
+        { native: "Nọ̀fua", en: "White" }, { native: "Nọ̀khui", en: "Black" }, { native: "Nọ́ba", en: "Red" },
+        { native: "Ẹ̀bẹ", en: "Green" }, { native: "Ẹ̀dọ̀n", en: "Blue" }, { native: "Nọ̀rẹn", en: "Yellow" }
       ]},
       { title: "Food", vocab: [
         { native: "Ọka", en: "Corn" }, { native: "Izẹ", en: "Rice" }, { native: "Erere", en: "Beans" },
         { native: "Iyan", en: "Yam" }, { native: "Ọghẹdẹ", en: "Plantain" }, { native: "Akarha", en: "Coco yam" }
       ]},
       { title: "Body Parts", vocab: [
-        { native: "Uhun", en: "Head" }, { native: "Ehor", en: "Ear" }, { native: "Aro", en: "Eye" },
-        { native: "Ihue", en: "Nose" }, { native: "Unu", en: "Mouth" }, { native: "Atata owẹ", en: "Foot" }
+        { native: "Uhunmwun", en: "Head" }, { native: "Ẹhọ́", en: "Ear" }, { native: "Árọ́", en: "Eye" },
+        { native: "Ihuẹ", en: "Nose" }, { native: "Unu", en: "Mouth" }, { native: "Owẹ́", en: "Foot" }
       ]},
       { title: "Market & Trade", vocab: [
         { native: "Ẹki", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
-        { native: "Khiẹn", en: "Sell" }, { native: "Esen", en: "Gift" }
+        { native: "Khiẹn", en: "Sell" }, { native: "Ẹ̀sẹ́", en: "Gift" }
       ]},
       { title: "Time & Days", vocab: [
-        { native: "Ẹdẹ", en: "Day" }, { native: "Akhuẹ", en: "Tomorrow" }, { native: "Ẹdẹrẹ", en: "Yesterday" },
+        { native: "Ẹdẹ", en: "Day" }, { native: "Akhuẹ", en: "Tomorrow" }, { native: "Ẹdọ́rọ", en: "Yesterday" },
         { native: "Owie", en: "Morning" }, { native: "Ason", en: "Night" }
       ]},
       { title: "Nature & Elements", vocab: [
@@ -452,7 +452,7 @@ const COURSES = {
         { native: "Erhan", en: "Tree" }, { native: "Okun", en: "Ocean" }
       ]},
       { title: "Daily Verbs", vocab: [
-        { native: "Re", en: "Eat" }, { native: "Wọn", en: "Drink" }, { native: "Khian", en: "Go" },
+        { native: "Lé", en: "Eat" }, { native: "Wọ́n", en: "Drink" }, { native: "Khian", en: "Go" },
         { native: "Gualọ", en: "Search" }, { native: "Guan", en: "Speak" }
       ]}
     ]
@@ -472,12 +472,12 @@ const COURSES = {
     lessons: [
       { title: "Greetings", vocab: [
         { native: "Emedi", en: "Welcome" }, { native: "Emesiere", en: "Good morning" },
-        { native: "Mokom", en: "Good afternoon" }, { native: "Esiere", en: "Good night" },
+        { native: "Mọkọm", en: "Good afternoon" }, { native: "Esiere", en: "Good night" },
         { native: "Ka di", en: "Goodbye" }
       ]},
       { title: "Numbers 1–5", vocab: [
         { native: "Kiet", en: "One" }, { native: "Iba", en: "Two" }, { native: "Ita", en: "Three" },
-        { native: "Inaŋ", en: "Four" }, { native: "Ition", en: "Five" }
+        { native: "Inaŋ", en: "Four" }, { native: "Itiọn", en: "Five" }
       ]},
       { title: "Numbers 6–10", vocab: [
         { native: "Itiokiet", en: "Six" }, { native: "Itiaba", en: "Seven" }, { native: "Itiaita", en: "Eight" },
@@ -485,15 +485,15 @@ const COURSES = {
       ]},
       { title: "Common Phrases", vocab: [
         { native: "Idem fo?", en: "How are you" }, { native: "Nso ke Ekot fi?", en: "What is your name" },
-        { native: "Mbọk", en: "Please" }, { native: "Sosongo", en: "Thank you" },
+        { native: "Mbọk", en: "Please" }, { native: "Sọsọñgọ", en: "Thank you" },
         { native: "Nfana ibaga", en: "No problem" }
       ]},
       { title: "Family", vocab: [
         { native: "Ete", en: "Father" }, { native: "Eka", en: "Mother" }, { native: "Eyen", en: "Child" },
-        { native: "Ndito", en: "Children" }, { native: "Ebe", en: "Husband" }, { native: "Nwan", en: "Wife" }
+        { native: "Nditọ", en: "Children" }, { native: "Ebe", en: "Husband" }, { native: "Nwan", en: "Wife" }
       ]},
       { title: "Food & Dining", vocab: [
-        { native: "Udia", en: "Food" }, { native: "Mmong", en: "Water" }, { native: "Bia", en: "Yam" },
+        { native: "Udia", en: "Food" }, { native: "Mmọñ", en: "Water" }, { native: "Bia", en: "Yam" },
         { native: "Iyak", en: "Fish" }, { native: "Unam", en: "Meat" }
       ]},
       { title: "Colors & Nature", vocab: [
@@ -501,21 +501,21 @@ const COURSES = {
         { native: "Utin", en: "Sun" }, { native: "Edim", en: "Rain" }
       ]},
       { title: "Animals", vocab: [
-        { native: "Ewa", en: "Dog" }, { native: "Anwa", en: "Cat" }, { native: "Enang", en: "Cow" },
-        { native: "Unen", en: "Chicken" }, { native: "Erong", en: "Sheep" }
+        { native: "Ewa", en: "Dog" }, { native: "Anwa", en: "Cat" }, { native: "Enañ", en: "Cow" },
+        { native: "Unen", en: "Chicken" }, { native: "Erọñ", en: "Sheep" }
       ]},
       { title: "Market & Commerce", vocab: [
         { native: "Urua", en: "Market" }, { native: "Okuk", en: "Money" }, { native: "Dep", en: "Buy" },
         { native: "Nyam", en: "Sell" }, { native: "Idahaemi", en: "Now" }
       ]},
       { title: "Essential Verbs", vocab: [
-        { native: "Dia", en: "Eat" }, { native: "Nwong", en: "Drink" }, { native: "Ka", en: "Go" },
+        { native: "Dia", en: "Eat" }, { native: "Ñwọñ", en: "Drink" }, { native: "Ka", en: "Go" },
         { native: "Di", en: "Come" }, { native: "Kut", en: "See" }
       ]}
     ]
   },
   urhobo: {
-    name: "Urhobo", native: "Ẹdo Urhobo", color: "urhobo", glyph: "U", speechLang: "urh",
+    name: "Urhobo", native: "Ẹvwrẹn Urhobo", color: "urhobo", glyph: "U", speechLang: "urh",
     voiceProfile: {
       accent: "Delta State Edoid Accent",
       persona: "Efe & Oghenekevwe",
@@ -536,24 +536,24 @@ const COURSES = {
         { native: "Írhirin", en: "Nine" }, { native: "Íhwe", en: "Ten" }
       ]},
       { title: "Greetings", vocab: [
-        { native: "Do", en: "Thank you" }, { native: "Dede", en: "Welcome" }, { native: "Kédófa", en: "Goodbye" },
-        { native: "Kódẹ", en: "Goodnight" }, { native: "Yéghwérẹ", en: "Safe journey" }
+        { native: "Do", en: "Thank you / Greetings" }, { native: "Dede", en: "Welcome" }, { native: "K'odẹfa", en: "Goodbye" },
+        { native: "K'odẹ", en: "Goodnight" }, { native: "Yagba", en: "Safe journey" }
       ]},
       { title: "Common Phrases", vocab: [
         { native: "Biko", en: "Please" }, { native: "E", en: "Yes" }, { native: "Ẹjo", en: "No" },
-        { native: "Omagáre", en: "How are you" }, { native: "Míguẹ", en: "Respectful greeting to an elder" }
+        { native: "Oma gba na?", en: "How are you" }, { native: "Miguọ", en: "Respectful greeting to an elder" }
       ]},
       { title: "Family", vocab: [
-        { native: "Ósẹ", en: "Father" }, { native: "Óni", en: "Mother" }, { native: "Ibábode", en: "Grandfather" },
-        { native: "Inénode", en: "Grandmother" }, { native: "Ómó", en: "Child" }, { native: "Óniọvo", en: "Sibling" }
+        { native: "Ọsẹ", en: "Father" }, { native: "Oni", en: "Mother" }, { native: "Ọsẹrode", en: "Grandfather" },
+        { native: "Onirode", en: "Grandmother" }, { native: "Ọmọ", en: "Child" }, { native: "Oniọvo", en: "Sibling" }
       ]},
       { title: "Body Parts", vocab: [
-        { native: "Uyovwi", en: "Head" }, { native: "Obọ", en: "Hand" }, { native: "Owọ", en: "Leg" },
-        { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" }, { native: "Órhó", en: "Ear" }
+        { native: "Uyovwi", en: "Head" }, { native: "Obọ", en: "Hand" }, { native: "Awọ", en: "Leg" },
+        { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" }, { native: "Ẹrhọ", en: "Ear" }
       ]},
       { title: "Food", vocab: [
-        { native: "Ame", en: "Water" }, { native: "Akara", en: "Bean-cake" }, { native: "Irósu", en: "Rice" },
-        { native: "Ọné", en: "Yam" }, { native: "Óka", en: "Corn" }, { native: "Ọrhẹ", en: "Plantain" }
+        { native: "Ame", en: "Water" }, { native: "Akara", en: "Bean-cake" }, { native: "Irosi", en: "Rice" },
+        { native: "Ole", en: "Yam" }, { native: "Ọka", en: "Corn" }, { native: "Ọrhen", en: "Plantain" }
       ]},
       { title: "Animals", vocab: [
         { native: "Eráko", en: "Dog" }, { native: "Erhué", en: "Cow" }, { native: "Ogodẹ", en: "Sheep" },
@@ -564,8 +564,8 @@ const COURSES = {
         { native: "Aso", en: "Night" }, { native: "Urhukpẹ", en: "Light" }
       ]},
       { title: "Market & Commerce", vocab: [
-        { native: "Iki", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
-        { native: "Shẹ", en: "Sell" }, { native: "Oware", en: "Thing" }
+        { native: "Ẹki", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
+        { native: "Shẹ", en: "Sell" }, { native: "Ẹware", en: "Goods / Things" }
       ]},
       { title: "Daily Verbs", vocab: [
         { native: "Re", en: "Eat" }, { native: "Da", en: "Drink" }, { native: "Kpo", en: "Go" },
@@ -574,7 +574,7 @@ const COURSES = {
     ]
   },
   tiv: {
-    name: "Tiv", native: "Dzwa Tiv", color: "tiv", glyph: "T", speechLang: "tiv",
+    name: "Tiv", native: "Zwa Tiv", color: "tiv", glyph: "T", speechLang: "tiv",
     voiceProfile: {
       accent: "Benue Valley Bantoid Accent",
       persona: "Mnguember & Terver",
@@ -587,7 +587,7 @@ const COURSES = {
     },
     lessons: [
       { title: "Numbers 1–5", vocab: [
-        { native: "Mom", en: "One" }, { native: "Uhar", en: "Two" }, { native: "Utar", en: "Three" },
+        { native: "Môm", en: "One" }, { native: "Uhar", en: "Two" }, { native: "Utar", en: "Three" },
         { native: "Unyiin", en: "Four" }, { native: "Utaan", en: "Five" }
       ]},
       { title: "Numbers 6–10", vocab: [
@@ -595,16 +595,16 @@ const COURSES = {
         { native: "Utan-kar-unyiin", en: "Nine" }, { native: "Pue", en: "Ten" }
       ]},
       { title: "Greetings", vocab: [
-        { native: "M sugh", en: "Hello" }, { native: "M sugh u", en: "Thank you" }, { native: "Een", en: "Yes" },
+        { native: "M sugh u", en: "Hello" }, { native: "M sugh u kpishi", en: "Thank you very much" }, { native: "Een", en: "Yes" },
         { native: "Ei", en: "No" }, { native: "Dedoo", en: "Good" }
       ]},
       { title: "Common Phrases", vocab: [
         { native: "Iti yo er nyi?", en: "What is your name" }, { native: "Iti yam er...", en: "My name is..." },
-        { native: "Mzamber we", en: "Please" }, { native: "U nder ver", en: "Good morning" }, { native: "U pander ver", en: "Good afternoon" }
+        { native: "Mzamber we", en: "Please" }, { native: "U nder ve", en: "Good morning" }, { native: "U pande ve", en: "Good afternoon" }
       ]},
       { title: "Family", vocab: [
         { native: "Ter", en: "Father" }, { native: "Ngo", en: "Mother" }, { native: "Wan", en: "Child" },
-        { native: "Abgbian", en: "Sibling" }, { native: "Nom", en: "Husband" }, { native: "Kwase", en: "Wife" }
+        { native: "Anmgbian", en: "Sibling" }, { native: "Nom", en: "Husband" }, { native: "Kwase", en: "Wife" }
       ]},
       { title: "Body Parts", vocab: [
         { native: "Ishe", en: "Eye" }, { native: "Hinga", en: "Nose" }, { native: "Nyexe", en: "Tooth" },
@@ -620,7 +620,7 @@ const COURSES = {
       ]},
       { title: "Food & Dining", vocab: [
         { native: "Igyande", en: "Yam" }, { native: "Ruam", en: "Food" }, { native: "Mnger", en: "Water" },
-        { native: "Nyinya", en: "Horse" }
+        { native: "Ikyur", en: "Meat" }
       ]},
       { title: "Time & Days", vocab: [
         { native: "Nyian", en: "Today" }, { native: "Kper", en: "Tomorrow" }, { native: "Hegen", en: "Now" },
@@ -650,8 +650,8 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Miguọ", en: "Hello" }, { native: "Ovwiroro", en: "Good morning" },
-        { native: "Meworhe", en: "Welcome" }, { native: "Obe", en: "Thank you" },
+        { native: "Miguọ", en: "Hello / Respectful greeting" }, { native: "Ọvwiroro", en: "Good morning" },
+        { native: "Mewọrhe", en: "Welcome" }, { native: "Wado", en: "Thank you / Well done" },
         { native: "Eyen", en: "Yes" }, { native: "Ẹjo", en: "No" }
       ]},
       { title: "Numbers 1–5", vocab: [
@@ -664,14 +664,14 @@ const COURSES = {
       ]},
       { title: "Family", vocab: [
         { native: "Ọsẹ", en: "Father" }, { native: "Oni", en: "Mother" }, { native: "Ọmọ", en: "Child" },
-        { native: "Ọmọte", en: "Daughter" }, { native: "Ọmọshare", en: "Son" }, { native: "Ọshare", en: "Husband" }, { native: "Aye", en: "Wife" }
+        { native: "Ọmọtẹ", en: "Daughter" }, { native: "Ọmọshare", en: "Son" }, { native: "Ọshare", en: "Husband" }, { native: "Aye", en: "Wife" }
       ]},
       { title: "Common Phrases", vocab: [
         { native: "K'odẹ rẹ?", en: "What is your name" }, { native: "Odẹ mẹ...", en: "My name is..." },
         { native: "K'oyoma?", en: "How are things" }, { native: "Oyoma", en: "It is good" }, { native: "Biko", en: "Please" }
       ]},
       { title: "Body Parts", vocab: [
-        { native: "Urhukpe", en: "Head" }, { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" },
+        { native: "Uyovwi", en: "Head" }, { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" },
         { native: "Ẹrhọ", en: "Ear" }, { native: "Ọbọ", en: "Hand" }, { native: "Awọ", en: "Leg" }
       ]},
       { title: "Nature & Elements", vocab: [
@@ -683,8 +683,8 @@ const COURSES = {
         { native: "Iriẹ", en: "Meat" }, { native: "Eri", en: "Fish" }
       ]},
       { title: "Market & Trade", vocab: [
-        { native: "Ekia", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
-        { native: "Shia", en: "Sell" }, { native: "Idjerhe", en: "Road" }
+        { native: "Ẹki", en: "Market" }, { native: "Igho", en: "Money" }, { native: "Dẹ", en: "Buy" },
+        { native: "Shẹ", en: "Sell" }, { native: "Idjerhe", en: "Road" }
       ]},
       { title: "Essential Verbs", vocab: [
         { native: "Re", en: "Eat" }, { native: "Da", en: "Drink" }, { native: "Kpo", en: "Go" },
@@ -706,9 +706,9 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Do", en: "Hello" }, { native: "Koyo", en: "Greetings" },
+        { native: "Do", en: "Hello" }, { native: "Kọyọ", en: "Greetings" },
         { native: "Wadoo", en: "Thank you" }, { native: "Ẹhẹ", en: "Yes" },
-        { native: "Iye", en: "No" }, { native: "Owerewe", en: "Good morning" }
+        { native: "Iye", en: "No" }, { native: "Ọwerewere", en: "Good morning" }
       ]},
       { title: "Numbers 1–5", vocab: [
         { native: "Ọvo", en: "One" }, { native: "Ive", en: "Two" }, { native: "Isa", en: "Three" },
@@ -720,14 +720,14 @@ const COURSES = {
       ]},
       { title: "Family", vocab: [
         { native: "Ọsẹ", en: "Father" }, { native: "Oni", en: "Mother" }, { native: "Ọmọ", en: "Child" },
-        { native: "Ọmọtọ", en: "Daughter" }, { native: "Ọmọzae", en: "Son" }, { native: "Ọzae", en: "Husband" }, { native: "Aye", en: "Wife" }
+        { native: "Ọmọtẹ", en: "Daughter" }, { native: "Ọmọzae", en: "Son" }, { native: "Ọzae", en: "Husband" }, { native: "Aye", en: "Wife" }
       ]},
       { title: "Common Phrases", vocab: [
         { native: "K'odẹ ra?", en: "What is your name" }, { native: "Odẹ mẹ...", en: "My name is..." },
         { native: "K'abọ?", en: "How are things" }, { native: "Abọ r'oma", en: "Things are good" }, { native: "Biko", en: "Please" }
       ]},
       { title: "Body Parts", vocab: [
-        { native: "Uzon", en: "Head" }, { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" },
+        { native: "Uzo", en: "Head" }, { native: "Ẹro", en: "Eye" }, { native: "Unu", en: "Mouth" },
         { native: "Ẹrhọ", en: "Ear" }, { native: "Ọbọ", en: "Hand" }, { native: "Awọ", en: "Leg" }
       ]},
       { title: "Nature & Weather", vocab: [
@@ -762,9 +762,9 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Dọọ", en: "Hello" }, { native: "Bọda ba", en: "Good morning" },
-        { native: "Nua", en: "Thank you" }, { native: "Iniye", en: "Yes" },
-        { native: "Kẹkẹ", en: "No" }, { native: "Alua", en: "Greetings" }
+        { native: "Dọọ", en: "Hello" }, { native: "Bọdaba", en: "Good morning" },
+        { native: "Miye dọọ", en: "Thank you" }, { native: "Iniye", en: "Yes" },
+        { native: "Kọkọ", en: "No" }, { native: "Alua", en: "Greetings" }
       ]},
       { title: "Numbers 1–5", vocab: [
         { native: "Kẹnị", en: "One" }, { native: "Mamụ", en: "Two" }, { native: "Tǎrụ", en: "Three" },
@@ -787,7 +787,7 @@ const COURSES = {
         { native: "Bẹrẹ", en: "Ear" }, { native: "Bara", en: "Hand" }, { native: "Bụọ", en: "Leg" }
       ]},
       { title: "Waterways & Nature", vocab: [
-        { native: "Beni", en: "Water" }, { native: "Fịrị", en: "River" }, { native: "Angala", en: "Mangrove" },
+        { native: "Beni", en: "Water" }, { native: "Toru", en: "River" }, { native: "Angala", en: "Mangrove" },
         { native: "Ẹkẹn", en: "Sun" }, { native: "Aki", en: "Moon" }, { native: "Osini", en: "Rain" }
       ]},
       { title: "Food & Fish", vocab: [
@@ -1892,12 +1892,12 @@ const CURATED_SENTENCES = {
       distractors: ["in", "small", "food", "bag"]
     },
     {
-      nativeSentence: "Ndewo, kedu aha gị?",
-      speakText: "Ndewo, kedu aha gị",
+      nativeSentence: "Ndewo, kedụ aha gị?",
+      speakText: "Ndewo, kedụ aha gị",
       tokens: [
         { text: "Ndewo", hint: "Hello / Greetings" },
         { text: ",", isPunct: true },
-        { text: "kedu", hint: "what / how" },
+        { text: "kedụ", hint: "what / how" },
         { text: "aha", hint: "name", isNew: true },
         { text: "gị", hint: "your" },
         { text: "?", isPunct: true }
@@ -1963,15 +1963,15 @@ const CURATED_SENTENCES = {
   ],
   yoruba: [
     {
-      nativeSentence: "Akiyesi, apo mi wuwo pupo!",
-      speakText: "Akiyesi, apo mi wuwo pupo",
+      nativeSentence: "Àkíyèsí, àpò mi wúwo púpọ̀!",
+      speakText: "Àkíyèsí, àpò mi wúwo púpọ̀",
       tokens: [
-        { text: "Akiyesi", hint: "Careful / Attention", isNew: true },
+        { text: "Àkíyèsí", hint: "Careful / Attention", isNew: true },
         { text: ",", isPunct: true },
-        { text: "apo", hint: "bag / suitcase" },
+        { text: "àpò", hint: "bag / suitcase" },
         { text: "mi", hint: "my" },
-        { text: "wuwo", hint: "is heavy" },
-        { text: "pupo", hint: "very / a lot" },
+        { text: "wúwo", hint: "is heavy" },
+        { text: "púpọ̀", hint: "very / a lot" },
         { text: "!", isPunct: true }
       ],
       answer: "Careful, my suitcase is very heavy!",
@@ -1985,14 +1985,14 @@ const CURATED_SENTENCES = {
       distractors: ["in", "bag", "small", "shirt"]
     },
     {
-      nativeSentence: "Bawo ni, e kaaro gbogbo yin!",
-      speakText: "Bawo ni, e kaaro gbogbo yin",
+      nativeSentence: "Báwo ni, ẹ káàárọ̀ gbogbo yín!",
+      speakText: "Báwo ni, ẹ káàárọ̀ gbogbo yín",
       tokens: [
-        { text: "Bawo ni", hint: "Hello / How are you" },
+        { text: "Báwo ni", hint: "Hello / How are you" },
         { text: ",", isPunct: true },
-        { text: "e kaaro", hint: "good morning" },
+        { text: "ẹ káàárọ̀", hint: "good morning" },
         { text: "gbogbo", hint: "all", isNew: true },
-        { text: "yin", hint: "you" },
+        { text: "yín", hint: "you" },
         { text: "!", isPunct: true }
       ],
       answer: "Hello, good morning to you all!",
@@ -2001,14 +2001,14 @@ const CURATED_SENTENCES = {
       distractors: ["night", "we", "tomorrow", "friend"]
     },
     {
-      nativeSentence: "E se pupo fun iranlowo re!",
-      speakText: "E se pupo fun iranlowo re",
+      nativeSentence: "Ẹ ṣe púpọ̀ fún ìrànlọ́wọ́ rẹ!",
+      speakText: "Ẹ ṣe púpọ̀ fún ìrànlọ́wọ́ rẹ",
       tokens: [
-        { text: "E se", hint: "Thank you" },
-        { text: "pupo", hint: "very much" },
-        { text: "fun", hint: "for" },
-        { text: "iranlowo", hint: "help / assistance", isNew: true },
-        { text: "re", hint: "your" },
+        { text: "Ẹ ṣe", hint: "Thank you" },
+        { text: "púpọ̀", hint: "very much" },
+        { text: "fún", hint: "for" },
+        { text: "ìrànlọ́wọ́", hint: "help / assistance", isNew: true },
+        { text: "rẹ", hint: "your" },
         { text: "!", isPunct: true }
       ],
       answer: "Thank you very much for your help!",
@@ -2017,16 +2017,16 @@ const CURATED_SENTENCES = {
       distractors: ["welcome", "please", "kindness", "friend"]
     },
     {
-      nativeSentence: "Iya mi ati baba mi wa nile.",
-      speakText: "Iya mi ati baba mi wa nile",
+      nativeSentence: "Ìyá mi àti bàbá mi wà nílé.",
+      speakText: "Ìyá mi àti bàbá mi wà nílé",
       tokens: [
-        { text: "Iya", hint: "Mother" },
+        { text: "Ìyá", hint: "Mother" },
         { text: "mi", hint: "my" },
-        { text: "ati", hint: "and" },
-        { text: "baba", hint: "father" },
+        { text: "àti", hint: "and" },
+        { text: "bàbá", hint: "father" },
         { text: "mi", hint: "my" },
-        { text: "wa", hint: "are" },
-        { text: "nile", hint: "at home", isNew: true },
+        { text: "wà", hint: "are" },
+        { text: "nílé", hint: "at home", isNew: true },
         { text: ".", isPunct: true }
       ],
       answer: "My mother and my father are at home.",
@@ -2035,15 +2035,15 @@ const CURATED_SENTENCES = {
       distractors: ["market", "going", "sister", "house"]
     },
     {
-      nativeSentence: "Je onje re pelu omi tutu!",
-      speakText: "Je onje re pelu omi tutu",
+      nativeSentence: "Jẹ oúnjẹ rẹ pẹ̀lú omi tútù!",
+      speakText: "Jẹ oúnjẹ rẹ pẹ̀lú omi tútù",
       tokens: [
-        { text: "Je", hint: "Eat" },
-        { text: "onje", hint: "food" },
-        { text: "re", hint: "your" },
-        { text: "pelu", hint: "with", isNew: true },
+        { text: "Jẹ", hint: "Eat" },
+        { text: "oúnjẹ", hint: "food" },
+        { text: "rẹ", hint: "your" },
+        { text: "pẹ̀lú", hint: "with", isNew: true },
         { text: "omi", hint: "water" },
-        { text: "tutu", hint: "cold" },
+        { text: "tútù", hint: "cold" },
         { text: "!", isPunct: true }
       ],
       answer: "Eat your food with cold water!",
@@ -2161,19 +2161,19 @@ const CURATED_SENTENCES = {
       distractors: ["in", "bag", "small", "food"]
     },
     {
-      nativeSentence: "Kɔyo, vbẹẹ o re?",
-      speakText: "Kɔyo, vbẹẹ o re",
+      nativeSentence: "Kọ́yọ́, vbè ó yé hẹ́?",
+      speakText: "Kọ́yọ́, vbè ó yé hẹ́",
       tokens: [
-        { text: "Kɔyo", hint: "Hello / Greetings" },
+        { text: "Kọ́yọ́", hint: "Hello / Greetings" },
         { text: ",", isPunct: true },
-        { text: "vbẹẹ", hint: "how", isNew: true },
-        { text: "o re", hint: "are things / is it" },
+        { text: "vbè", hint: "how", isNew: true },
+        { text: "ó yé hẹ́", hint: "are you / is it" },
         { text: "?", isPunct: true }
       ],
-      answer: "Hello, how are things?",
-      answerTokens: ["Hello", "how", "are", "things"],
-      acceptAnswers: ["Hello how are things", "Hi how are things", "Hello how is it"],
-      distractors: ["you", "fine", "morning", "good"]
+      answer: "Hello, how are you?",
+      answerTokens: ["Hello", "how", "are", "you"],
+      acceptAnswers: ["Hello how are you", "Hi how are you", "Hello how are things"],
+      distractors: ["fine", "morning", "good", "water"]
     }
   ],
   efik: [
@@ -5508,25 +5508,25 @@ const NOTIFICATION_MESSAGES = {
     { title: "🔥 Ci gaba da koyo!", body: "Your daily Hausa lesson is waiting. Earn XP and protect your day streak on Lingua Naija." }
   ],
   edo: [
-    { title: "🇳🇬 Kóyo! Complete today's Edo lesson", body: "It's been 24 hours! Don't let your Edo vocabulary slip away." }
+    { title: "🇳🇬 Kọ́yọ́! Complete today's Edo lesson", body: "It's been 24 hours! Don't let your Edo vocabulary slip away." }
   ],
   efik: [
     { title: "🇳🇬 Mọ́kọ́m! Time for Efịk practice", body: "Keep your Efịk streak going strong with a quick 3-minute lesson." }
   ],
   urhobo: [
-    { title: "🇳🇬 Migwo! Keep your Urhobo streak", body: "24 hours since your last session. Practice your Urhobo phrases now!" }
+    { title: "🇳🇬 Miguọ! Keep your Urhobo streak", body: "24 hours since your last session. Practice your Urhobo phrases now!" }
   ],
   tiv: [
     { title: "🇳🇬 M sugh u! Daily Tiv Lesson", body: "Protect your streak! Complete today's Tiv phrases on Lingua Naija." }
   ],
   uvwie: [
-    { title: "🇳🇬 Migwo! Uvwie lesson waiting", body: "Don't break your daily streak! Practice your Uvwie lesson now." }
+    { title: "🇳🇬 Miguọ! Uvwie lesson waiting", body: "Don't break your daily streak! Practice your Uvwie lesson now." }
   ],
   isoko: [
     { title: "🇳🇬 Do! Keep your Isoko streak alive", body: "24 hours have passed — jump in for your daily Isoko lesson!" }
   ],
   ijaw: [
-    { title: "🇳🇬 Tebidaba! Time for Ijaw practice", body: "Keep your Nigerian language skills strong with today's Ijaw lesson." }
+    { title: "🇳🇬 Bọdaba! Time for Ijaw practice", body: "Keep your Nigerian language skills strong with today's Ijaw lesson." }
   ],
   default: [
     { title: "🇳🇬 Lingua Naija: Daily Lesson Reminder", body: "It's been 24 hours since your last lesson! Protect your streak with a quick 3-minute session." },

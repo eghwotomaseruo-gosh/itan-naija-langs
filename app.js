@@ -29,7 +29,7 @@ const TRIBE_DETAILS = {
   yoruba: {
     name: "Yorùbá",
     native: "Èdè Yorùbá",
-    greeting: "Báwo ni",
+    greeting: "Ẹ n lẹ́",
     region: "Southwest",
     symbolTitle: "Adé Beaded Crown & Okin Bird",
     svg: `<svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M10 24 L12 11 L18 16 L24 11 L26 24 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.18)" stroke-linejoin="round"/><circle cx="18" cy="9" r="3" stroke="white" stroke-width="2" fill="white"/><path d="M18 6 L18 4" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M9 24 L27 24 L25 29 L11 29 Z" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.25)"/><line x1="12" y1="29" x2="12" y2="33" stroke="white" stroke-width="1.8" stroke-linecap="round"/><line x1="18" y1="29" x2="18" y2="34" stroke="white" stroke-width="1.8" stroke-linecap="round"/><line x1="24" y1="29" x2="24" y2="33" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>`
@@ -230,7 +230,7 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Báwo ni", en: "Hello" }, { native: "Ẹ káàárọ̀", en: "Good morning" },
+        { native: "Ẹ n lẹ́", en: "Hello" }, { native: "Báwo ni", en: "How are you" }, { native: "Ẹ káàárọ̀", en: "Good morning" },
         { native: "Ẹ ṣe", en: "Thank you" }, { native: "Bẹ́ẹ̀ni", en: "Yes" },
         { native: "Rárá", en: "No" }, { native: "Ó dábọ̀", en: "Goodbye" }
       ]},
@@ -866,7 +866,7 @@ const CULTURE = {
     scenario: {
       prompt: "You meet your friend's mother for the first time. What's the respectful thing to do?",
       options: [
-        { text: "Say “Bawo ni” and kneel or prostrate briefly", correct: true, feedback: "That's the traditional, respectful way to greet an elder." },
+        { text: "Say “Ẹ n lẹ́ o, màmá” and kneel or prostrate briefly", correct: true, feedback: "That's the traditional, respectful way to greet an elder using the honorific 'Ẹ'." },
         { text: "Wave from a distance without speaking", correct: false, feedback: "A greeting is expected — a wave alone can come across as distant." },
         { text: "Ask for her phone number right away", correct: false, feedback: "Save the small talk for after a proper greeting!" }
       ]
@@ -1988,16 +1988,19 @@ const CURATED_SENTENCES = {
       nativeSentence: "Báwo ni, ẹ káàárọ̀ gbogbo yín!",
       speakText: "Báwo ni, ẹ káàárọ̀ gbogbo yín",
       tokens: [
-        { text: "Báwo ni", hint: "Hello / How are you" },
+        { text: "Báwo ni", hint: "How are you", isNew: true },
         { text: ",", isPunct: true },
         { text: "ẹ káàárọ̀", hint: "good morning" },
-        { text: "gbogbo", hint: "all", isNew: true },
+        { text: "gbogbo", hint: "all" },
         { text: "yín", hint: "you" },
         { text: "!", isPunct: true }
       ],
-      answer: "Hello, good morning to you all!",
-      answerTokens: ["Hello", "good", "morning", "to", "you", "all"],
-      acceptAnswers: ["Hello good morning to you all", "Hi good morning to all of you"],
+      answer: "How are you, good morning to you all!",
+      answerTokens: ["How", "are", "you", "good", "morning", "to", "you", "all"],
+      acceptAnswers: [
+        "How are you good morning to you all",
+        "How are you good morning to all of you"
+      ],
       distractors: ["night", "we", "tomorrow", "friend"]
     },
     {

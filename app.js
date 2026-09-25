@@ -318,7 +318,7 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Sannu", en: "Hello" }, { native: "Ina kwana", en: "Good morning" },
+        { native: "Sannu", en: "Hello" }, { native: "Yaya kake", en: "How are you" }, { native: "Ina kwana", en: "Good morning" },
         { native: "Na gode", en: "Thank you" }, { native: "Ee", en: "Yes" },
         { native: "A'a", en: "No" }, { native: "Sai anjima", en: "Goodbye" }
       ]},
@@ -471,9 +471,8 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Emedi", en: "Welcome" }, { native: "Emesiere", en: "Good morning" },
-        { native: "Mọkọm", en: "Good afternoon" }, { native: "Esiere", en: "Good night" },
-        { native: "Ka di", en: "Goodbye" }
+        { native: "Mọ́kọ́m", en: "Hello" }, { native: "Emedi", en: "Welcome" }, { native: "Emesiere", en: "Good morning" },
+        { native: "Esiere", en: "Good night" }, { native: "Ka di", en: "Goodbye" }
       ]},
       { title: "Numbers 1–5", vocab: [
         { native: "Kiet", en: "One" }, { native: "Iba", en: "Two" }, { native: "Ita", en: "Three" },
@@ -536,12 +535,12 @@ const COURSES = {
         { native: "Írhirin", en: "Nine" }, { native: "Íhwe", en: "Ten" }
       ]},
       { title: "Greetings", vocab: [
-        { native: "Do", en: "Thank you / Greetings" }, { native: "Dede", en: "Welcome" }, { native: "K'odẹfa", en: "Goodbye" },
-        { native: "K'odẹ", en: "Goodnight" }, { native: "Yagba", en: "Safe journey" }
+        { native: "Do", en: "Greetings / Well done" }, { native: "Mavọ", en: "How are you" }, { native: "Dede", en: "Welcome" },
+        { native: "K'odẹfa", en: "Goodbye" }, { native: "K'odẹ", en: "Goodnight" }, { native: "Yagba", en: "Safe journey" }
       ]},
       { title: "Common Phrases", vocab: [
         { native: "Biko", en: "Please" }, { native: "E", en: "Yes" }, { native: "Ẹjo", en: "No" },
-        { native: "Oma gba na?", en: "How are you" }, { native: "Miguọ", en: "Respectful greeting to an elder" }
+        { native: "Oma gba na?", en: "Are you fine" }, { native: "Miguọ", en: "I kneel / Respectful greeting to an elder" }
       ]},
       { title: "Family", vocab: [
         { native: "Ọsẹ", en: "Father" }, { native: "Oni", en: "Mother" }, { native: "Ọsẹrode", en: "Grandfather" },
@@ -595,8 +594,8 @@ const COURSES = {
         { native: "Utan-kar-unyiin", en: "Nine" }, { native: "Pue", en: "Ten" }
       ]},
       { title: "Greetings", vocab: [
-        { native: "M sugh u", en: "Hello" }, { native: "M sugh u kpishi", en: "Thank you very much" }, { native: "Een", en: "Yes" },
-        { native: "Ei", en: "No" }, { native: "Dedoo", en: "Good" }
+        { native: "M sugh u", en: "Hello" }, { native: "U ngu nena?", en: "How are you" }, { native: "M sugh u kpishi", en: "Thank you very much" },
+        { native: "Een", en: "Yes" }, { native: "Ei", en: "No" }, { native: "Dedoo", en: "Good" }
       ]},
       { title: "Common Phrases", vocab: [
         { native: "Iti yo er nyi?", en: "What is your name" }, { native: "Iti yam er...", en: "My name is..." },
@@ -706,9 +705,9 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Do", en: "Hello" }, { native: "Kọyọ", en: "Greetings" },
-        { native: "Wadoo", en: "Thank you" }, { native: "Ẹhẹ", en: "Yes" },
-        { native: "Iye", en: "No" }, { native: "Ọwerewere", en: "Good morning" }
+        { native: "Do", en: "Hello" }, { native: "Mavọ", en: "How are you" },
+        { native: "Ọwerewere", en: "Good morning" }, { native: "Wadoo", en: "Thank you" },
+        { native: "Ẹhẹ", en: "Yes" }, { native: "Iye", en: "No" }
       ]},
       { title: "Numbers 1–5", vocab: [
         { native: "Ọvo", en: "One" }, { native: "Ive", en: "Two" }, { native: "Isa", en: "Three" },
@@ -762,7 +761,7 @@ const COURSES = {
     },
     lessons: [
       { title: "Greetings", vocab: [
-        { native: "Dọọ", en: "Hello" }, { native: "Bọdaba", en: "Good morning" },
+        { native: "Dọọ", en: "Hello" }, { native: "Bọdaba", en: "Welcome" }, { native: "Seridaba", en: "Good morning" },
         { native: "Miye dọọ", en: "Thank you" }, { native: "Iniye", en: "Yes" },
         { native: "Kọkọ", en: "No" }, { native: "Alua", en: "Greetings" }
       ]},
@@ -894,11 +893,11 @@ const CULTURE = {
       { native: "Aro n'ekhoe ẹkhoe, ọrọ vbe ẹro.", translation: "The eyes that look down see the path clearly.", meaning: "Humility and caution lead to peace and enduring honor." },
       { native: "Ai gbe ovbi ẹnwanre vb'unu.", translation: "One does not strike an elder on the mouth.", meaning: "Always respect the counsel and words of elders." }
     ],
-    etiquette: { title: "Greeting elders and leaders", text: "When greeting elders, Edo men bow respectfully saying 'Kọyọ' or family morning greetings, and gifts are always presented or received with both hands as a sign of purity and gratitude." },
+    etiquette: { title: "Greeting elders and leaders", text: "When greeting elders, Edo men bow respectfully saying 'Kọ́yọ́' or family morning greetings, and gifts are always presented or received with both hands as a sign of purity and gratitude." },
     scenario: {
       prompt: "You enter an Edo elder's parlor for a family visit. How should you greet them?",
       options: [
-        { text: "Say “Kọyọ” or “Ọbowiẹ” with a polite bow", correct: true, feedback: "Perfect — this shows genuine honor and warmth in Edo culture." },
+        { text: "Say “Kọ́yọ́” or “Ọ̀b'ówie” with a polite bow", correct: true, feedback: "Perfect — this shows genuine honor and warmth in Edo culture." },
         { text: "Nod silently without addressing anyone", correct: false, feedback: "Speaking a clear, warm greeting is expected." },
         { text: "Walk directly to a chair and sit before speaking", correct: false, feedback: "Always greet before taking your seat!" }
       ]
@@ -910,11 +909,11 @@ const CULTURE = {
       { native: "Owo idaha ke mkpa owo ebiet mbuk.", translation: "You do not use another person's tragedy as casual gossip.", meaning: "Cultivate deep empathy and never celebrate other people's misfortune." },
       { native: "Ubok kiet isibọhọ ekpat.", translation: "One hand cannot easily lift a heavy sack.", meaning: "Unity and teamwork achieve what solitary effort cannot." }
     ],
-    etiquette: { title: "Warm Calabar hospitality", text: "Efịk culture is renowned for lavish hospitality. Guests are warmly welcomed with water and refreshments, and visitors are expected to receive them with two hands saying 'Sosongo' (Thank you)." },
+    etiquette: { title: "Warm Calabar hospitality", text: "Efịk culture is renowned for lavish hospitality. Guests are warmly welcomed with water and refreshments, and visitors are expected to receive them with two hands saying 'Sọsọñgọ' (Thank you)." },
     scenario: {
       prompt: "Your Calabar host hands you a cup of water upon your arrival. What is polite?",
       options: [
-        { text: "Receive it with both hands and say “Sosongo”", correct: true, feedback: "Spot on! That reflects the true grace of Efịk hospitality." },
+        { text: "Receive it with both hands and say “Sọsọñgọ”", correct: true, feedback: "Spot on! That reflects the true grace of Efịk hospitality." },
         { text: "Push it aside and demand your favorite soda", correct: false, feedback: "Always receive the offered hospitality graciously first." },
         { text: "Grab it with left hand and turn away", correct: false, feedback: "Using both hands expresses deep gratitude." }
       ]
@@ -926,11 +925,11 @@ const CULTURE = {
       { native: "Oshare rẹ evwro kẹ oghwẹ.", translation: "A truthful man earns honor in the assembly.", meaning: "Integrity and honesty outlast deception every time." },
       { native: "Ọrhẹ ọvo cha sa vwo rhe.", translation: "One plantain tree begins a thriving plantation.", meaning: "Small beginnings with diligence grow into great prosperity." }
     ],
-    etiquette: { title: "The 'Míguẹ' greeting", text: "Urhobo youth greet elders by kneeling slightly or touching the knee and saying 'Míguẹ' (I kneel), to which the elder responds with a blessing 'Vrendon' (Rise and live long)." },
+    etiquette: { title: "The 'Miguọ' greeting", text: "Urhobo youth greet elders by kneeling slightly or touching the knee and saying 'Miguọ' (I kneel), to which the elder responds with a blessing 'Vrẹdo' (Rise and live long)." },
     scenario: {
       prompt: "You meet an Urhobo elder at a community gathering. What is the traditional respectful greeting?",
       options: [
-        { text: "Say “Míguẹ” with a slight knee touch/curtsey", correct: true, feedback: "Excellent! The elder will warmly bless you with 'Vrendon'." },
+        { text: "Say “Miguọ” with a slight knee touch/curtsey", correct: true, feedback: "Excellent! The elder will warmly bless you with 'Vrẹdo'." },
         { text: "Give a fist bump from afar", correct: false, feedback: "Traditional greetings are much warmer and more respectful." },
         { text: "Wait for the elder to stand and greet you first", correct: false, feedback: "Youth and newcomers always initiate respectful greetings." }
       ]
@@ -1317,6 +1316,7 @@ function getPhoneticUtterance(text, courseKey, voice){
       .replace(/rh/gi, "rh")
       .replace(/Miguọ/gi, "Mee-gwaw")
       .replace(/Miguo/gi, "Mee-gwaw")
+      .replace(/Vrẹdo/gi, "Vreh-doh")
       .replace(/Kọ́yọ́/gi, "Kaw-yaw")
       .replace(/Ọb'ókhian/gi, "Aw-boh-kee-ahn");
   } else if(key === "efik"){
@@ -1329,7 +1329,7 @@ function getPhoneticUtterance(text, courseKey, voice){
       .replace(/[ẹ́Ẹ́]/g, "éh")
       .replace(/[ẹẸ]/g, "eh")
       .replace(/Sọsọñgọ/gi, "Saw-saw-ngaw")
-      .replace(/Mọkọm/gi, "Maw-kawm");
+      .replace(/Mọ́?kọ́?m/gi, "Maw-kawm");
   } else if(key === "tiv"){
     // Tiv bantoid sounds
     result = result
@@ -2232,6 +2232,25 @@ const CURATED_SENTENCES = {
       answerTokens: ["Careful", "my", "suitcase", "is", "very", "heavy"],
       acceptAnswers: ["Careful my suitcase is very heavy", "Careful my bag is very heavy"],
       distractors: ["in", "bag", "small", "food"]
+    },
+    {
+      nativeSentence: "Miguọ, oma gba na?",
+      speakText: "Miguọ, oma gba na",
+      tokens: [
+        { text: "Miguọ", hint: "Greetings / I kneel", isNew: true },
+        { text: ",", isPunct: true },
+        { text: "oma", hint: "body" },
+        { text: "gba na", hint: "is it well / are you fine" },
+        { text: "?", isPunct: true }
+      ],
+      answer: "Greetings, how are you?",
+      answerTokens: ["Greetings", "how", "are", "you"],
+      acceptAnswers: [
+        "Greetings how are you",
+        "Hello how are you",
+        "Greetings are you fine"
+      ],
+      distractors: ["fine", "morning", "good", "water"]
     }
   ],
   tiv: [
